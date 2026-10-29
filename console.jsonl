@@ -1,0 +1,838 @@
+{"level":"debug","message":"[vite] connected.","timestamp":1792653755387}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792653779200}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792653779200}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792653779261}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792653779261}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792653816311}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792653816311}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792653816312}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792653816312}
+{"level":"error","message":"Warning: React has detected a change in the order of Hooks called by %s. This will lead to bugs and errors if not fixed. For more information, read the Rules of Hooks: https://reactjs.org/link/rules-of-hooks\n\n   Previous render            Next render\n   ------------------------------------------------------\n%s   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n%s App 1. useState                   useState\n2. useCallback                useCallback\n3. useEffect                  useEffect\n4. useCallback                useCallback\n5. useCallback                useCallback\n6. useCallback                useCallback\n7. useCallback                useCallback\n8. useCallback                useCallback\n9. useCallback                useCallback\n10. useCallback               useCallback\n11. useCallback               useCallback\n12. useCallback               useCallback\n13. useCallback               useCallback\n14. useCallback               useCallback\n15. useCallback               useCallback\n16. useCallback               useCallback\n17. useCallback               useCallback\n18. useCallback               useCallback\n19. useCallback               useCallback\n20. useCallback               useCallback\n21. useState                  useCallback\n \n    at App (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/App.tsx?t=1792653849114:59:17)\n    at Le (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/connectkit.js?v=ed645da4:18793:42)\n    at Web3ContextProvider (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/connectkit.js?v=ed645da4:34420:30)\n    at ConnectKitProvider (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/connectkit.js?v=ed645da4:37910:29)\n    at QueryClientProvider (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-WZEH4STI.js?v=ed645da4:39:30)\n    at Hydrate (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-WPFSLU33.js?v=ed645da4:392:11)\n    at WagmiProvider (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-WPFSLU33.js?v=ed645da4:414:11)","timestamp":1792653816331}
+{"level":"error","message":"Uncaught Error: Rendered more hooks than during the previous render.","timestamp":1792653816331,"source":"https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:18604:21","stack":"Error: Rendered more hooks than during the previous render.\n    at updateWorkInProgressHook (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:18604:21)\n    at updateCallback (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:19103:22)\n    at Object.useCallback (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:19619:22)\n    at useCallback (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-TWJ6NINL.js?v=ed645da4:1375:29)\n    at useAppStore (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/store.ts?t=1792653849114:423:29)\n    at App (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/App.tsx?t=1792653849114:59:17)\n    at renderWithHooks (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:18474:26)\n    at updateFunctionComponent (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:21508:28)\n    at beginWork (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:22850:22)\n    at HTMLUnknownElement.callCallback2 (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:10558:22)"}
+{"level":"error","message":"Uncaught Error: Rendered more hooks than during the previous render.","timestamp":1792653816332,"source":"https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:18604:21","stack":"Error: Rendered more hooks than during the previous render.\n    at updateWorkInProgressHook (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:18604:21)\n    at updateCallback (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:19103:22)\n    at Object.useCallback (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:19619:22)\n    at useCallback (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-TWJ6NINL.js?v=ed645da4:1375:29)\n    at useAppStore (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/store.ts?t=1792653849114:423:29)\n    at App (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/App.tsx?t=1792653849114:59:17)\n    at renderWithHooks (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:18474:26)\n    at updateFunctionComponent (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:21508:28)\n    at beginWork (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:22850:22)\n    at HTMLUnknownElement.callCallback2 (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:10558:22)"}
+{"level":"error","message":"The above error occurred in the <App> component:\n\n    at App (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/App.tsx?t=1792653849114:59:17)\n    at Le (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/connectkit.js?v=ed645da4:18793:42)\n    at Web3ContextProvider (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/connectkit.js?v=ed645da4:34420:30)\n    at ConnectKitProvider (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/connectkit.js?v=ed645da4:37910:29)\n    at QueryClientProvider (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-WZEH4STI.js?v=ed645da4:39:30)\n    at Hydrate (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-WPFSLU33.js?v=ed645da4:392:11)\n    at WagmiProvider (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-WPFSLU33.js?v=ed645da4:414:11)\n\nConsider adding an error boundary to your tree to customize error handling behavior.\nVisit https://reactjs.org/link/error-boundaries to learn more about error boundaries.","timestamp":1792653816333}
+{"level":"error","message":"Unhandled promise rejection: Error: Rendered more hooks than during the previous render.\n    at updateWorkInProgressHook (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:18604:21)\n    at updateCallback (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:19103:22)\n    at Object.useCallback (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:19619:22)\n    at useCallback (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-TWJ6NINL.js?v=ed645da4:1375:29)\n    at useAppStore (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/store.ts?t=1792653849114:423:29)\n    at App (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/App.tsx?t=1792653849114:59:17)\n    at renderWithHooks (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:18474:26)\n    at updateFunctionComponent (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:21508:28)\n    at beginWork (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:22850:22)\n    at beginWork$1 (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:26684:22)","timestamp":1792653816334,"stack":"Error: Rendered more hooks than during the previous render.\n    at updateWorkInProgressHook (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:18604:21)\n    at updateCallback (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:19103:22)\n    at Object.useCallback (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:19619:22)\n    at useCallback (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-TWJ6NINL.js?v=ed645da4:1375:29)\n    at useAppStore (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/store.ts?t=1792653849114:423:29)\n    at App (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/App.tsx?t=1792653849114:59:17)\n    at renderWithHooks (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:18474:26)\n    at updateFunctionComponent (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:21508:28)\n    at beginWork (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:22850:22)\n    at beginWork$1 (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:26684:22)"}
+{"level":"error","message":"Warning: React has detected a change in the order of Hooks called by %s. This will lead to bugs and errors if not fixed. For more information, read the Rules of Hooks: https://reactjs.org/link/rules-of-hooks\n\n   Previous render            Next render\n   ------------------------------------------------------\n%s   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n%s App 1. useState                   useState\n2. useCallback                useCallback\n3. useEffect                  useEffect\n4. useCallback                useCallback\n5. useCallback                useCallback\n6. useCallback                useCallback\n7. useCallback                useCallback\n8. useCallback                useCallback\n9. useCallback                useCallback\n10. useCallback               useCallback\n11. useCallback               useCallback\n12. useCallback               useCallback\n13. useCallback               useCallback\n14. useCallback               useCallback\n15. useCallback               useCallback\n16. useCallback               useCallback\n17. useCallback               useCallback\n18. useCallback               useCallback\n19. useCallback               useCallback\n20. useCallback               useCallback\n21. useState                  useCallback\n \n    at App (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/App.tsx?t=1792653849114:59:17)\n    at Le (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/connectkit.js?v=ed645da4:18793:42)\n    at Web3ContextProvider (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/connectkit.js?v=ed645da4:34420:30)\n    at ConnectKitProvider (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/connectkit.js?v=ed645da4:37910:29)\n    at QueryClientProvider (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-WZEH4STI.js?v=ed645da4:39:30)\n    at Hydrate (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-WPFSLU33.js?v=ed645da4:392:11)\n    at WagmiProvider (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-WPFSLU33.js?v=ed645da4:414:11)","timestamp":1792653816335}
+{"level":"error","message":"Uncaught Error: Rendered more hooks than during the previous render.","timestamp":1792653816335,"source":"https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:18604:21","stack":"Error: Rendered more hooks than during the previous render.\n    at updateWorkInProgressHook (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:18604:21)\n    at updateCallback (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:19103:22)\n    at Object.useCallback (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:19619:22)\n    at useCallback (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-TWJ6NINL.js?v=ed645da4:1375:29)\n    at useAppStore (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/store.ts?t=1792653849114:423:29)\n    at App (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/App.tsx?t=1792653849114:59:17)\n    at renderWithHooks (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:18474:26)\n    at updateFunctionComponent (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:21508:28)\n    at beginWork (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:22850:22)\n    at HTMLUnknownElement.callCallback2 (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:10558:22)"}
+{"level":"error","message":"Uncaught Error: Rendered more hooks than during the previous render.","timestamp":1792653816336,"source":"https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:18604:21","stack":"Error: Rendered more hooks than during the previous render.\n    at updateWorkInProgressHook (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:18604:21)\n    at updateCallback (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:19103:22)\n    at Object.useCallback (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:19619:22)\n    at useCallback (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-TWJ6NINL.js?v=ed645da4:1375:29)\n    at useAppStore (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/store.ts?t=1792653849114:423:29)\n    at App (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/App.tsx?t=1792653849114:59:17)\n    at renderWithHooks (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:18474:26)\n    at updateFunctionComponent (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:21508:28)\n    at beginWork (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:22850:22)\n    at HTMLUnknownElement.callCallback2 (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:10558:22)"}
+{"level":"error","message":"The above error occurred in the <App> component:\n\n    at App (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/App.tsx?t=1792653849114:59:17)\n    at Le (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/connectkit.js?v=ed645da4:18793:42)\n    at Web3ContextProvider (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/connectkit.js?v=ed645da4:34420:30)\n    at ConnectKitProvider (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/connectkit.js?v=ed645da4:37910:29)\n    at QueryClientProvider (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-WZEH4STI.js?v=ed645da4:39:30)\n    at Hydrate (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-WPFSLU33.js?v=ed645da4:392:11)\n    at WagmiProvider (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-WPFSLU33.js?v=ed645da4:414:11)\n\nConsider adding an error boundary to your tree to customize error handling behavior.\nVisit https://reactjs.org/link/error-boundaries to learn more about error boundaries.","timestamp":1792653816336}
+{"level":"error","message":"Unhandled promise rejection: Error: Rendered more hooks than during the previous render.\n    at updateWorkInProgressHook (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:18604:21)\n    at updateCallback (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:19103:22)\n    at Object.useCallback (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:19619:22)\n    at useCallback (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-TWJ6NINL.js?v=ed645da4:1375:29)\n    at useAppStore (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/store.ts?t=1792653849114:423:29)\n    at App (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/App.tsx?t=1792653849114:59:17)\n    at renderWithHooks (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:18474:26)\n    at updateFunctionComponent (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:21508:28)\n    at beginWork (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:22850:22)\n    at beginWork$1 (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:26684:22)","timestamp":1792653816337,"stack":"Error: Rendered more hooks than during the previous render.\n    at updateWorkInProgressHook (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:18604:21)\n    at updateCallback (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:19103:22)\n    at Object.useCallback (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:19619:22)\n    at useCallback (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-TWJ6NINL.js?v=ed645da4:1375:29)\n    at useAppStore (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/store.ts?t=1792653849114:423:29)\n    at App (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/App.tsx?t=1792653849114:59:17)\n    at renderWithHooks (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:18474:26)\n    at updateFunctionComponent (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:21508:28)\n    at beginWork (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:22850:22)\n    at beginWork$1 (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=ed645da4:26684:22)"}
+{"level":"debug","message":"[vite] hot updated: /src/components/BriefPanel.tsx","timestamp":1792653853347}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792653853347}
+{"level":"debug","message":"[vite] hot updated: /src/components/BriefPanel.tsx","timestamp":1792653853348}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792653853348}
+{"level":"debug","message":"[vite] hot updated: /src/components/QAPanel.tsx","timestamp":1792653854687}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792653854687}
+{"level":"debug","message":"[vite] hot updated: /src/components/QAPanel.tsx","timestamp":1792653854688}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792653854688}
+{"level":"debug","message":"[vite] hot updated: /src/components/StudioFloor.tsx","timestamp":1792653884103}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792653884103}
+{"level":"debug","message":"[vite] hot updated: /src/components/StudioFloor.tsx","timestamp":1792653884104}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792653884104}
+{"level":"debug","message":"[vite] hot updated: /src/components/ProductionPanel.tsx","timestamp":1792653908155}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792653908155}
+{"level":"debug","message":"[vite] hot updated: /src/components/ProductionPanel.tsx","timestamp":1792653908157}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792653908157}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792653934254}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792653934254}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792653934255}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792653934255}
+{"level":"debug","message":"(previous line repeated 1× more)","timestamp":1792653992072}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792653992072}
+{"level":"debug","message":"[vite] hot updated: /src/components/ProductionPanel.tsx","timestamp":1792653992072}
+{"level":"debug","message":"(previous line repeated 1× more)","timestamp":1792653992073}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792653992073}
+{"level":"debug","message":"[vite] hot updated: /src/components/ProductionPanel.tsx","timestamp":1792653992074}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792653998794}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792653998794}
+{"level":"debug","message":"[vite] hot updated: /src/components/ProductionPanel.tsx","timestamp":1792653998794}
+{"level":"debug","message":"[vite] hot updated: /src/components/QAPanel.tsx","timestamp":1792653998794}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792654000386}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792654000387}
+{"level":"debug","message":"[vite] hot updated: /src/components/ProductionPanel.tsx","timestamp":1792654000387}
+{"level":"debug","message":"[vite] hot updated: /src/components/QAPanel.tsx","timestamp":1792654000387}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792654001439}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792654001439}
+{"level":"debug","message":"[vite] hot updated: /src/components/ProductionPanel.tsx","timestamp":1792654001439}
+{"level":"debug","message":"[vite] hot updated: /src/components/QAPanel.tsx","timestamp":1792654001439}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792654010200}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792654010200}
+{"level":"debug","message":"[vite] hot updated: /src/components/ProductionPanel.tsx","timestamp":1792654010200}
+{"level":"debug","message":"[vite] hot updated: /src/components/QAPanel.tsx","timestamp":1792654010200}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792654011194}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792654011194}
+{"level":"debug","message":"[vite] hot updated: /src/components/ProductionPanel.tsx","timestamp":1792654011194}
+{"level":"debug","message":"[vite] hot updated: /src/components/QAPanel.tsx","timestamp":1792654011194}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792654011780}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792654011780}
+{"level":"debug","message":"[vite] hot updated: /src/components/ProductionPanel.tsx","timestamp":1792654011780}
+{"level":"debug","message":"[vite] hot updated: /src/components/QAPanel.tsx","timestamp":1792654011780}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792654020921}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792654020921}
+{"level":"debug","message":"[vite] hot updated: /src/components/ProductionPanel.tsx","timestamp":1792654020921}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792654020923}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792654020923}
+{"level":"debug","message":"[vite] hot updated: /src/components/ProductionPanel.tsx","timestamp":1792654020923}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792654031728}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792654031729}
+{"level":"debug","message":"[vite] hot updated: /src/components/ProductionPanel.tsx","timestamp":1792654031729}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792654031729}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792654031729}
+{"level":"debug","message":"[vite] hot updated: /src/components/ProductionPanel.tsx","timestamp":1792654031729}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792654034651}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792654034651}
+{"level":"debug","message":"[vite] hot updated: /src/components/ProductionPanel.tsx","timestamp":1792654034651}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792654034668}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792654034668}
+{"level":"debug","message":"[vite] hot updated: /src/components/ProductionPanel.tsx","timestamp":1792654034668}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792654044591}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792654044591}
+{"level":"debug","message":"[vite] hot updated: /src/components/ProductionPanel.tsx","timestamp":1792654044591}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792654044594}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792654044594}
+{"level":"debug","message":"[vite] hot updated: /src/components/ProductionPanel.tsx","timestamp":1792654044594}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792654058690}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792654058690}
+{"level":"debug","message":"[vite] hot updated: /src/components/ProductionPanel.tsx","timestamp":1792654058690}
+{"level":"debug","message":"[vite] hot updated: /src/components/QAPanel.tsx","timestamp":1792654058690}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792654059064}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792654059064}
+{"level":"debug","message":"[vite] hot updated: /src/components/ProductionPanel.tsx","timestamp":1792654059064}
+{"level":"debug","message":"[vite] hot updated: /src/components/QAPanel.tsx","timestamp":1792654059064}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792654160476}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792654160477}
+{"level":"debug","message":"[vite] hot updated: /src/components/ProductionPanel.tsx","timestamp":1792654160477}
+{"level":"debug","message":"[vite] hot updated: /src/components/QAPanel.tsx","timestamp":1792654160477}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792654179477}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792654179477}
+{"level":"debug","message":"[vite] hot updated: /src/components/ProductionPanel.tsx","timestamp":1792654179477}
+{"level":"debug","message":"[vite] hot updated: /src/components/QAPanel.tsx","timestamp":1792654179477}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792654180700}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792654180700}
+{"level":"debug","message":"[vite] hot updated: /src/components/ProductionPanel.tsx","timestamp":1792654180700}
+{"level":"debug","message":"[vite] hot updated: /src/components/QAPanel.tsx","timestamp":1792654180700}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792654182063}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792654182063}
+{"level":"debug","message":"[vite] hot updated: /src/components/ProductionPanel.tsx","timestamp":1792654182063}
+{"level":"debug","message":"[vite] hot updated: /src/components/ArcadeGame.tsx","timestamp":1792654208069}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792654208069}
+{"level":"debug","message":"[vite] hot updated: /src/components/ArcadeGame.tsx","timestamp":1792654211940}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792654211940}
+{"level":"debug","message":"[vite] hot updated: /src/components/QAPanel.tsx","timestamp":1792654215163}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792654215163}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792654220355}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792654220355}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792654228688}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792654228688}
+{"level":"debug","message":"[vite] hot updated: /src/components/StudioFloor.tsx","timestamp":1792654233422}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792654233422}
+{"level":"debug","message":"[vite] hot updated: /src/components/StudioFloor.tsx","timestamp":1792654236941}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792654236941}
+{"level":"debug","message":"[vite] hot updated: /src/components/StudioFloor.tsx","timestamp":1792654243143}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792654243143}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792654250444}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792654250445}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792654256588}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792654256588}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792654262636}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792654262636}
+{"level":"debug","message":"[vite] connected.","timestamp":1792654889213}
+{"level":"debug","message":"[vite] connected.","timestamp":1792654948821}
+{"level":"debug","message":"[vite] connected.","timestamp":1792654949597}
+{"level":"debug","message":"[vite] connected.","timestamp":1792655877222}
+{"level":"debug","message":"[vite] connected.","timestamp":1792655877662}
+{"level":"debug","message":"[vite] connected.","timestamp":1792657844820}
+{"level":"debug","message":"[vite] connected.","timestamp":1792657856033}
+{"level":"debug","message":"[vite] connected.","timestamp":1792657879192}
+{"level":"error","message":"[vite] Failed to reload /src/index.css. This could be due to syntax errors or importing non-existent modules. (see errors above)","timestamp":1792657907854}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792657907854}
+{"level":"error","message":"[vite] Failed to reload /src/index.css. This could be due to syntax errors or importing non-existent modules. (see errors above)","timestamp":1792657908867}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792657908867}
+{"level":"debug","message":"[vite] connected.","timestamp":1792659234424}
+{"level":"debug","message":"[vite] connected.","timestamp":1792659521643}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792659648851}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792659648851}
+{"level":"debug","message":"[vite] hot updated: /src/components/CreateOrderForm.tsx","timestamp":1792659648851}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderView.tsx","timestamp":1792659648851}
+{"level":"debug","message":"[vite] hot updated: /src/components/FundPanel.tsx","timestamp":1792659648851}
+{"level":"debug","message":"[vite] hot updated: /src/components/SettleRefundPanel.tsx","timestamp":1792659648852}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792659653260}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792659653260}
+{"level":"debug","message":"[vite] hot updated: /src/components/CreateOrderForm.tsx","timestamp":1792659653260}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderView.tsx","timestamp":1792659653260}
+{"level":"debug","message":"[vite] hot updated: /src/components/FundPanel.tsx","timestamp":1792659653260}
+{"level":"debug","message":"[vite] hot updated: /src/components/SettleRefundPanel.tsx","timestamp":1792659653260}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792659687442}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792659687442}
+{"level":"debug","message":"[vite] hot updated: /src/components/CreateOrderForm.tsx","timestamp":1792659687442}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderView.tsx","timestamp":1792659687443}
+{"level":"debug","message":"[vite] hot updated: /src/components/FundPanel.tsx","timestamp":1792659687443}
+{"level":"debug","message":"[vite] hot updated: /src/components/SettleRefundPanel.tsx","timestamp":1792659687443}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792659688850}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792659688850}
+{"level":"debug","message":"[vite] hot updated: /src/components/CreateOrderForm.tsx","timestamp":1792659688850}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderView.tsx","timestamp":1792659688851}
+{"level":"debug","message":"[vite] hot updated: /src/components/FundPanel.tsx","timestamp":1792659688851}
+{"level":"debug","message":"[vite] hot updated: /src/components/SettleRefundPanel.tsx","timestamp":1792659688851}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792659705961}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792659705961}
+{"level":"debug","message":"[vite] hot updated: /src/components/CreateOrderForm.tsx","timestamp":1792659705961}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderView.tsx","timestamp":1792659705962}
+{"level":"debug","message":"[vite] hot updated: /src/components/FundPanel.tsx","timestamp":1792659705962}
+{"level":"debug","message":"[vite] hot updated: /src/components/SettleRefundPanel.tsx","timestamp":1792659705962}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792659707225}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792659707225}
+{"level":"debug","message":"[vite] hot updated: /src/components/CreateOrderForm.tsx","timestamp":1792659707225}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderView.tsx","timestamp":1792659707225}
+{"level":"debug","message":"[vite] hot updated: /src/components/FundPanel.tsx","timestamp":1792659707226}
+{"level":"debug","message":"[vite] hot updated: /src/components/SettleRefundPanel.tsx","timestamp":1792659707226}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792659723887}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792659723887}
+{"level":"error","message":"[vite] SyntaxError: The requested module '/src/pt-utils.ts?t=1792659734900' does not provide an export named 'ARC_CHAIN_ID'","timestamp":1792659791032,"stack":"SyntaxError: The requested module '/src/pt-utils.ts?t=1792659734900' does not provide an export named 'ARC_CHAIN_ID'"}
+{"level":"error","message":"[vite] Failed to reload /src/App.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above)","timestamp":1792659791032}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792659791032}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792659791032}
+{"level":"debug","message":"[vite] hot updated: /src/components/CreateOrderForm.tsx","timestamp":1792659801176}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792659801177}
+{"level":"debug","message":"[vite] hot updated: /src/components/CreateOrderForm.tsx","timestamp":1792659816950}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792659816950}
+{"level":"debug","message":"[vite] hot updated: /src/components/CreateOrderForm.tsx","timestamp":1792659826944}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792659826944}
+{"level":"debug","message":"[vite] hot updated: /src/components/CreateOrderForm.tsx","timestamp":1792659855060}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792659855060}
+{"level":"debug","message":"[vite] hot updated: /src/components/FundPanel.tsx","timestamp":1792659856508}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792659856508}
+{"level":"error","message":"[vite] SyntaxError: The requested module '/src/pt-utils.ts?t=1792659734900' does not provide an export named 'ARC_CHAIN_ID'","timestamp":1792660105528,"stack":"SyntaxError: The requested module '/src/pt-utils.ts?t=1792659734900' does not provide an export named 'ARC_CHAIN_ID'"}
+{"level":"error","message":"[vite] Failed to reload /src/App.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above)","timestamp":1792660105528}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792660105529}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792660105529}
+{"level":"error","message":"[vite] SyntaxError: The requested module '/src/pt-utils.ts?t=1792659734900' does not provide an export named 'ARC_CHAIN_ID'","timestamp":1792660106579,"stack":"SyntaxError: The requested module '/src/pt-utils.ts?t=1792659734900' does not provide an export named 'ARC_CHAIN_ID'"}
+{"level":"error","message":"[vite] Failed to reload /src/App.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above)","timestamp":1792660106580}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792660107043}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792660107043}
+{"level":"error","message":"[vite] ReferenceError: UTILS_ARC_CHAIN_ID is not defined\n    at https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/App.tsx?t=1792660146610:56:11","timestamp":1792660113130,"stack":"ReferenceError: UTILS_ARC_CHAIN_ID is not defined\n    at https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/App.tsx?t=1792660146610:56:11"}
+{"level":"error","message":"[vite] Failed to reload /src/App.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above)","timestamp":1792660113130}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792660117584}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792660117584}
+{"level":"error","message":"[vite] ReferenceError: UTILS_ARC_CHAIN_ID is not defined\n    at https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/App.tsx?t=1792660155235:56:11","timestamp":1792660121636,"stack":"ReferenceError: UTILS_ARC_CHAIN_ID is not defined\n    at https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/App.tsx?t=1792660155235:56:11"}
+{"level":"error","message":"[vite] Failed to reload /src/App.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above)","timestamp":1792660121636}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792660121636}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792660121636}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792660131023}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792660131023}
+{"level":"debug","message":"(previous line repeated 1× more)","timestamp":1792660143623}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792660143623}
+{"level":"debug","message":"(previous line repeated 1× more)","timestamp":1792660150180}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792660150180}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792660178942}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792660178942}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792660188954}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792660188954}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792660499805}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792660499806}
+{"level":"debug","message":"(previous line repeated 1× more)","timestamp":1792660507321}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792660507321}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792660518010}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792660518010}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792660535661}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792660535661}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792660549206}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792660549206}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792660564776}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792660564777}
+{"level":"debug","message":"[vite] hot updated: /src/components/FundPanel.tsx","timestamp":1792660574878}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792660574878}
+{"level":"debug","message":"[vite] hot updated: /src/components/SettleRefundPanel.tsx","timestamp":1792660584580}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1792660584580}
+{"level":"log","message":"[vite] server connection lost. Polling for restart...","timestamp":1792661323669}
+{"level":"debug","message":"[vite] connected.","timestamp":1792661812292}
+{"level":"error","message":"[vite] Failed to reload /src/App.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above)","timestamp":1793004304215}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1793004304707}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793004304708}
+{"level":"debug","message":"(previous line repeated 1× more)","timestamp":1793004315517}
+{"level":"error","message":"[vite] Failed to reload /src/App.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above)","timestamp":1793004315517}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1793004316483}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793004316483}
+{"level":"error","message":"[vite] Failed to reload /src/components/CreateOrderForm.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above)","timestamp":1793004538847}
+{"level":"debug","message":"[vite] hot updated: /src/components/CreateOrderForm.tsx","timestamp":1793004539471}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793004539471}
+{"level":"debug","message":"[vite] connected.","timestamp":1793006079901}
+{"level":"debug","message":"[vite] connected.","timestamp":1793008266498}
+{"level":"debug","message":"[vite] connected.","timestamp":1793008267289}
+{"level":"log","message":"[vite] server connection lost. Polling for restart...","timestamp":1793010069346}
+{"level":"log","message":"[vite] server connection lost. Polling for restart...","timestamp":1793010069365}
+{"level":"log","message":"[vite] server connection lost. Polling for restart...","timestamp":1793012551241}
+{"level":"log","message":"[vite] server connection lost. Polling for restart...","timestamp":1793012551255}
+{"level":"log","message":"[vite] server connection lost. Polling for restart...","timestamp":1793116955542}
+{"level":"log","message":"[vite] server connection lost. Polling for restart...","timestamp":1793116955559}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1793117196520}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793117196521}
+{"level":"debug","message":"[vite] connected.","timestamp":1793119140215}
+{"level":"debug","message":"[vite] connected.","timestamp":1793119144465}
+{"level":"debug","message":"[vite] connected.","timestamp":1793119155498}
+{"level":"debug","message":"[vite] connected.","timestamp":1793119156273}
+{"level":"debug","message":"[vite] connected.","timestamp":1793119156808}
+{"level":"debug","message":"[vite] connected.","timestamp":1793120329816}
+{"level":"debug","message":"[vite] connected.","timestamp":1793120330602}
+{"level":"debug","message":"[vite] connected.","timestamp":1793120330940}
+{"level":"debug","message":"[vite] hot updated: /src/components/FundPanel.tsx","timestamp":1793120347440}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793120347440}
+{"level":"debug","message":"[vite] hot updated: /src/components/FundPanel.tsx","timestamp":1793120347441}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793120347441}
+{"level":"debug","message":"[vite] hot updated: /src/components/FundPanel.tsx","timestamp":1793120352524}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793120352524}
+{"level":"debug","message":"[vite] hot updated: /src/components/FundPanel.tsx","timestamp":1793120352527}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793120352527}
+{"level":"error","message":"[vite] Failed to reload /src/components/FundPanel.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above)","timestamp":1793120352927}
+{"level":"debug","message":"[vite] hot updated: /src/components/FundPanel.tsx","timestamp":1793120352927}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793120352927}
+{"level":"debug","message":"[vite] hot updated: /src/components/FundPanel.tsx","timestamp":1793120354241}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793120354241}
+{"level":"debug","message":"[vite] hot updated: /src/components/FundPanel.tsx","timestamp":1793120355030}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793120355030}
+{"level":"debug","message":"[vite] hot updated: /src/components/FundPanel.tsx","timestamp":1793120355030}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793120355031}
+{"level":"debug","message":"[vite] hot updated: /src/components/SettleRefundPanel.tsx","timestamp":1793120357797}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793120357797}
+{"level":"debug","message":"[vite] hot updated: /src/components/SettleRefundPanel.tsx","timestamp":1793120357798}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793120357798}
+{"level":"debug","message":"[vite] hot updated: /src/components/SettleRefundPanel.tsx","timestamp":1793120360475}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793120360475}
+{"level":"debug","message":"[vite] hot updated: /src/components/SettleRefundPanel.tsx","timestamp":1793120360476}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793120360476}
+{"level":"debug","message":"[vite] hot updated: /src/components/SettleRefundPanel.tsx","timestamp":1793120360476}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793120360476}
+{"level":"debug","message":"[vite] hot updated: /src/components/SettleRefundPanel.tsx","timestamp":1793120364109}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793120364109}
+{"level":"debug","message":"[vite] hot updated: /src/components/SettleRefundPanel.tsx","timestamp":1793120364110}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793120364110}
+{"level":"debug","message":"[vite] hot updated: /src/components/SettleRefundPanel.tsx","timestamp":1793120364111}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793120364111}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderView.tsx","timestamp":1793120371159}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793120371159}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderView.tsx","timestamp":1793120371162}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793120371162}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderView.tsx","timestamp":1793120371162}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793120371162}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderView.tsx","timestamp":1793120376467}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793120376467}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderView.tsx","timestamp":1793120376468}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793120376468}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderView.tsx","timestamp":1793120380909}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793120380909}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderView.tsx","timestamp":1793120380910}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793120380910}
+{"level":"error","message":"[vite] Failed to reload /src/components/OrderView.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above)","timestamp":1793120383315}
+{"level":"error","message":"[vite] Failed to reload /src/components/OrderView.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above)","timestamp":1793120384125}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderView.tsx","timestamp":1793120384317}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793120384317}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderView.tsx","timestamp":1793120384327}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793120384328}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderView.tsx","timestamp":1793120388801}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793120388801}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderView.tsx","timestamp":1793120388804}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793120388804}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderView.tsx","timestamp":1793120392135}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793120392135}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderView.tsx","timestamp":1793120392135}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793120392135}
+{"level":"debug","message":"[vite] hot updated: /src/components/CreateOrderForm.tsx","timestamp":1793120400567}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793120400567}
+{"level":"debug","message":"[vite] hot updated: /src/components/CreateOrderForm.tsx","timestamp":1793120400567}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793120400567}
+{"level":"error","message":"[vite] Failed to reload /src/components/CreateOrderForm.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above)","timestamp":1793120402424}
+{"level":"debug","message":"[vite] hot updated: /src/components/CreateOrderForm.tsx","timestamp":1793120402815}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793120402815}
+{"level":"error","message":"[vite] Failed to reload /src/components/CreateOrderForm.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above)","timestamp":1793120403204}
+{"level":"debug","message":"[vite] hot updated: /src/components/CreateOrderForm.tsx","timestamp":1793120403204}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793120403204}
+{"level":"debug","message":"[vite] hot updated: /src/components/CreateOrderForm.tsx","timestamp":1793120407791}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793120407791}
+{"level":"debug","message":"[vite] hot updated: /src/components/CreateOrderForm.tsx","timestamp":1793120407791}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793120407791}
+{"level":"log","message":"[vite] server connection lost. Polling for restart...","timestamp":1793176016111}
+{"level":"log","message":"[vite] server connection lost. Polling for restart...","timestamp":1793177965243}
+{"level":"log","message":"[vite] server connection lost. Polling for restart...","timestamp":1793177965248}
+{"level":"debug","message":"[vite] connected.","timestamp":1793189889215}
+{"level":"log","message":"[vite] server connection lost. Polling for restart...","timestamp":1793190792016}
+{"level":"log","message":"[vite] server connection lost. Polling for restart...","timestamp":1793198924052}
+{"level":"debug","message":"[vite] connected.","timestamp":1793255087930}
+{"level":"debug","message":"[vite] connected.","timestamp":1793255089072}
+{"level":"debug","message":"[vite] connected.","timestamp":1793255640813}
+{"level":"debug","message":"[vite] connected.","timestamp":1793255641703}
+{"level":"debug","message":"[vite] connected.","timestamp":1793255641964}
+{"level":"debug","message":"[vite] connected.","timestamp":1793255654072}
+{"level":"debug","message":"[vite] connected.","timestamp":1793255666900}
+{"level":"debug","message":"[vite] connected.","timestamp":1793255667557}
+{"level":"debug","message":"[vite] connected.","timestamp":1793255720815}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793255726423}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793255726424}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderView.tsx","timestamp":1793255734863}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793255734863}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderView.tsx","timestamp":1793255734864}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793255734864}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderView.tsx","timestamp":1793255765285}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793255765285}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderView.tsx","timestamp":1793255765287}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793255765287}
+{"level":"debug","message":"[vite] hot updated: /src/components/ShareCard.tsx","timestamp":1793255813131}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793255813131}
+{"level":"debug","message":"[vite] hot updated: /src/components/ShareCard.tsx","timestamp":1793255813133}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793255813133}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderLookup.tsx","timestamp":1793255813782}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793255813782}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderLookup.tsx","timestamp":1793255813911}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793255813911}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1793255816576}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793255816576}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderLifecycle.tsx","timestamp":1793255816577}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793255816577}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1793255816728}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793255816728}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderLifecycle.tsx","timestamp":1793255816729}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793255816729}
+{"level":"debug","message":"[vite] connected.","timestamp":1793255840013}
+{"level":"debug","message":"[vite] connected.","timestamp":1793256191471}
+{"level":"error","message":"Warning: You are calling ReactDOMClient.createRoot() on a container that has already been passed to createRoot() before. Instead, call root.render() on the existing root instead if you want to update it.","timestamp":1793256212215}
+{"level":"error","message":"Warning: You are calling ReactDOMClient.createRoot() on a container that has already been passed to createRoot() before. Instead, call root.render() on the existing root instead if you want to update it.","timestamp":1793256212215}
+{"level":"debug","message":"[vite] invalidate /src/main.tsx: Could not Fast Refresh (\"true\" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports","timestamp":1793256212268}
+{"level":"debug","message":"[vite] hot updated: /src/main.tsx","timestamp":1793256212268}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793256212268}
+{"level":"debug","message":"[vite] invalidate /src/main.tsx: Could not Fast Refresh (\"true\" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports","timestamp":1793256212268}
+{"level":"debug","message":"[vite] hot updated: /src/main.tsx","timestamp":1793256212269}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793256212269}
+{"level":"debug","message":"[vite] connected.","timestamp":1793256225294}
+{"level":"debug","message":"[vite] connected.","timestamp":1793256228948}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793256264208}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793258961111}
+{"level":"debug","message":"[vite] hot updated: /src/components/CreateOrderForm.tsx","timestamp":1793258961111}
+{"level":"debug","message":"[vite] hot updated: /src/components/ui.tsx","timestamp":1793258961111}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1793258961111}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderView.tsx","timestamp":1793258961111}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderLookup.tsx","timestamp":1793258961111}
+{"level":"debug","message":"[vite] hot updated: /src/components/TxIsland.tsx","timestamp":1793258961111}
+{"level":"debug","message":"[vite] hot updated: /src/components/SegmentedProgress.tsx","timestamp":1793258961111}
+{"level":"debug","message":"[vite] hot updated: /src/components/ActionPanel.tsx","timestamp":1793258961111}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderHero.tsx","timestamp":1793258961111}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793258961282}
+{"level":"debug","message":"[vite] hot updated: /src/components/CreateOrderForm.tsx","timestamp":1793258961282}
+{"level":"debug","message":"[vite] hot updated: /src/components/ui.tsx","timestamp":1793258961282}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1793258961282}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderView.tsx","timestamp":1793258961282}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderLookup.tsx","timestamp":1793258961282}
+{"level":"debug","message":"[vite] hot updated: /src/components/TxIsland.tsx","timestamp":1793258961282}
+{"level":"debug","message":"[vite] hot updated: /src/components/SegmentedProgress.tsx","timestamp":1793258961282}
+{"level":"debug","message":"[vite] hot updated: /src/components/ActionPanel.tsx","timestamp":1793258961282}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderHero.tsx","timestamp":1793258961282}
+{"level":"debug","message":"[vite] invalidate /src/components/fields.tsx: Could not Fast Refresh (new export)","timestamp":1793258999630}
+{"level":"debug","message":"[vite] hot updated: /src/components/fields.tsx","timestamp":1793258999630}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793258999630}
+{"level":"debug","message":"[vite] invalidate /src/components/fields.tsx: Could not Fast Refresh (new export)","timestamp":1793258999637}
+{"level":"debug","message":"[vite] hot updated: /src/components/fields.tsx","timestamp":1793258999637}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793258999637}
+{"level":"debug","message":"[vite] hot updated: /src/components/ui.tsx","timestamp":1793259008871}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259008871}
+{"level":"debug","message":"[vite] hot updated: /src/components/ui.tsx","timestamp":1793259008872}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259008872}
+{"level":"debug","message":"[vite] hot updated: /src/components/TopBar.tsx","timestamp":1793259021965}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259021965}
+{"level":"debug","message":"[vite] hot updated: /src/components/TopBar.tsx","timestamp":1793259021966}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259021966}
+{"level":"debug","message":"[vite] hot updated: /src/components/Intro.tsx","timestamp":1793259043884}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259043884}
+{"level":"debug","message":"[vite] hot updated: /src/components/Intro.tsx","timestamp":1793259043885}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259043885}
+{"level":"debug","message":"[vite] hot updated: /src/components/Intro.tsx","timestamp":1793259061493}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259061493}
+{"level":"debug","message":"[vite] hot updated: /src/components/Intro.tsx","timestamp":1793259061494}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259061494}
+{"level":"debug","message":"[vite] hot updated: /src/components/CreateOrderForm.tsx","timestamp":1793259105128}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259105128}
+{"level":"debug","message":"[vite] hot updated: /src/components/CreateOrderForm.tsx","timestamp":1793259105249}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259105249}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderHero.tsx","timestamp":1793259120338}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259120338}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderHero.tsx","timestamp":1793259120339}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259120339}
+{"level":"debug","message":"[vite] hot updated: /src/components/SegmentedProgress.tsx","timestamp":1793259121453}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259121453}
+{"level":"debug","message":"[vite] hot updated: /src/components/SegmentedProgress.tsx","timestamp":1793259121454}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259121454}
+{"level":"debug","message":"[vite] hot updated: /src/components/SegmentedProgress.tsx","timestamp":1793259134023}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259134023}
+{"level":"debug","message":"[vite] hot updated: /src/components/SegmentedProgress.tsx","timestamp":1793259134024}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259134024}
+{"level":"debug","message":"[vite] hot updated: /src/components/ShareCard.tsx","timestamp":1793259152029}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259152029}
+{"level":"debug","message":"[vite] hot updated: /src/components/ShareCard.tsx","timestamp":1793259152030}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259152030}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderDetails.tsx","timestamp":1793259152678}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259152678}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderDetails.tsx","timestamp":1793259152786}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259152786}
+{"level":"debug","message":"[vite] hot updated: /src/components/ActionPanel.tsx","timestamp":1793259153734}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259153734}
+{"level":"debug","message":"[vite] hot updated: /src/components/ActionPanel.tsx","timestamp":1793259153735}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259153735}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderView.tsx","timestamp":1793259154455}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259154455}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderView.tsx","timestamp":1793259154579}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259154579}
+{"level":"error","message":"Warning: You are calling ReactDOMClient.createRoot() on a container that has already been passed to createRoot() before. Instead, call root.render() on the existing root instead if you want to update it.","timestamp":1793259158105}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259158105}
+{"level":"debug","message":"[vite] invalidate /src/main.tsx: Could not Fast Refresh (\"true\" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports","timestamp":1793259158105}
+{"level":"debug","message":"[vite] hot updated: /src/main.tsx","timestamp":1793259158105}
+{"level":"debug","message":"[vite] hot updated: /src/components/ThemeSwitch.tsx","timestamp":1793259158105}
+{"level":"error","message":"Warning: You are calling ReactDOMClient.createRoot() on a container that has already been passed to createRoot() before. Instead, call root.render() on the existing root instead if you want to update it.","timestamp":1793259158242}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259158242}
+{"level":"debug","message":"[vite] invalidate /src/main.tsx: Could not Fast Refresh (\"true\" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports","timestamp":1793259158242}
+{"level":"debug","message":"[vite] hot updated: /src/main.tsx","timestamp":1793259158242}
+{"level":"debug","message":"[vite] hot updated: /src/components/ThemeSwitch.tsx","timestamp":1793259158242}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259158476}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259158476}
+{"level":"debug","message":"(previous line repeated 1× more)","timestamp":1793259163463}
+{"level":"debug","message":"[vite] hot updated: /src/components/DeadlinePicker.tsx","timestamp":1793259163463}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259163463}
+{"level":"debug","message":"(previous line repeated 1× more)","timestamp":1793259163463}
+{"level":"debug","message":"[vite] hot updated: /src/components/DeadlinePicker.tsx","timestamp":1793259163463}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259163463}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259540771}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259540780}
+{"level":"debug","message":"(previous line repeated 1× more)","timestamp":1793259543799}
+{"level":"debug","message":"[vite] hot updated: /src/components/CreateOrderForm.tsx","timestamp":1793259543799}
+{"level":"debug","message":"[vite] hot updated: /src/components/ui.tsx","timestamp":1793259543799}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1793259543799}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderView.tsx","timestamp":1793259543799}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderLookup.tsx","timestamp":1793259543799}
+{"level":"debug","message":"[vite] hot updated: /src/components/TxIsland.tsx","timestamp":1793259543799}
+{"level":"debug","message":"[vite] hot updated: /src/components/SegmentedProgress.tsx","timestamp":1793259543799}
+{"level":"debug","message":"[vite] hot updated: /src/components/ActionPanel.tsx","timestamp":1793259543799}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderHero.tsx","timestamp":1793259543799}
+{"level":"debug","message":"[vite] hot updated: /src/components/DeadlinePicker.tsx","timestamp":1793259543799}
+{"level":"debug","message":"[vite] hot updated: /src/components/ContributorRows.tsx","timestamp":1793259543800}
+{"level":"debug","message":"[vite] hot updated: /src/components/AnimatedAmount.tsx","timestamp":1793259543800}
+{"level":"debug","message":"[vite] hot updated: /src/components/ShareCard.tsx","timestamp":1793259543800}
+{"level":"debug","message":"(previous line repeated 1× more)","timestamp":1793259544108}
+{"level":"debug","message":"[vite] hot updated: /src/components/CreateOrderForm.tsx","timestamp":1793259544108}
+{"level":"debug","message":"[vite] hot updated: /src/components/ui.tsx","timestamp":1793259544109}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1793259544109}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderView.tsx","timestamp":1793259544109}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderLookup.tsx","timestamp":1793259544109}
+{"level":"debug","message":"[vite] hot updated: /src/components/TxIsland.tsx","timestamp":1793259544109}
+{"level":"debug","message":"[vite] hot updated: /src/components/SegmentedProgress.tsx","timestamp":1793259544109}
+{"level":"debug","message":"[vite] hot updated: /src/components/ActionPanel.tsx","timestamp":1793259544109}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderHero.tsx","timestamp":1793259544109}
+{"level":"debug","message":"[vite] hot updated: /src/components/DeadlinePicker.tsx","timestamp":1793259544109}
+{"level":"debug","message":"[vite] hot updated: /src/components/ContributorRows.tsx","timestamp":1793259544109}
+{"level":"debug","message":"[vite] hot updated: /src/components/AnimatedAmount.tsx","timestamp":1793259544109}
+{"level":"debug","message":"[vite] hot updated: /src/components/ShareCard.tsx","timestamp":1793259544109}
+{"level":"debug","message":"[vite] hot updated: /src/components/ui.tsx","timestamp":1793259545254}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259545254}
+{"level":"debug","message":"[vite] hot updated: /src/components/ui.tsx","timestamp":1793259545262}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259545262}
+{"level":"debug","message":"[vite] invalidate /src/components/ui.tsx: Could not Fast Refresh (new export)","timestamp":1793259560897}
+{"level":"debug","message":"[vite] hot updated: /src/components/ui.tsx","timestamp":1793259560897}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259560897}
+{"level":"debug","message":"[vite] invalidate /src/components/ui.tsx: Could not Fast Refresh (new export)","timestamp":1793259560904}
+{"level":"debug","message":"[vite] hot updated: /src/components/ui.tsx","timestamp":1793259560904}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259560904}
+{"level":"debug","message":"[vite] hot updated: /src/components/fields.tsx","timestamp":1793259562479}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259562479}
+{"level":"debug","message":"[vite] hot updated: /src/components/fields.tsx","timestamp":1793259562487}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259562487}
+{"level":"debug","message":"(previous line repeated 1× more)","timestamp":1793259564268}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderView.tsx","timestamp":1793259564268}
+{"level":"debug","message":"[vite] hot updated: /src/components/CreateOrderForm.tsx","timestamp":1793259564268}
+{"level":"debug","message":"[vite] hot updated: /src/components/ShareCard.tsx","timestamp":1793259564268}
+{"level":"debug","message":"[vite] hot updated: /src/components/fields.tsx","timestamp":1793259564268}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1793259564268}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderLookup.tsx","timestamp":1793259564268}
+{"level":"debug","message":"[vite] hot updated: /src/components/TxIsland.tsx","timestamp":1793259564268}
+{"level":"debug","message":"[vite] hot updated: /src/components/TopBar.tsx","timestamp":1793259564268}
+{"level":"debug","message":"[vite] hot updated: /src/components/Intro.tsx","timestamp":1793259564268}
+{"level":"debug","message":"[vite] hot updated: /src/components/SegmentedProgress.tsx","timestamp":1793259564268}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderDetails.tsx","timestamp":1793259564268}
+{"level":"debug","message":"[vite] hot updated: /src/components/ActionPanel.tsx","timestamp":1793259564268}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderHero.tsx","timestamp":1793259564268}
+{"level":"debug","message":"[vite] hot updated: /src/components/ContributorRows.tsx","timestamp":1793259564269}
+{"level":"debug","message":"(previous line repeated 1× more)","timestamp":1793259564357}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderView.tsx","timestamp":1793259564357}
+{"level":"debug","message":"[vite] hot updated: /src/components/CreateOrderForm.tsx","timestamp":1793259564357}
+{"level":"debug","message":"[vite] hot updated: /src/components/ShareCard.tsx","timestamp":1793259564357}
+{"level":"debug","message":"[vite] hot updated: /src/components/fields.tsx","timestamp":1793259564357}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1793259564357}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderLookup.tsx","timestamp":1793259564357}
+{"level":"debug","message":"[vite] hot updated: /src/components/TxIsland.tsx","timestamp":1793259564357}
+{"level":"debug","message":"[vite] hot updated: /src/components/TopBar.tsx","timestamp":1793259564357}
+{"level":"debug","message":"[vite] hot updated: /src/components/Intro.tsx","timestamp":1793259564357}
+{"level":"debug","message":"[vite] hot updated: /src/components/SegmentedProgress.tsx","timestamp":1793259564357}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderDetails.tsx","timestamp":1793259564357}
+{"level":"debug","message":"[vite] hot updated: /src/components/ActionPanel.tsx","timestamp":1793259564357}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderHero.tsx","timestamp":1793259564357}
+{"level":"debug","message":"[vite] hot updated: /src/components/ContributorRows.tsx","timestamp":1793259564357}
+{"level":"debug","message":"[vite] hot updated: /src/components/CreateOrderForm.tsx","timestamp":1793259604884}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259604884}
+{"level":"debug","message":"[vite] hot updated: /src/components/ContributorRows.tsx","timestamp":1793259604885}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259604885}
+{"level":"debug","message":"[vite] hot updated: /src/components/DeadlinePicker.tsx","timestamp":1793259604885}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259604885}
+{"level":"debug","message":"[vite] hot updated: /src/components/CreateOrderForm.tsx","timestamp":1793259605031}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259605031}
+{"level":"debug","message":"[vite] hot updated: /src/components/ContributorRows.tsx","timestamp":1793259605032}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259605032}
+{"level":"debug","message":"[vite] hot updated: /src/components/DeadlinePicker.tsx","timestamp":1793259605032}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259605032}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1793259624316}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259624316}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1793259624317}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259624317}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderLookup.tsx","timestamp":1793259624319}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259624319}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderLookup.tsx","timestamp":1793259624320}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259624320}
+{"level":"debug","message":"[vite] hot updated: /src/components/Intro.tsx","timestamp":1793259625740}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259625740}
+{"level":"debug","message":"[vite] hot updated: /src/components/Intro.tsx","timestamp":1793259625741}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259625741}
+{"level":"debug","message":"[vite] hot updated: /src/components/ActionPanel.tsx","timestamp":1793259625742}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259625742}
+{"level":"debug","message":"[vite] hot updated: /src/components/ActionPanel.tsx","timestamp":1793259625742}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259625742}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderHero.tsx","timestamp":1793259637275}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259637275}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderHero.tsx","timestamp":1793259637276}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259637276}
+{"level":"debug","message":"[vite] hot updated: /src/components/ShareCard.tsx","timestamp":1793259638720}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259638720}
+{"level":"debug","message":"[vite] hot updated: /src/components/ShareCard.tsx","timestamp":1793259638726}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259638726}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderView.tsx","timestamp":1793259640217}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259640217}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderDetails.tsx","timestamp":1793259640218}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259640218}
+{"level":"debug","message":"[vite] hot updated: /src/components/SegmentedProgress.tsx","timestamp":1793259640219}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259640219}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderView.tsx","timestamp":1793259640518}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259640518}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderDetails.tsx","timestamp":1793259640519}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259640519}
+{"level":"debug","message":"[vite] hot updated: /src/components/SegmentedProgress.tsx","timestamp":1793259640519}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259640519}
+{"level":"debug","message":"[vite] hot updated: /src/components/SegmentedProgress.tsx","timestamp":1793259647333}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259647333}
+{"level":"debug","message":"[vite] hot updated: /src/components/SegmentedProgress.tsx","timestamp":1793259647340}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259647340}
+{"level":"debug","message":"[vite] hot updated: /src/components/CreateOrderForm.tsx","timestamp":1793259648770}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259648770}
+{"level":"debug","message":"[vite] hot updated: /src/components/CreateOrderForm.tsx","timestamp":1793259648776}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259648776}
+{"level":"debug","message":"[vite] hot updated: /src/components/TxIsland.tsx","timestamp":1793259650323}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259650323}
+{"level":"debug","message":"[vite] hot updated: /src/components/TxIsland.tsx","timestamp":1793259650330}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259650330}
+{"level":"debug","message":"[vite] hot updated: /src/components/TopBar.tsx","timestamp":1793259651869}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259651869}
+{"level":"debug","message":"[vite] hot updated: /src/components/TopBar.tsx","timestamp":1793259651869}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793259651869}
+{"level":"debug","message":"[vite] connected.","timestamp":1793262674322}
+{"level":"debug","message":"[vite] connected.","timestamp":1793262674768}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793262786996}
+{"level":"debug","message":"[vite] hot updated: /src/components/CreateOrderForm.tsx","timestamp":1793262786996}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderHero.tsx","timestamp":1793262786996}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793262787852}
+{"level":"debug","message":"[vite] hot updated: /src/components/CreateOrderForm.tsx","timestamp":1793262787852}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderHero.tsx","timestamp":1793262787852}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793262788302}
+{"level":"debug","message":"[vite] hot updated: /src/components/CreateOrderForm.tsx","timestamp":1793262788302}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderHero.tsx","timestamp":1793262788303}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderLookup.tsx","timestamp":1793262995182}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793262995182}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderLookup.tsx","timestamp":1793262995184}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793262995184}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderLookup.tsx","timestamp":1793262995186}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793262995186}
+{"level":"debug","message":"[vite] hot updated: /src/components/TopBar.tsx","timestamp":1793262996608}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793262996608}
+{"level":"debug","message":"[vite] hot updated: /src/components/TopBar.tsx","timestamp":1793262996609}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793262996609}
+{"level":"debug","message":"[vite] hot updated: /src/components/TopBar.tsx","timestamp":1793262996618}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793262996619}
+{"level":"debug","message":"[vite] hot updated: /src/components/TopBar.tsx","timestamp":1793263006507}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793263006508}
+{"level":"debug","message":"[vite] hot updated: /src/components/TopBar.tsx","timestamp":1793263006510}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793263006510}
+{"level":"debug","message":"[vite] hot updated: /src/components/TopBar.tsx","timestamp":1793263006512}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793263006512}
+{"level":"debug","message":"(previous line repeated 1× more)","timestamp":1793263043855}
+{"level":"debug","message":"[vite] invalidate /src/App.tsx: Could not Fast Refresh (new export)","timestamp":1793263043855}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1793263043855}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793263043855}
+{"level":"debug","message":"(previous line repeated 1× more)","timestamp":1793263044384}
+{"level":"debug","message":"[vite] invalidate /src/App.tsx: Could not Fast Refresh (new export)","timestamp":1793263044384}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1793263044384}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793263044384}
+{"level":"debug","message":"(previous line repeated 1× more)","timestamp":1793263044767}
+{"level":"debug","message":"[vite] invalidate /src/App.tsx: Could not Fast Refresh (new export)","timestamp":1793263044767}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1793263044767}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793263044767}
+{"level":"error","message":"Warning: You are calling ReactDOMClient.createRoot() on a container that has already been passed to createRoot() before. Instead, call root.render() on the existing root instead if you want to update it.","timestamp":1793263044850}
+{"level":"debug","message":"[vite] invalidate /src/main.tsx: Could not Fast Refresh (\"true\" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports","timestamp":1793263044850}
+{"level":"debug","message":"[vite] hot updated: /src/main.tsx","timestamp":1793263044851}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793263044851}
+{"level":"error","message":"Warning: You are calling ReactDOMClient.createRoot() on a container that has already been passed to createRoot() before. Instead, call root.render() on the existing root instead if you want to update it.","timestamp":1793263044968}
+{"level":"debug","message":"[vite] invalidate /src/main.tsx: Could not Fast Refresh (\"true\" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports","timestamp":1793263044969}
+{"level":"debug","message":"[vite] hot updated: /src/main.tsx","timestamp":1793263044969}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793263044969}
+{"level":"error","message":"Warning: You are calling ReactDOMClient.createRoot() on a container that has already been passed to createRoot() before. Instead, call root.render() on the existing root instead if you want to update it.","timestamp":1793263045351}
+{"level":"debug","message":"[vite] invalidate /src/main.tsx: Could not Fast Refresh (\"true\" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports","timestamp":1793263045351}
+{"level":"debug","message":"[vite] hot updated: /src/main.tsx","timestamp":1793263045351}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793263045351}
+{"level":"debug","message":"(previous line repeated 3× more)","timestamp":1793263049816}
+{"level":"debug","message":"[vite] invalidate /src/App.tsx: Could not Fast Refresh (export removed)","timestamp":1793263049816}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1793263049816}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793263049816}
+{"level":"debug","message":"(previous line repeated 3× more)","timestamp":1793263049817}
+{"level":"debug","message":"[vite] invalidate /src/App.tsx: Could not Fast Refresh (export removed)","timestamp":1793263049817}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1793263049817}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793263049817}
+{"level":"error","message":"[vite] Failed to reload /src/components/OrderView.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above)","timestamp":1793263050203}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderView.tsx","timestamp":1793263051205}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793263051205}
+{"level":"debug","message":"(previous line repeated 3× more)","timestamp":1793263051881}
+{"level":"debug","message":"[vite] invalidate /src/App.tsx: Could not Fast Refresh (export removed)","timestamp":1793263051881}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1793263051881}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793263051882}
+{"level":"error","message":"[vite] Failed to reload /src/components/OrderView.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above)","timestamp":1793263052297}
+{"level":"debug","message":"[vite] hot updated: /src/components/OrderView.tsx","timestamp":1793263052297}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793263052297}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793263083234}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1793263083234}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793263083527}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1793263083528}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793263083902}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1793263083902}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793263087497}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1793263087497}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793263087631}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1793263087631}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793263088027}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1793263088027}
+{"level":"debug","message":"(previous line repeated 1× more)","timestamp":1793263088936}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793263088936}
+{"level":"debug","message":"(previous line repeated 1× more)","timestamp":1793263088937}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793263088937}
+{"level":"debug","message":"(previous line repeated 1× more)","timestamp":1793263089022}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793263089022}
+{"level":"debug","message":"(previous line repeated 1× more)","timestamp":1793263117152}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1793263117152}
+{"level":"debug","message":"(previous line repeated 1× more)","timestamp":1793263117279}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1793263117279}
+{"level":"debug","message":"(previous line repeated 1× more)","timestamp":1793263117738}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1793263117738}
+{"level":"debug","message":"(previous line repeated 1× more)","timestamp":1793263118818}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793263118818}
+{"level":"debug","message":"(previous line repeated 1× more)","timestamp":1793263118829}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793263118829}
+{"level":"debug","message":"(previous line repeated 1× more)","timestamp":1793263118829}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793263118829}
+{"level":"debug","message":"(previous line repeated 1× more)","timestamp":1793263373318}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1793263373318}
+{"level":"debug","message":"(previous line repeated 1× more)","timestamp":1793263373322}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793263373322}
+{"level":"debug","message":"(previous line repeated 1× more)","timestamp":1793263374035}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1793263374035}
+{"level":"debug","message":"(previous line repeated 1× more)","timestamp":1793263374039}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793263374039}
+{"level":"debug","message":"(previous line repeated 1× more)","timestamp":1793263374711}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1793263374711}
+{"level":"debug","message":"(previous line repeated 1× more)","timestamp":1793263374714}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793263374714}
+{"level":"error","message":"Warning: React has detected a change in the order of Hooks called by %s. This will lead to bugs and errors if not fixed. For more information, read the Rules of Hooks: https://reactjs.org/link/rules-of-hooks\n\n   Previous render            Next render\n   ------------------------------------------------------\n%s   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n%s App 1. useState                   useState\n2. useContext                 useContext\n3. useRef                     useRef\n4. useRef                     useRef\n5. useMemo                    useMemo\n6. useSyncExternalStore       useSyncExternalStore\n7. useEffect                  useEffect\n8. useDebugValue              useDebugValue\n9. useMemo                    useMemo\n10. useContext                useContext\n11. useSyncExternalStore      useSyncExternalStore\n12. useContext                useContext\n13. useContext                useContext\n14. useState                  useState\n15. useEffect                 useEffect\n16. useCallback               useCallback\n17. useSyncExternalStore      useSyncExternalStore\n18. useCallback               useCallback\n19. useSyncExternalStore      useSyncExternalStore\n20. useContext                useContext\n21. useRef                    useRef\n22. useMemo                   useMemo\n23. useSyncExternalStore      useSyncExternalStore\n24. useEffect                 useEffect\n25. useDebugValue             useDebugValue\n26. useContext                useContext\n27. useContext                useContext\n28. useRef                    useRef\n29. useRef                    useRef\n30. useMemo                   useMemo\n31. useSyncExternalStore      useSyncExternalStore\n32. useEffect                 useEffect\n33. useDebugValue             useDebugValue\n34. useMemo                   useMemo\n35. useSyncExternalStore      useSyncExternalStore\n36. useRef                    useRef\n37. useEffect                 useEffect\n38. useContext                useContext\n39. useContext                useContext\n40. useContext                useContext\n41. useEffect                 useEffect\n42. useState                  useState\n43. useCallback               useCallback\n44. useSyncExternalStore      useSyncExternalStore\n45. useEffect                 useEffect\n46. useCallback               useCallback\n47. useState                  useState\n48. useEffect                 useEffect\n49. useCallback               useCallback\n50. useState                  useState\n51. useState                  useState\n52. useState                  useState\n53. useState                  useState\n54. useState                  useState\n55. useEffect                 useEffect\n56. useState                  useState\n57. useCallback               useCallback\n58. useEffect                 useEffect\n59. useState                  useState\n60. useState                  useRef\n \n    at App (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/App.tsx?t=1793263415867:46:24)\n    at Le (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/connectkit.js?v=cd46b0ad:16790:42)\n    at Web3ContextProvider (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/connectkit.js?v=cd46b0ad:32417:30)\n    at ConnectKitProvider (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/connectkit.js?v=cd46b0ad:35907:29)\n    at ThemedProviders (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/main.tsx?t=1793263094326:122:28)\n    at QueryClientProvider (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-WZEH4STI.js?v=cd46b0ad:39:30)\n    at Hydrate (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-QLCGE3SK.js?v=cd46b0ad:392:11)\n    at WagmiProvider (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-QLCGE3SK.js?v=cd46b0ad:414:11)","timestamp":1793263476364}
+{"level":"error","message":"Uncaught Error: Should have a queue. This is likely a bug in React. Please file an issue.","timestamp":1793263476365,"source":"https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:18656:13","stack":"Error: Should have a queue. This is likely a bug in React. Please file an issue.\n    at updateReducer (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:18656:19)\n    at updateState (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:18947:18)\n    at Object.useState (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:19679:24)\n    at useState (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-TWJ6NINL.js?v=cd46b0ad:1351:29)\n    at useKittyData (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/useKittyData.ts?t=1793263415867:14:31)\n    at App (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/App.tsx?t=1793263415867:96:17)\n    at renderWithHooks (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:18474:26)\n    at updateFunctionComponent (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:21508:28)\n    at beginWork (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:22850:22)\n    at HTMLUnknownElement.callCallback2 (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:10558:22)"}
+{"level":"error","message":"Uncaught Error: Should have a queue. This is likely a bug in React. Please file an issue.","timestamp":1793263476367,"source":"https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:18656:13","stack":"Error: Should have a queue. This is likely a bug in React. Please file an issue.\n    at updateReducer (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:18656:19)\n    at updateState (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:18947:18)\n    at Object.useState (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:19679:24)\n    at useState (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-TWJ6NINL.js?v=cd46b0ad:1351:29)\n    at useKittyData (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/useKittyData.ts?t=1793263415867:14:31)\n    at App (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/App.tsx?t=1793263415867:96:17)\n    at renderWithHooks (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:18474:26)\n    at updateFunctionComponent (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:21508:28)\n    at beginWork (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:22850:22)\n    at HTMLUnknownElement.callCallback2 (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:10558:22)"}
+{"level":"error","message":"The above error occurred in the <App> component:\n\n    at App (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/App.tsx?t=1793263415867:46:24)\n    at Le (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/connectkit.js?v=cd46b0ad:16790:42)\n    at Web3ContextProvider (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/connectkit.js?v=cd46b0ad:32417:30)\n    at ConnectKitProvider (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/connectkit.js?v=cd46b0ad:35907:29)\n    at ThemedProviders (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/main.tsx?t=1793263094326:122:28)\n    at QueryClientProvider (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-WZEH4STI.js?v=cd46b0ad:39:30)\n    at Hydrate (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-QLCGE3SK.js?v=cd46b0ad:392:11)\n    at WagmiProvider (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-QLCGE3SK.js?v=cd46b0ad:414:11)\n\nConsider adding an error boundary to your tree to customize error handling behavior.\nVisit https://reactjs.org/link/error-boundaries to learn more about error boundaries.","timestamp":1793263476372}
+{"level":"error","message":"Warning: React has detected a change in the order of Hooks called by %s. This will lead to bugs and errors if not fixed. For more information, read the Rules of Hooks: https://reactjs.org/link/rules-of-hooks\n\n   Previous render            Next render\n   ------------------------------------------------------\n%s   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n%s App 1. useState                   useState\n2. useContext                 useContext\n3. useRef                     useRef\n4. useRef                     useRef\n5. useMemo                    useMemo\n6. useSyncExternalStore       useSyncExternalStore\n7. useEffect                  useEffect\n8. useDebugValue              useDebugValue\n9. useMemo                    useMemo\n10. useContext                useContext\n11. useSyncExternalStore      useSyncExternalStore\n12. useContext                useContext\n13. useContext                useContext\n14. useState                  useState\n15. useEffect                 useEffect\n16. useCallback               useCallback\n17. useSyncExternalStore      useSyncExternalStore\n18. useCallback               useCallback\n19. useSyncExternalStore      useSyncExternalStore\n20. useContext                useContext\n21. useRef                    useRef\n22. useMemo                   useMemo\n23. useSyncExternalStore      useSyncExternalStore\n24. useEffect                 useEffect\n25. useDebugValue             useDebugValue\n26. useContext                useContext\n27. useContext                useContext\n28. useRef                    useRef\n29. useRef                    useRef\n30. useMemo                   useMemo\n31. useSyncExternalStore      useSyncExternalStore\n32. useEffect                 useEffect\n33. useDebugValue             useDebugValue\n34. useMemo                   useMemo\n35. useSyncExternalStore      useSyncExternalStore\n36. useRef                    useRef\n37. useEffect                 useEffect\n38. useContext                useContext\n39. useContext                useContext\n40. useContext                useContext\n41. useEffect                 useEffect\n42. useState                  useState\n43. useCallback               useCallback\n44. useSyncExternalStore      useSyncExternalStore\n45. useEffect                 useEffect\n46. useCallback               useCallback\n47. useState                  useState\n48. useEffect                 useEffect\n49. useCallback               useCallback\n50. useState                  useState\n51. useState                  useState\n52. useState                  useState\n53. useState                  useState\n54. useState                  useState\n55. useEffect                 useEffect\n56. useState                  useState\n57. useCallback               useCallback\n58. useEffect                 useEffect\n59. useState                  useState\n60. useState                  useRef\n \n    at App (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/App.tsx?t=1793263415867:46:24)\n    at Le (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/connectkit.js?v=cd46b0ad:16790:42)\n    at Web3ContextProvider (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/connectkit.js?v=cd46b0ad:32417:30)\n    at ConnectKitProvider (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/connectkit.js?v=cd46b0ad:35907:29)\n    at ThemedProviders (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/main.tsx?t=1793263094326:122:28)\n    at QueryClientProvider (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-WZEH4STI.js?v=cd46b0ad:39:30)\n    at Hydrate (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-QLCGE3SK.js?v=cd46b0ad:392:11)\n    at WagmiProvider (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-QLCGE3SK.js?v=cd46b0ad:414:11)","timestamp":1793263476398}
+{"level":"error","message":"Uncaught Error: Should have a queue. This is likely a bug in React. Please file an issue.","timestamp":1793263476399,"source":"https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:18656:13","stack":"Error: Should have a queue. This is likely a bug in React. Please file an issue.\n    at updateReducer (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:18656:19)\n    at updateState (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:18947:18)\n    at Object.useState (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:19679:24)\n    at useState (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-TWJ6NINL.js?v=cd46b0ad:1351:29)\n    at useKittyData (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/useKittyData.ts?t=1793263415867:14:31)\n    at App (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/App.tsx?t=1793263415867:96:17)\n    at renderWithHooks (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:18474:26)\n    at updateFunctionComponent (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:21508:28)\n    at beginWork (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:22850:22)\n    at HTMLUnknownElement.callCallback2 (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:10558:22)"}
+{"level":"error","message":"Uncaught Error: Should have a queue. This is likely a bug in React. Please file an issue.","timestamp":1793263476399,"source":"https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:18656:13","stack":"Error: Should have a queue. This is likely a bug in React. Please file an issue.\n    at updateReducer (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:18656:19)\n    at updateState (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:18947:18)\n    at Object.useState (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:19679:24)\n    at useState (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-TWJ6NINL.js?v=cd46b0ad:1351:29)\n    at useKittyData (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/useKittyData.ts?t=1793263415867:14:31)\n    at App (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/App.tsx?t=1793263415867:96:17)\n    at renderWithHooks (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:18474:26)\n    at updateFunctionComponent (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:21508:28)\n    at beginWork (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:22850:22)\n    at HTMLUnknownElement.callCallback2 (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:10558:22)"}
+{"level":"error","message":"The above error occurred in the <App> component:\n\n    at App (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/App.tsx?t=1793263415867:46:24)\n    at Le (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/connectkit.js?v=cd46b0ad:16790:42)\n    at Web3ContextProvider (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/connectkit.js?v=cd46b0ad:32417:30)\n    at ConnectKitProvider (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/connectkit.js?v=cd46b0ad:35907:29)\n    at ThemedProviders (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/main.tsx?t=1793263094326:122:28)\n    at QueryClientProvider (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-WZEH4STI.js?v=cd46b0ad:39:30)\n    at Hydrate (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-QLCGE3SK.js?v=cd46b0ad:392:11)\n    at WagmiProvider (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-QLCGE3SK.js?v=cd46b0ad:414:11)\n\nConsider adding an error boundary to your tree to customize error handling behavior.\nVisit https://reactjs.org/link/error-boundaries to learn more about error boundaries.","timestamp":1793263476400}
+{"level":"error","message":"Unhandled promise rejection: Error: Should have a queue. This is likely a bug in React. Please file an issue.\n    at updateReducer (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:18656:19)\n    at updateState (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:18947:18)\n    at Object.useState (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:19679:24)\n    at useState (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-TWJ6NINL.js?v=cd46b0ad:1351:29)\n    at useKittyData (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/useKittyData.ts?t=1793263415867:14:31)\n    at App (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/App.tsx?t=1793263415867:96:17)\n    at renderWithHooks (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:18474:26)\n    at updateFunctionComponent (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:21508:28)\n    at beginWork (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:22850:22)\n    at beginWork$1 (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:26684:22)","timestamp":1793263476404,"stack":"Error: Should have a queue. This is likely a bug in React. Please file an issue.\n    at updateReducer (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:18656:19)\n    at updateState (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:18947:18)\n    at Object.useState (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:19679:24)\n    at useState (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-TWJ6NINL.js?v=cd46b0ad:1351:29)\n    at useKittyData (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/useKittyData.ts?t=1793263415867:14:31)\n    at App (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/App.tsx?t=1793263415867:96:17)\n    at renderWithHooks (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:18474:26)\n    at updateFunctionComponent (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:21508:28)\n    at beginWork (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:22850:22)\n    at beginWork$1 (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:26684:22)"}
+{"level":"error","message":"Unhandled promise rejection: Error: Should have a queue. This is likely a bug in React. Please file an issue.\n    at updateReducer (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:18656:19)\n    at updateState (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:18947:18)\n    at Object.useState (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:19679:24)\n    at useState (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-TWJ6NINL.js?v=cd46b0ad:1351:29)\n    at useKittyData (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/useKittyData.ts?t=1793263415867:14:31)\n    at App (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/App.tsx?t=1793263415867:96:17)\n    at renderWithHooks (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:18474:26)\n    at updateFunctionComponent (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:21508:28)\n    at beginWork (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:22850:22)\n    at beginWork$1 (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:26684:22)","timestamp":1793263476408,"stack":"Error: Should have a queue. This is likely a bug in React. Please file an issue.\n    at updateReducer (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:18656:19)\n    at updateState (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:18947:18)\n    at Object.useState (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:19679:24)\n    at useState (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-TWJ6NINL.js?v=cd46b0ad:1351:29)\n    at useKittyData (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/useKittyData.ts?t=1793263415867:14:31)\n    at App (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/App.tsx?t=1793263415867:96:17)\n    at renderWithHooks (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:18474:26)\n    at updateFunctionComponent (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:21508:28)\n    at beginWork (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:22850:22)\n    at beginWork$1 (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:26684:22)"}
+{"level":"error","message":"Warning: React has detected a change in the order of Hooks called by %s. This will lead to bugs and errors if not fixed. For more information, read the Rules of Hooks: https://reactjs.org/link/rules-of-hooks\n\n   Previous render            Next render\n   ------------------------------------------------------\n%s   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n%s App 1. useState                   useState\n2. useContext                 useContext\n3. useRef                     useRef\n4. useRef                     useRef\n5. useMemo                    useMemo\n6. useSyncExternalStore       useSyncExternalStore\n7. useEffect                  useEffect\n8. useDebugValue              useDebugValue\n9. useMemo                    useMemo\n10. useContext                useContext\n11. useSyncExternalStore      useSyncExternalStore\n12. useContext                useContext\n13. useContext                useContext\n14. useState                  useState\n15. useEffect                 useEffect\n16. useCallback               useCallback\n17. useSyncExternalStore      useSyncExternalStore\n18. useCallback               useCallback\n19. useSyncExternalStore      useSyncExternalStore\n20. useContext                useContext\n21. useRef                    useRef\n22. useMemo                   useMemo\n23. useSyncExternalStore      useSyncExternalStore\n24. useEffect                 useEffect\n25. useDebugValue             useDebugValue\n26. useContext                useContext\n27. useContext                useContext\n28. useRef                    useRef\n29. useRef                    useRef\n30. useMemo                   useMemo\n31. useSyncExternalStore      useSyncExternalStore\n32. useEffect                 useEffect\n33. useDebugValue             useDebugValue\n34. useMemo                   useMemo\n35. useSyncExternalStore      useSyncExternalStore\n36. useRef                    useRef\n37. useEffect                 useEffect\n38. useContext                useContext\n39. useContext                useContext\n40. useContext                useContext\n41. useEffect                 useEffect\n42. useState                  useState\n43. useCallback               useCallback\n44. useSyncExternalStore      useSyncExternalStore\n45. useEffect                 useEffect\n46. useCallback               useCallback\n47. useState                  useState\n48. useEffect                 useEffect\n49. useCallback               useCallback\n50. useState                  useState\n51. useState                  useState\n52. useState                  useState\n53. useState                  useState\n54. useState                  useState\n55. useEffect                 useEffect\n56. useState                  useState\n57. useCallback               useCallback\n58. useEffect                 useEffect\n59. useState                  useState\n60. useState                  useRef\n \n    at App (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/App.tsx?t=1793263415867:46:24)\n    at Le (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/connectkit.js?v=cd46b0ad:16790:42)\n    at Web3ContextProvider (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/connectkit.js?v=cd46b0ad:32417:30)\n    at ConnectKitProvider (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/connectkit.js?v=cd46b0ad:35907:29)\n    at ThemedProviders (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/main.tsx?t=1793263094326:122:28)\n    at QueryClientProvider (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-WZEH4STI.js?v=cd46b0ad:39:30)\n    at Hydrate (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-QLCGE3SK.js?v=cd46b0ad:392:11)\n    at WagmiProvider (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-QLCGE3SK.js?v=cd46b0ad:414:11)","timestamp":1793263476862}
+{"level":"error","message":"Uncaught Error: Should have a queue. This is likely a bug in React. Please file an issue.","timestamp":1793263476862,"source":"https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:18656:13","stack":"Error: Should have a queue. This is likely a bug in React. Please file an issue.\n    at updateReducer (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:18656:19)\n    at updateState (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:18947:18)\n    at Object.useState (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:19679:24)\n    at useState (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-TWJ6NINL.js?v=cd46b0ad:1351:29)\n    at useKittyData (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/useKittyData.ts?t=1793263415867:14:31)\n    at App (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/App.tsx?t=1793263415867:96:17)\n    at renderWithHooks (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:18474:26)\n    at updateFunctionComponent (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:21508:28)\n    at beginWork (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:22850:22)\n    at HTMLUnknownElement.callCallback2 (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:10558:22)"}
+{"level":"error","message":"Uncaught Error: Should have a queue. This is likely a bug in React. Please file an issue.","timestamp":1793263476863,"source":"https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:18656:13","stack":"Error: Should have a queue. This is likely a bug in React. Please file an issue.\n    at updateReducer (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:18656:19)\n    at updateState (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:18947:18)\n    at Object.useState (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:19679:24)\n    at useState (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-TWJ6NINL.js?v=cd46b0ad:1351:29)\n    at useKittyData (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/useKittyData.ts?t=1793263415867:14:31)\n    at App (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/App.tsx?t=1793263415867:96:17)\n    at renderWithHooks (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:18474:26)\n    at updateFunctionComponent (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:21508:28)\n    at beginWork (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:22850:22)\n    at HTMLUnknownElement.callCallback2 (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:10558:22)"}
+{"level":"error","message":"The above error occurred in the <App> component:\n\n    at App (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/App.tsx?t=1793263415867:46:24)\n    at Le (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/connectkit.js?v=cd46b0ad:16790:42)\n    at Web3ContextProvider (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/connectkit.js?v=cd46b0ad:32417:30)\n    at ConnectKitProvider (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/connectkit.js?v=cd46b0ad:35907:29)\n    at ThemedProviders (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/main.tsx?t=1793263094326:122:28)\n    at QueryClientProvider (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-WZEH4STI.js?v=cd46b0ad:39:30)\n    at Hydrate (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-QLCGE3SK.js?v=cd46b0ad:392:11)\n    at WagmiProvider (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-QLCGE3SK.js?v=cd46b0ad:414:11)\n\nConsider adding an error boundary to your tree to customize error handling behavior.\nVisit https://reactjs.org/link/error-boundaries to learn more about error boundaries.","timestamp":1793263476863}
+{"level":"error","message":"Unhandled promise rejection: Error: Should have a queue. This is likely a bug in React. Please file an issue.\n    at updateReducer (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:18656:19)\n    at updateState (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:18947:18)\n    at Object.useState (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:19679:24)\n    at useState (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-TWJ6NINL.js?v=cd46b0ad:1351:29)\n    at useKittyData (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/useKittyData.ts?t=1793263415867:14:31)\n    at App (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/App.tsx?t=1793263415867:96:17)\n    at renderWithHooks (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:18474:26)\n    at updateFunctionComponent (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:21508:28)\n    at beginWork (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:22850:22)\n    at beginWork$1 (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:26684:22)","timestamp":1793263476866,"stack":"Error: Should have a queue. This is likely a bug in React. Please file an issue.\n    at updateReducer (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:18656:19)\n    at updateState (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:18947:18)\n    at Object.useState (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:19679:24)\n    at useState (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-TWJ6NINL.js?v=cd46b0ad:1351:29)\n    at useKittyData (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/useKittyData.ts?t=1793263415867:14:31)\n    at App (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/App.tsx?t=1793263415867:96:17)\n    at renderWithHooks (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:18474:26)\n    at updateFunctionComponent (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:21508:28)\n    at beginWork (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:22850:22)\n    at beginWork$1 (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:26684:22)"}
+{"level":"log","message":"[vite] server connection lost. Polling for restart...","timestamp":1793264718899}
+{"level":"log","message":"[vite] server connection lost. Polling for restart...","timestamp":1793264719888}
+{"level":"log","message":"[vite] server connection lost. Polling for restart...","timestamp":1793264719893}
+{"level":"log","message":"[vite] server connection lost. Polling for restart...","timestamp":1793265233677}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793265435446}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1793265435446}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793265473622}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1793265473622}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793265483595}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1793265483596}
+{"level":"error","message":"Uncaught ReferenceError: validateKittyDeployment is not defined","timestamp":1793265483879,"source":"https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:23596:15","stack":"ReferenceError: validateKittyDeployment is not defined\n    at https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/App.tsx?t=1793265526952:64:5\n    at commitHookEffectListMount (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:23841:34)\n    at commitPassiveMountOnFiber (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:25084:19)\n    at commitPassiveMountEffects_complete (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:25057:17)\n    at commitPassiveMountEffects_begin (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:25047:15)\n    at commitPassiveMountEffects (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:25037:11)\n    at flushPassiveEffectsImpl (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:26421:11)\n    at flushPassiveEffects (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:26378:22)\n    at commitRootImpl (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:26347:13)\n    at commitRoot (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:26208:13)"}
+{"level":"error","message":"The above error occurred in the <App> component:\n\n    at App (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/App.tsx?t=1793265526952:45:24)\n    at Le (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/connectkit.js?v=cd46b0ad:16790:42)\n    at Web3ContextProvider (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/connectkit.js?v=cd46b0ad:32417:30)\n    at ConnectKitProvider (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/connectkit.js?v=cd46b0ad:35907:29)\n    at ThemedProviders (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/main.tsx?t=1793265287818:122:28)\n    at QueryClientProvider (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-WZEH4STI.js?v=cd46b0ad:39:30)\n    at Hydrate (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-QLCGE3SK.js?v=cd46b0ad:392:11)\n    at WagmiProvider (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-QLCGE3SK.js?v=cd46b0ad:414:11)\n\nConsider adding an error boundary to your tree to customize error handling behavior.\nVisit https://reactjs.org/link/error-boundaries to learn more about error boundaries.","timestamp":1793265483891}
+{"level":"error","message":"Unhandled promise rejection: ReferenceError: validateKittyDeployment is not defined\n    at https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/App.tsx?t=1793265526952:64:5\n    at commitHookEffectListMount (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:23841:34)\n    at commitPassiveMountOnFiber (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:25084:19)\n    at commitPassiveMountEffects_complete (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:25057:17)\n    at commitPassiveMountEffects_begin (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:25047:15)\n    at commitPassiveMountEffects (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:25037:11)\n    at flushPassiveEffectsImpl (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:26421:11)\n    at flushPassiveEffects (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:26378:22)\n    at commitRootImpl (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:26347:13)\n    at commitRoot (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:26208:13)","timestamp":1793265483893,"stack":"ReferenceError: validateKittyDeployment is not defined\n    at https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/App.tsx?t=1793265526952:64:5\n    at commitHookEffectListMount (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:23841:34)\n    at commitPassiveMountOnFiber (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:25084:19)\n    at commitPassiveMountEffects_complete (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:25057:17)\n    at commitPassiveMountEffects_begin (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:25047:15)\n    at commitPassiveMountEffects (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:25037:11)\n    at flushPassiveEffectsImpl (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:26421:11)\n    at flushPassiveEffects (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:26378:22)\n    at commitRootImpl (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:26347:13)\n    at commitRoot (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:26208:13)"}
+{"level":"error","message":"Warning: You are calling ReactDOMClient.createRoot() on a container that has already been passed to createRoot() before. Instead, call root.render() on the existing root instead if you want to update it.","timestamp":1793265485319}
+{"level":"debug","message":"[vite] invalidate /src/main.tsx: Could not Fast Refresh (\"true\" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports","timestamp":1793265485320}
+{"level":"debug","message":"[vite] hot updated: /src/main.tsx","timestamp":1793265485321}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793265485321}
+{"level":"error","message":"Uncaught ReferenceError: validateKittyDeployment is not defined","timestamp":1793265485414,"source":"https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:23596:15","stack":"ReferenceError: validateKittyDeployment is not defined\n    at https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/App.tsx?t=1793265526953:64:5\n    at commitHookEffectListMount (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:23841:34)\n    at commitPassiveMountOnFiber (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:25084:19)\n    at commitPassiveMountEffects_complete (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:25057:17)\n    at commitPassiveMountEffects_begin (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:25047:15)\n    at commitPassiveMountEffects (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:25037:11)\n    at flushPassiveEffectsImpl (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:26421:11)\n    at flushPassiveEffects (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:26378:22)\n    at https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:26259:17\n    at workLoop (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:462:42)"}
+{"level":"error","message":"Uncaught ReferenceError: validateKittyDeployment is not defined","timestamp":1793265485423,"source":"https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:23596:15","stack":"ReferenceError: validateKittyDeployment is not defined\n    at https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/App.tsx?t=1793265526953:64:5\n    at commitHookEffectListMount (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:23841:34)\n    at invokePassiveEffectMountInDEV (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:25252:19)\n    at invokeEffectsInDev (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:26632:19)\n    at commitDoubleInvokeEffectsInDEV (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:26617:15)\n    at flushPassiveEffectsImpl (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:26434:13)\n    at flushPassiveEffects (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:26378:22)\n    at https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:26259:17\n    at workLoop (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:462:42)\n    at flushWork (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:441:22)"}
+{"level":"error","message":"The above error occurred in the <App> component:\n\n    at App (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/App.tsx?t=1793265526953:45:24)\n    at Le (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/connectkit.js?v=cd46b0ad:16790:42)\n    at Web3ContextProvider (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/connectkit.js?v=cd46b0ad:32417:30)\n    at ConnectKitProvider (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/connectkit.js?v=cd46b0ad:35907:29)\n    at ThemedProviders (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/main.tsx?t=1793265526953:122:28)\n    at QueryClientProvider (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-WZEH4STI.js?v=cd46b0ad:39:30)\n    at Hydrate (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-QLCGE3SK.js?v=cd46b0ad:392:11)\n    at WagmiProvider (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-QLCGE3SK.js?v=cd46b0ad:414:11)\n\nConsider adding an error boundary to your tree to customize error handling behavior.\nVisit https://reactjs.org/link/error-boundaries to learn more about error boundaries.","timestamp":1793265485439}
+{"level":"error","message":"(previous line repeated 1× more)","timestamp":1793265485439}
+{"level":"error","message":"Uncaught ReferenceError: validateKittyDeployment is not defined","timestamp":1793265485439,"source":"https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:16054:15","stack":"ReferenceError: validateKittyDeployment is not defined\n    at https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/src/App.tsx?t=1793265526953:64:5\n    at commitHookEffectListMount (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:23841:34)\n    at commitPassiveMountOnFiber (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:25084:19)\n    at commitPassiveMountEffects_complete (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:25057:17)\n    at commitPassiveMountEffects_begin (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:25047:15)\n    at commitPassiveMountEffects (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:25037:11)\n    at flushPassiveEffectsImpl (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:26421:11)\n    at flushPassiveEffects (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:26378:22)\n    at https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:26259:17\n    at workLoop (https://iiqg6660v3dt1qf72uyyg.preview.studio.arc.io/node_modules/.vite/deps/chunk-YI6NTZAD.js?v=cd46b0ad:462:42)"}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1793265485445}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793265485445}
+{"level":"debug","message":"(previous line repeated 1× more)","timestamp":1793265493372}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1793265493371}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793265493372}
+{"level":"debug","message":"(previous line repeated 1× more)","timestamp":1793265495960}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1793265495960}
+{"level":"error","message":"Warning: You are calling ReactDOMClient.createRoot() on a container that has already been passed to createRoot() before. Instead, call root.render() on the existing root instead if you want to update it.","timestamp":1793265497657}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793265497657}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1793265497657}
+{"level":"debug","message":"[vite] invalidate /src/main.tsx: Could not Fast Refresh (\"true\" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports","timestamp":1793265497658}
+{"level":"debug","message":"[vite] hot updated: /src/main.tsx","timestamp":1793265497658}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793265498006}
+{"level":"error","message":"[vite] Failed to reload /src/main.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above)","timestamp":1793265503746}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793265504152}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1793265504152}
+{"level":"debug","message":"[vite] hot updated: /src/main.tsx","timestamp":1793265504152}
+{"level":"error","message":"[vite] Failed to reload /src/main.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above)","timestamp":1793265504982}
+{"level":"debug","message":"[vite] hot updated: /src/main.tsx","timestamp":1793265504983}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793265504983}
+{"level":"error","message":"[vite] Failed to reload /src/main.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above)","timestamp":1793265511519}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793265511919}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1793265511919}
+{"level":"debug","message":"[vite] hot updated: /src/main.tsx","timestamp":1793265511919}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793265511924}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1793265511924}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793265523051}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1793265523051}
+{"level":"debug","message":"[vite] hot updated: /src/components/fields.tsx","timestamp":1793265590234}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793265590234}
+{"level":"debug","message":"[vite] hot updated: /src/components/ThemeSwitch.tsx","timestamp":1793265591804}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793265591804}
+{"level":"debug","message":"[vite] hot updated: /src/components/CreateKitty.tsx","timestamp":1793265602863}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793265602864}
+{"level":"debug","message":"[vite] hot updated: /src/components/TopBar.tsx","timestamp":1793265604265}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793265604266}
+{"level":"debug","message":"[vite] hot updated: /src/components/fields.tsx","timestamp":1793265605863}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793265605863}
+{"level":"debug","message":"[vite] hot updated: /src/components/Home.tsx","timestamp":1793265628455}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793265628455}
+{"level":"error","message":"Warning: You are calling ReactDOMClient.createRoot() on a container that has already been passed to createRoot() before. Instead, call root.render() on the existing root instead if you want to update it.","timestamp":1793265640655}
+{"level":"debug","message":"[vite] invalidate /src/main.tsx: Could not Fast Refresh (\"true\" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports","timestamp":1793265640655}
+{"level":"debug","message":"[vite] hot updated: /src/main.tsx","timestamp":1793265640655}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793265640655}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793266255566}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1793266255566}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793266257775}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1793266257775}
+{"level":"debug","message":"[vite] hot updated: /src/index.css","timestamp":1793266258283}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1793266258283}
+{"level":"log","message":"[vite] server connection lost. Polling for restart...","timestamp":1793268118792}
+{"level":"log","message":"[vite] server connection lost. Polling for restart...","timestamp":1793268118819}
