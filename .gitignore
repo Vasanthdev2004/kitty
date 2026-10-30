@@ -1,0 +1,23 @@
+# Secrets and local config
+.env
+.env.*
+!.env.example
+
+# Dependencies and build output
+node_modules/
+dist/
+coverage/
+
+# Studio and runtime logs (regenerated while the app runs)
+console.jsonl
+traces.jsonl
+*.log
+
+# Foundry build output and caches (recreate with `forge build`)
+cache/
+contracts/cache/
+contracts/out/
+broadcast/
+
+# OS files
+.DS_Store
