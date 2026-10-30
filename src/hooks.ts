@@ -3,12 +3,23 @@ import { useEffect, useState } from 'react';
 import { chainOffsetSeconds, estimateChainNow } from './pt-share';
 import { getShareBase } from './lib/share';
 
-/** Wall-clock ms, refreshed on an interval. */
+/**
+ * Wall-clock ms, refreshed on an interval. The interval is cleared while the tab is
+ * hidden (no wasted wake-ups) and restarts, with an immediate refresh, when it is shown again.
+ */
 export function useNowMs(intervalMs: number): number {
   const [now, setNow] = useState(() => Date.now());
   useEffect(() => {
-    const id = setInterval(() => setNow(Date.now()), intervalMs);
-    return () => clearInterval(id);
+    let id: ReturnType<typeof setInterval> | undefined;
+    const start = () => { if (id === undefined) id = setInterval(() => setNow(Date.now()), intervalMs); };
+    const stop = () => { if (id !== undefined) { clearInterval(id); id = undefined; } };
+    const onVisibility = () => {
+      if (document.hidden) stop();
+      else { setNow(Date.now()); start(); }
+    };
+    if (!document.hidden) start();
+    document.addEventListener('visibilitychange', onVisibility);
+    return () => { stop(); document.removeEventListener('visibilitychange', onVisibility); };
   }, [intervalMs]);
   return now;
 }

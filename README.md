@@ -9,7 +9,7 @@ Built with [Arc Studio](https://studio.arc.io)
 ## How it works
 
 1. **Create.** Start a kitty: set a recipient, a goal, a deadline and a name. Choose named shares (split), or an open pool where anyone can chip in. A seller can create a kitty that pays themselves to request payment.
-2. **Share the link.** Every kitty has its own link, QR code and a ready-made message to send.
+2. **Share the link.** A new kitty opens on a share step: an editable message, WhatsApp and Telegram links, the device's share sheet, a QR code and a "Save as image" card for group chats. On a split kitty the creator and the recipient can also remind each person who still owes, with that person's exact remaining share. A "What happens next" timeline shows the deadline and the 30-day payout window.
 3. **Chip in.** People put in USDC before the deadline. Nothing goes to the recipient yet, and nobody can chip in more than the goal.
 4. **Pay out or refund.** When the goal is met, anyone can trigger the payout and the recipient receives the full amount in one payment. If the deadline passes first, each person gets their own money back with one click.
 
@@ -54,7 +54,12 @@ bun install
 bun run dev
 ```
 
-The chain, contract address and USDC address live in `src/kitty-config.ts`. The app reads no environment variables. `.env.example` lists the optional variables used by the scripts in `scripts/`.
+The chain, contract address and USDC address live in `src/kitty-config.ts`.
+
+Environment variable (optional):
+
+- `VITE_KITTY_CHAIN`: which deployment the build uses, `arcTestnet` (default) or `arc`. The hosted build sets it. Any other value means `arcTestnet`. With `arc`, the app shows "Kitty is not deployed on Arc yet" and blocks every write until the mainnet address is filled in. See [DEPLOY.md](DEPLOY.md).
+- `VITE_SITE_URL`: the public address of the hosted app (for example `https://kitty.example`). It makes the social preview image (`public/og-image.png`) an absolute URL, which chat apps need. Without it the tags use a relative path.
 
 To rebuild the contract ABI used by the app: `forge build`, then `bun run kitty:abi`.
 
@@ -62,7 +67,7 @@ To rebuild the contract ABI used by the app: `forge build`, then `bun run kitty:
 
 ```bash
 forge test        # 253 tests pass (193 Kitty, 60 legacy PayTogether)
-bun run test      # 270 tests pass
+bun run test      # 333 tests pass
 bun run check     # lint + typecheck, 0 errors
 ```
 
@@ -86,7 +91,10 @@ The Kitty suite includes fuzz tests and 7 invariants, each run for 256 runs of 5
 - `src/kitty-tx.ts`, `src/useKittyTx.ts`: safe transaction flow (preflight, one write at a time, uncertain receipts)
 - `src/kitty-data.ts`, `src/useKittyData.ts`: batched chain reads and event scans
 - `src/components/`: the interface
-- `scripts/`: ABI generator and a read-only smoke test (`bun run kitty:smoke`)
+- `src/share-messages.ts`, `src/avatar.ts`: share messages and chat links, and avatar identity (pure, tested)
+- `public/og-image.png`: the social preview image (`tools/make-og-image.mjs` regenerates it)
+- `scripts/`: ABI generator, a read-only smoke test (`bun run kitty:smoke`) and a read-only post-deploy check (`scripts/verify-deploy.ts`)
+- `DEPLOY.md`: how the owner deploys Kitty to Arc mainnet and switches the app over
 
 ## Legacy
 

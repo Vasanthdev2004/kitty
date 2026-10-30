@@ -8,6 +8,10 @@ import { CreateKitty } from '../components/CreateKitty';
 import { KittyPage, type KittyPageProps } from '../components/KittyPage';
 import { MyKitties } from '../components/MyKitties';
 import { SegmentedTabs } from '../components/fields';
+import { ContributorGrid } from '../components/SegmentedProgress';
+import { ActivityFeed } from '../components/ActivityFeed';
+import { KittyNotFound } from '../components/KittyNotFound';
+import { Avatar, PersonAvatar } from '../components/ui';
 import { ACTIVE } from '../kitty-config';
 import { SETTLE_GRACE_SECONDS } from '../kitty-core';
 import type { KittyData, MineSummary } from '../kitty-types';
@@ -48,7 +52,7 @@ describe('render smoke', () => {
     for (const t of [
       'Nobody fronts the money.', 'Split a bill', 'Pool for a goal', 'Request payment', 'Group gift', 'Rent deposit', 'Team tool',
       // animated demo + the real-UI previews in the start cards
-      'Weekend in Lisbon', 'Locked until everyone chips in.', '12 people', 'Requested by the seller', '60.00 USDC',
+      'Weekend in Lisbon', 'Ana', 'Ravi', 'Mei', 'Not paid', 'Sam', '60.00', '12 people', 'Requested by the seller',
     ]) {
       expect(html).toContain(t);
     }
@@ -165,5 +169,79 @@ describe('render smoke', () => {
     expect(html).toContain('No kitties yet');
     expect(html).toContain('Split a bill');
     expect(html).toContain('Request payment');
+  });
+
+  it('a new kitty shows the share step first, with chat links and Save as image', () => {
+    const html = page(base, { connectedAddress: BOB, justCreated: true });
+    expect(html).toContain('Your kitty is live. Send the link.');
+    expect(html).toContain('WhatsApp');
+    expect(html).toContain('Telegram');
+    expect(html).toContain('Save as image');
+    expect(html).toContain('Dismiss');
+    expect(html).toContain('id="share-message"');
+  });
+
+  it('the share step also greets the creator, but not a plain contributor, and not once the kitty is closed', () => {
+    expect(page(base, { connectedAddress: BOB })).toContain('Your kitty is live. Send the link.');
+    expect(page(base, { connectedAddress: ME })).not.toContain('Your kitty is live. Send the link.');
+    expect(page({ ...base, deadline: NOW - 10n }, { connectedAddress: BOB, justCreated: true })).not.toContain('Your kitty is live');
+  });
+
+  it('what happens next follows the live phase', () => {
+    expect(page(base)).toContain('What happens next');
+    expect(page(base)).toContain('Chip in until');
+    const ready = page({ ...base, totalFundedRaw: 100n * U });
+    expect(ready).toContain('Paying out stays open until');
+    const expired = page({ ...base, deadline: NOW - 10n });
+    expect(expired).toContain('The deadline passed on');
+    expect(expired).toContain('Each person can take back what they put in.');
+  });
+
+  it('reminders only for people who still owe, and only when the caller may send them', () => {
+    const rows = [
+      { address: ME, shareRaw: 60n * U, contributedRaw: 60n * U, refunded: false },   // paid
+      { address: BOB, shareRaw: 40n * U, contributedRaw: 10n * U, refunded: false },  // partial
+      { address: SELLER, shareRaw: 10n * U, contributedRaw: 0n, refunded: false },    // not paid
+    ];
+    const withRemind = clean(renderToString(createElement(ContributorGrid, {
+      contributions: rows, connectedAddress: undefined, remindMessage: () => 'hello',
+    })));
+    expect(withRemind.match(/>Remind</g)?.length).toBe(2);
+    expect(withRemind.match(/>WhatsApp</g)?.length).toBe(2);
+    const without = clean(renderToString(createElement(ContributorGrid, { contributions: rows, connectedAddress: undefined })));
+    expect(without).not.toContain('>Remind<');
+    // The caller's own tile never offers a reminder to themselves.
+    const asBob = clean(renderToString(createElement(ContributorGrid, { contributions: rows, connectedAddress: BOB, remindMessage: () => 'hi' })));
+    expect(asBob.match(/>Remind</g)?.length).toBe(1);
+  });
+
+  it('activity: calm empty state', () => {
+    const html = clean(renderToString(createElement(ActivityFeed, {
+      items: [], loading: false, error: undefined, me: undefined, explorerBase: 'https://x', onRetry: noop, nowSec: 0,
+    })));
+    expect(html).toContain('No activity yet. Share the link to get the first chip in.');
+  });
+
+  it('not found: calm, with a way home and to the Open tab', () => {
+    const html = clean(renderToString(createElement(KittyNotFound, { networkName: 'Arc Testnet', onNavigate: noop })));
+    expect(html).toContain('We could not find that kitty');
+    expect(html).toContain('Go home');
+    expect(html).toContain('Open another kitty');
+    expect(html).toContain('Arc Testnet');
+    expect(html).not.toMatch(/[\u2013\u2014]/);
+  });
+
+  it('avatars: address, initials, "You", and the paid badge', () => {
+    const addr = clean(renderToString(createElement(Avatar, { address: ME, size: 24 })));
+    expect(addr).toContain('<svg');
+    const named = clean(renderToString(createElement(Avatar, { name: 'Ana', size: 32 })));
+    expect(named).toContain('>A<');
+    expect(named).toContain('font-size:12.8px');
+    const you = clean(renderToString(createElement(PersonAvatar, { address: ME, me: ME.toUpperCase().replace('0X', '0x') })));
+    expect(you).toContain('>Y<');
+    const other = clean(renderToString(createElement(PersonAvatar, { address: ME, me: BOB })));
+    expect(other).toContain('<svg');
+    expect(clean(renderToString(createElement(Avatar, { name: 'Ana', size: 28, status: 'paid' })))).toContain('M2.4 6.3');
+    expect(named).not.toContain('M2.4 6.3');
   });
 });

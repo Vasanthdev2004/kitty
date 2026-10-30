@@ -7,7 +7,8 @@ import {
 } from 'motion/react';
 import type { Icon } from '@phosphor-icons/react';
 import { cn } from '../cn';
-import { avatarColors } from '../pt-ui';
+import BoringAvatar from 'boring-avatars';
+import { addressAvatarProps, isSameAddress, namedAvatar } from '../avatar';
 import type { ContributorStatus } from '../pt-share';
 import { CONTRIBUTOR_STATUS_LABEL } from '../pt-share';
 
@@ -28,7 +29,7 @@ const VARIANT: Record<ButtonVariant, string> = {
 };
 
 const SIZE: Record<ButtonSize, string> = {
-  sm: 'h-9 px-4 text-[13px] gap-1.5',
+  sm: 'h-9 max-sm:h-11 px-4 text-[13px] gap-1.5',
   md: 'h-11 px-5 text-sm gap-2',
   lg: 'h-12 px-6 text-[15px] gap-2',
 };
@@ -183,20 +184,68 @@ export function YouChip() {
 
 // ── Avatar ────────────────────────────────────────────────────────────────────
 
-export function Avatar({ address, size = 32, className }: { address: string; size?: number; className?: string }) {
-  const c = avatarColors(address);
+/**
+ * Address avatar (boring-avatars marble) or, with `name`, an initials disc.
+ * `status="paid"` adds a small check badge bottom-right that pops in.
+ */
+export function Avatar({
+  address, name, size = 32, status, badgeRing = 'var(--s1)', className,
+}: {
+  address?: string;
+  /** Named avatar: initials on a soft tint. Takes priority over `address`. */
+  name?: string;
+  size?: number;
+  status?: 'paid';
+  /** Colour of the ring around the badge: the surface the avatar sits on. */
+  badgeRing?: string;
+  className?: string;
+}) {
+  const reduce = useReducedMotion();
+  const named = name ? namedAvatar(name, size) : undefined;
+  const badge = Math.max(10, Math.round(size * 0.42));
   return (
     <span
       aria-hidden
-      className={cn('inline-block shrink-0 rounded-full', className)}
-      style={{
-        width: size,
-        height: size,
-        background: `linear-gradient(135deg, ${c.from}, ${c.to})`,
-        boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.10)',
-      }}
-    />
+      className={cn('relative inline-block shrink-0 rounded-full', className)}
+      style={{ width: size, height: size }}
+    >
+      {named ? (
+        <span
+          className="flex h-full w-full items-center justify-center rounded-full font-semibold leading-none"
+          style={{ background: named.bg, color: named.fg, fontSize: named.fontSize }}
+        >
+          {named.initials}
+        </span>
+      ) : (
+        <span className="block h-full w-full overflow-hidden rounded-full">
+          <BoringAvatar {...addressAvatarProps(address ?? '', size)} />
+        </span>
+      )}
+      <span className="pointer-events-none absolute inset-0 rounded-full" style={{ boxShadow: 'inset 0 0 0 1px var(--avatar-ring)' }} />
+      {status === 'paid' && (
+        <motion.span
+          className="absolute flex items-center justify-center rounded-full"
+          style={{ width: badge, height: badge, right: -2, bottom: -2, background: 'var(--ok)', boxShadow: `0 0 0 1.5px ${badgeRing}` }}
+          initial={reduce ? false : { scale: 0.6, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ type: 'spring', stiffness: 520, damping: 24 }}
+        >
+          <svg viewBox="0 0 12 12" width={badge * 0.62} height={badge * 0.62} fill="none">
+            <path d="M2.4 6.3 4.9 8.8 9.6 3.4" stroke="#0A2E1C" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </motion.span>
+      )}
+    </span>
   );
+}
+
+/** An address avatar, or the "You" initials avatar when the address is the connected wallet. */
+export function PersonAvatar({
+  address, me, size, status, badgeRing,
+}: { address: string; me?: string; size?: number; status?: 'paid'; badgeRing?: string }) {
+  return isSameAddress(address, me)
+    ? <Avatar name="You" size={size} status={status} badgeRing={badgeRing} />
+    : <Avatar address={address} size={size} status={status} badgeRing={badgeRing} />;
 }
 
 /** Placeholder while an address is empty: a plain surface-3 disc. */

@@ -102,7 +102,7 @@ export interface StorageLike { getItem(k: string): string | null; setItem(k: str
 
 const cacheKey = (dep: KittyDeployment) => `kitty:validated:${dep.chainId}:${dep.kitty.toLowerCase()}`;
 
-function sessionStore(): StorageLike | undefined {
+export function sessionStore(): StorageLike | undefined {
   try { return typeof sessionStorage === 'undefined' ? undefined : sessionStorage; } catch { return undefined; }
 }
 
@@ -148,6 +148,7 @@ export type KittyPreflight =
 export function checkKittyPreflight(
   account: string | undefined, chainId: number | undefined, dep: KittyDeployment,
 ): KittyPreflight {
+  if (!dep.deployed) return { ok: false, reason: `Kitty is not deployed on ${dep.shortName} yet.` };
   if (!account) return { ok: false, reason: 'Wallet not connected.' };
   if (chainId !== dep.chainId) {
     return { ok: false, reason: `Wrong chain (got ${chainId ?? 'unknown'}, need ${dep.chainId}).` };

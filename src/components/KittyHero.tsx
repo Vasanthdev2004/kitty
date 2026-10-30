@@ -1,12 +1,11 @@
 // ─── Kitty – hero: title, recipient, funded amount, countdown ────────────────
 import { ArrowSquareOut, ArrowsClockwise } from '@phosphor-icons/react';
-import { useChainNow } from '../hooks';
 import { formatDeadline, shortAddress } from '../pt-utils';
 import { formatUsdcPlain, fundedPercent, paidSummary } from '../pt-share';
 import { splitCountdown } from '../pt-ui';
 import { PHASE_PILL, kittyPhase, type KittyPhase } from '../kitty-core';
 import type { KittyData } from '../kitty-types';
-import { Avatar, Button, Card, Chip, IconButton } from './ui';
+import { Card, Chip, IconButton, PersonAvatar } from './ui';
 import { AnimatedAmount } from './AnimatedAmount';
 import { CopyButton } from './fields';
 
@@ -27,15 +26,14 @@ const NOTE: Record<KittyPhase, (deadline: bigint) => string> = {
   stuck: () => 'The goal was met but nobody paid out within 30 days of the deadline, so paying out is closed. Everyone can take back their own money.',
 };
 
+/** `chainNow` is the page's single clock (see KittyPage), so the hero never runs its own timer. */
 export function KittyHero({
-  data, readPhase, onRefresh, explorerBase,
-}: { data: KittyData; readPhase: KittyPhase; onRefresh: () => void | Promise<void>; explorerBase: string }) {
-  const chainNow = useChainNow(data.chainTimestamp);
+  data, chainNow, onRefresh, explorerBase, me,
+}: { data: KittyData; chainNow: bigint; onRefresh: () => void | Promise<void>; explorerBase: string; me?: string }) {
   const phase = kittyPhase({ settled: data.settled, totalFundedRaw: data.totalFundedRaw, goalRaw: data.goalRaw, deadline: data.deadline, now: chainNow });
   const pill = PHASE_PILL[phase];
   const parts = splitCountdown(Number(data.deadline - chainNow));
   const pct = fundedPercent(data.totalFundedRaw, data.goalRaw);
-  const stale = phase !== readPhase && (phase === 'expired' || phase === 'stuck');
   const requested = data.creator.toLowerCase() === data.recipient.toLowerCase();
   const people = data.contributors.length;
   const count = data.mode === 'split'
@@ -51,9 +49,9 @@ export function KittyHero({
             <span className="text-[13px] text-ink-2">{data.mode === 'split' ? 'Split' : 'Open pool'}</span>
             {requested && <span className="text-[13px] text-ink-2">Requested by the recipient</span>}
           </div>
-          <h1 className="font-sans text-[28px] font-semibold leading-[1.15] tracking-[-0.02em] text-ink text-balance">{data.ref || 'Untitled kitty'}</h1>
+          <h1 title={data.ref} className="line-clamp-2 break-words font-sans text-[28px] font-semibold leading-[1.15] tracking-[-0.02em] text-ink text-balance">{data.ref || 'Untitled kitty'}</h1>
           <div className="flex flex-wrap items-center gap-x-2 text-[13px] text-ink-2">
-            <Avatar address={data.recipient} size={22} />
+            <PersonAvatar address={data.recipient} me={me} size={22} />
             <span>Recipient</span>
             <span className="mono text-ink">{shortAddress(data.recipient)}</span>
             <span className="-my-1 flex items-center">
@@ -65,7 +63,7 @@ export function KittyHero({
                   rel="noopener noreferrer"
                   aria-label="View recipient on the explorer"
                   title="View on explorer"
-                  className="inline-flex h-9 w-9 items-center justify-center rounded-full text-ink-2 transition-colors duration-150 hover:bg-s3 hover:text-ink"
+                  className="inline-flex h-9 w-9 max-sm:h-11 max-sm:w-11 items-center justify-center rounded-full text-ink-2 transition-colors duration-150 hover:bg-s3 hover:text-ink"
                 >
                   <ArrowSquareOut size={18} weight="regular" />
                 </a>
@@ -103,12 +101,6 @@ export function KittyHero({
       </div>
 
       <p className="mt-6 text-[13px] leading-relaxed text-ink-2 text-pretty">{NOTE[phase](data.deadline)}</p>
-      {stale && (
-        <div className="mt-3 flex flex-wrap items-center gap-3">
-          <p className="text-[13px] text-warn-text">The deadline just passed. Refresh to confirm onchain before getting a refund.</p>
-          <Button size="sm" variant="secondary" onClick={() => void onRefresh()}>Refresh</Button>
-        </div>
-      )}
     </Card>
   );
 }

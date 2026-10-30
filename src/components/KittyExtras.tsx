@@ -17,7 +17,7 @@ function ExplorerLink({ href, label }: { href: string; label: string }) {
       rel="noopener noreferrer"
       aria-label={label}
       title="View on explorer"
-      className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-ink-2 transition-colors duration-150 hover:bg-s3 hover:text-ink"
+      className="inline-flex h-9 w-9 max-sm:h-11 max-sm:w-11 shrink-0 items-center justify-center rounded-full text-ink-2 transition-colors duration-150 hover:bg-s3 hover:text-ink"
     >
       <ArrowSquareOut size={18} weight="regular" />
     </a>

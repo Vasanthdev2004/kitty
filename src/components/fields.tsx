@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import { cn } from '../cn';
 import { copyText } from '../copy';
 import { Avatar, Button, EmptyAvatar } from './ui';
+import { isSameAddress } from '../avatar';
 import { PILL_CLASS, useSlidingPill } from './useSlidingPill';
 
 // ── Segmented tabs with a sliding active pill ────────────────────────────────
@@ -43,7 +44,7 @@ export function SegmentedTabs<T extends string>({
             data-pill-active={active}
             onClick={() => onChange(t.id)}
             className={cn(
-              'relative z-10 inline-flex h-9 items-center gap-1.5 rounded-full px-3.5 text-[13px] font-medium whitespace-nowrap transition-colors duration-150 sm:px-4',
+              'relative z-10 inline-flex h-9 max-sm:h-11 items-center gap-1.5 rounded-full px-3.5 text-[13px] font-medium whitespace-nowrap transition-colors duration-150 sm:px-4',
               active ? 'text-ink' : 'text-ink-2 hover:text-ink',
             )}
           >
@@ -132,8 +133,10 @@ export function ReferenceInput({
  * button while empty. Errors are shown by the parent, not by this control.
  */
 export function AddressInput({
-  value, onChange, onBlur, invalid, ariaLabel, id, describedBy, className,
+  value, onChange, onBlur, invalid, ariaLabel, id, describedBy, className, me,
 }: {
+  /** The connected wallet: a typed address equal to it shows the "You" avatar. */
+  me?: string;
   value: string; onChange: (v: string) => void; onBlur?: () => void; invalid?: boolean;
   ariaLabel?: string; id?: string; describedBy?: string; className?: string;
 }) {
@@ -171,7 +174,7 @@ export function AddressInput({
 
   return (
     <InputShell invalid={invalid} className={cn('py-3', className)}>
-      {valid ? <Avatar address={trimmed} size={24} /> : <EmptyAvatar size={24} />}
+      {valid ? (isSameAddress(trimmed, me) ? <Avatar name="You" size={24} /> : <Avatar address={trimmed} size={24} />) : <EmptyAvatar size={24} />}
       <textarea
         ref={ref}
         id={id}
@@ -337,7 +340,7 @@ export function CopyButton({
       aria-label={copied ? 'Copied' : label}
       title={label}
       className={cn(
-        'inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-ink-2 transition-colors duration-150',
+        'inline-flex h-9 w-9 max-sm:h-11 max-sm:w-11 shrink-0 items-center justify-center rounded-full text-ink-2 transition-colors duration-150',
         'hover:bg-s3 hover:text-ink disabled:cursor-not-allowed disabled:opacity-45',
         className,
       )}

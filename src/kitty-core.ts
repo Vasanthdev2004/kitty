@@ -1,10 +1,10 @@
 // ─── Kitty – pure helpers ───────────────────────────────────────────────────
 // No chain calls and no React: everything here is unit-tested in vitest.
 import { encodeAbiParameters, isAddress, keccak256 } from 'viem';
-import type { DraftShare } from './pt-types';
-import { isoToUnixSeconds, parseUsdcAmount } from './pt-utils';
+import type { DraftShare, TxStatus } from './pt-types';
+import { formatDeadline, isoToUnixSeconds, parseUsdcAmount } from './pt-utils';
 import { isValidOrderId } from './pt-share';
-import { toLocalInputValue } from './pt-ui';
+import { relativeFromNow, toLocalInputValue } from './pt-ui';
 import type {
   ActivityItem, KittyData, KittyMode, MineRole, MineSummary,
 } from './kitty-types';
@@ -522,4 +522,65 @@ export function groupMine(list: readonly MineSummary[], now: bigint): MineGroups
   g.active.sort(asc);
   g.completed.sort((a, b) => asc(b, a));
   return g;
+}
+
+
+// ── What happens next (timeline) ─────────────────────────────────────────────
+
+export type StepState = 'past' | 'current' | 'upcoming' | 'skipped';
+export interface TimelineStep { id: 'funding' | 'paid' | 'refunds'; title: string; text: string; state: StepState }
+
+/** "in 3 days" for the future, "2 days ago" for the past. */
+export function relativeTo(nowSec: bigint, ts: bigint): string {
+  return ts > nowSec ? relativeFromNow(Number(ts - nowSec)) : agoText(Number(nowSec - ts));
+}
+
+const whenText = (nowSec: bigint, ts: bigint) => `${formatDeadline(ts)} (${relativeTo(nowSec, ts)})`;
+
+/**
+ * The three possible steps and where this kitty is: Funding, then Paid out OR
+ * Refunds open. A fully funded kitty also shows when the 30-day pay-out window ends.
+ */
+export function timelineSteps(p: { phase: KittyPhase; deadline: bigint; now: bigint }): TimelineStep[] {
+  const { phase, deadline, now } = p;
+  const windowEnd = deadline + SETTLE_GRACE_SECONDS;
+  const goalMet = phase === 'ready' || phase === 'paid' || phase === 'stuck';
+  const funding: TimelineStep = phase === 'open'
+    ? { id: 'funding', title: 'Funding', state: 'current', text: `Chip in until ${whenText(now, deadline)}.` }
+    : goalMet
+      ? { id: 'funding', title: 'Funding', state: 'past', text: 'The goal was met.' }
+      : { id: 'funding', title: 'Funding', state: 'past', text: `The deadline passed on ${whenText(now, deadline)}.` };
+
+  const paid: TimelineStep =
+    phase === 'ready' ? { id: 'paid', title: 'Paid out', state: 'current', text: `Anyone can pay out now. Paying out stays open until ${whenText(now, windowEnd)}.` }
+    : phase === 'paid' ? { id: 'paid', title: 'Paid out', state: 'current', text: 'The recipient was paid in full, in one payment.' }
+    : phase === 'open' ? { id: 'paid', title: 'Paid out', state: 'upcoming', text: 'When the goal is met, the recipient is paid in one go.' }
+    : phase === 'stuck' ? { id: 'paid', title: 'Paid out', state: 'skipped', text: `Paying out closed on ${whenText(now, windowEnd)} because nobody did it in time.` }
+    : { id: 'paid', title: 'Paid out', state: 'skipped', text: 'The goal was not met, so there is no payout.' };
+
+  const refunds: TimelineStep =
+    phase === 'expired' || phase === 'stuck' ? { id: 'refunds', title: 'Refunds open', state: 'current', text: 'Each person can take back what they put in.' }
+    : phase === 'paid' ? { id: 'refunds', title: 'Refunds open', state: 'skipped', text: 'Not needed. The kitty was paid out.' }
+    : phase === 'ready' ? { id: 'refunds', title: 'Refunds open', state: 'upcoming', text: 'If nobody pays out by then, each person can take back what they put in.' }
+    : { id: 'refunds', title: 'Refunds open', state: 'upcoming', text: 'If the goal is not met by the deadline, each person can take back what they put in.' };
+
+  return [funding, paid, refunds];
+}
+
+// ── Pending transaction wording ──────────────────────────────────────────────
+
+/** The step shown on a busy button: what is happening right now. */
+export function busyLabel(s: TxStatus): string {
+  switch (s.kind) {
+    case 'wallet-pending':
+      return ({
+        'Approve USDC': 'Approving USDC', 'Chip in': 'Chipping in', 'Pay out': 'Paying out',
+        'Get refund': 'Getting refund', 'Start kitty': 'Starting kitty',
+      } as Record<string, string>)[s.label] ?? 'Waiting for wallet';
+    case 'submitted':
+    case 'confirming':
+      return s.label === 'Approve USDC' ? 'Confirming approval' : 'Confirming';
+    case 'uncertain': return 'Pending';
+    default: return 'Working';
+  }
 }

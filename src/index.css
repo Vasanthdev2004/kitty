@@ -36,6 +36,7 @@
   --s2: #17171b;
   --s3: #1e1e23;
   --line: rgba(255, 255, 255, 0.07);
+  --avatar-ring: rgba(255, 255, 255, 0.12);
   --line-strong: rgba(255, 255, 255, 0.12);
 
   --text: #ededf0;
@@ -66,6 +67,7 @@
   --s1: #ffffff;
   --s2: #f0f0f3;
   --s3: #e6e6eb;
+  --avatar-ring: rgba(10,10,20,0.12);
   --line: rgba(10, 10, 20, 0.08);
   --line-strong: rgba(10, 10, 20, 0.16);
 

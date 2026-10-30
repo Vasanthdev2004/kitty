@@ -18,6 +18,11 @@ import {
 } from './kitty-tx';
 import type { TxStatus } from './pt-types';
 import { plain } from './pt-ui';
+import { formatUsdcPlain } from './pt-share';
+import { formatDeadline } from './pt-utils';
+import {
+  describeChipIn, describeCreate, describePayOut, describeRefund, type WriteSummary,
+} from './write-summary';
 
 const notifyError = (m: string) => toast.error(plain(m));
 
@@ -35,9 +40,11 @@ export function useKittyTx(p: {
   chainId: number | undefined;
   /** True once the deployment passed bytecode, token() and decimals checks. */
   deploymentValid: boolean;
+  /** Mainnet: resolves true once the user has seen exactly what is about to happen. Testnet: omit. */
+  confirmWrite?: (summary: WriteSummary) => Promise<boolean>;
   onDone: (d: TxDone) => void;
 }) {
-  const { dep, publicClient, walletClient, account, chainId, deploymentValid, onDone } = p;
+  const { dep, publicClient, walletClient, account, chainId, deploymentValid, confirmWrite, onDone } = p;
   const [txStatus, setTxStatus] = useState<TxStatus>({ kind: 'idle' });
   const [pendingHash, setPendingHash] = useState<`0x${string}` | undefined>();
   const pendingOpRef = useRef<PendingOp | null>(null);
@@ -91,6 +98,16 @@ export function useKittyTx(p: {
     return pre.account;
   }, [account, chainId, dep, walletClient, deploymentValid]);
 
+  /**
+   * Called right after `gate()` (so the lock is already held and nothing else can start).
+   * Declining releases the lock and sends nothing.
+   */
+  const confirmed = useCallback(async (summary: WriteSummary): Promise<boolean> => {
+    const ok = confirmWrite ? await confirmWrite(summary) : true;
+    if (!ok) releaseInflight(inflightRef.current);
+    return ok;
+  }, [confirmWrite]);
+
   const submit = useCallback((op: PendingOp, hash: `0x${string}`) => {
     pendingOpRef.current = op;
     setPendingHash(hash);
@@ -107,14 +124,26 @@ export function useKittyTx(p: {
       notifyError(e instanceof Error ? e.message : 'Invalid details');
       return;
     }
+    const args = call.args as unknown as readonly [unknown, unknown, bigint, bigint, string];
+    const ok = await confirmed(describeCreate({
+      ref: args[4], goalText: `${formatUsdcPlain(args[2])} USDC`, recipient,
+      deadlineText: formatDeadline(args[3]), modeLabel: draft.mode === 'split' ? 'Split between named people' : 'Open pool',
+    }));
+    if (!ok) return;
     const r = await kittyWrite({ dep, functionName: call.functionName, args: call.args, label: 'Start kitty', walletClient, onStatus: setTxStatus });
     if (r.kind === 'submitted') { submit({ kind: 'create', orderId: potId, label: 'Start kitty' }, r.hash); toast.success('Kitty submitted. Waiting for confirmation.'); }
     else releaseInflight(inflightRef.current);
-  }, [gate, walletClient, dep, submit]);
+  }, [gate, confirmed, walletClient, dep, submit]);
 
-  const chipIn = useCallback(async (potId: `0x${string}`, amountRaw: bigint, hasAllowance: boolean) => {
+  const chipIn = useCallback(async (
+    potId: `0x${string}`, amountRaw: bigint, hasAllowance: boolean, ctx?: { ref: string; recipient: string },
+  ) => {
     const acct = gate();
     if (!acct || !walletClient) return;
+    const ok = await confirmed(describeChipIn({
+      ref: ctx?.ref ?? potId, amountText: `${formatUsdcPlain(amountRaw)} USDC`, recipient: ctx?.recipient ?? 'the recipient',
+    }));
+    if (!ok) return;
     if (hasAllowance) {
       const r = await kittyWrite({ dep, functionName: 'fund', args: [potId, amountRaw], label: 'Chip in', walletClient, onStatus: setTxStatus });
       if (r.kind === 'submitted') submit({ kind: 'fund', orderId: potId, label: 'Chip in' }, r.hash);
@@ -129,18 +158,27 @@ export function useKittyTx(p: {
       submit({ kind: 'fund', orderId: potId, label: 'Approve USDC' }, r.hash);
       notifyError('Approval uncertain. Do not resubmit. Use Retry lookup.');
     } else releaseInflight(inflightRef.current);
-  }, [gate, walletClient, dep, minimal, submit]);
+  }, [gate, confirmed, walletClient, dep, minimal, submit]);
 
-  const simple = useCallback(async (fn: 'settle' | 'refund', kind: PendingOp['kind'], label: string, potId: `0x${string}`) => {
+  const simple = useCallback(async (
+    fn: 'settle' | 'refund', kind: PendingOp['kind'], label: string, potId: `0x${string}`, summary: WriteSummary,
+  ) => {
     const acct = gate();
     if (!acct || !walletClient) return;
+    if (!(await confirmed(summary))) return;
     const r = await kittyWrite({ dep, functionName: fn, args: [potId], label, walletClient, onStatus: setTxStatus });
     if (r.kind === 'submitted') submit({ kind, orderId: potId, label }, r.hash);
     else releaseInflight(inflightRef.current);
-  }, [gate, walletClient, dep, submit]);
+  }, [gate, confirmed, walletClient, dep, submit]);
 
-  const payOut = useCallback((potId: `0x${string}`) => simple('settle', 'settle', 'Pay out', potId), [simple]);
-  const getRefund = useCallback((potId: `0x${string}`) => simple('refund', 'refund', 'Get refund', potId), [simple]);
+  const payOut = useCallback((potId: `0x${string}`, ctx?: { ref: string; recipient: string; goalRaw: bigint }) =>
+    simple('settle', 'settle', 'Pay out', potId, describePayOut({
+      ref: ctx?.ref ?? potId, amountText: ctx ? `${formatUsdcPlain(ctx.goalRaw)} USDC` : 'the full goal', recipient: ctx?.recipient ?? 'the recipient',
+    })), [simple]);
+  const getRefund = useCallback((potId: `0x${string}`, ctx?: { ref: string; amountRaw: bigint }) =>
+    simple('refund', 'refund', 'Get refund', potId, describeRefund({
+      ref: ctx?.ref ?? potId, amountText: ctx ? `${formatUsdcPlain(ctx.amountRaw)} USDC` : 'your contribution',
+    })), [simple]);
 
   /** Re-polls the same hash. Never submits a new transaction. */
   const retry = useCallback(() => {

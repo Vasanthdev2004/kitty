@@ -87,9 +87,18 @@ bun run check       # lint + typecheck
 - Product: Kitty ("put money in the kitty"), tagline "Nobody fronts the money." Vocabulary: kitty (pot), chip in (fund), pay out (settle), get refund (refund), recipient (payee).
 - Contract: `contracts/Kitty.sol` (tests: `contracts/test/Kitty*.t.sol`). `PayTogether.sol` and its tests are legacy and untouched.
 - Deployed on Arc Testnet: `0x12840026bd9457b41ae104536f0917a19dd88611` (tx `0x18dd71935db31534585192d4ffa2d86c5a71f96f6f6a101377b7b22657c478fc`, block 69,641,176), token = Arc USDC `0x3600000000000000000000000000000000000000`.
-- One config file: `src/kitty-config.ts` (chain id -> contract, USDC, deploy block). Event scans start at the deploy block, never block 0.
+- One config file: `src/kitty-config.ts` (chain id -> contract, USDC, deploy block; Arc Testnet 5042002 and Arc mainnet 5042). Event scans start at the deploy block, never block 0.
+- `VITE_KITTY_CHAIN` (`arc` | `arcTestnet`, default `arcTestnet`) picks the deployment. Mainnet address is `undefined` until the owner deploys (`ARC_MAINNET_AT` in kitty-config.ts, one line, see DEPLOY.md); until then the app shows "Kitty is not deployed on Arc yet" and blocks all reads and writes. Studio never deploys, signs or funds on mainnet.
+- Mainnet only: first write of a session shows a confirmation (amount, recipient, irreversible payout); acknowledgement is kept in sessionStorage. Testnet-only copy (footer, Testnet pill, faucet hint) comes from the config.
 - Routing is query params: `?kitty=<id>` (legacy `?order=` still works), `?view=mine`, `?view=open`, `?new=<split|open|request|template>`.
 - Tx safety lives in `src/kitty-tx.ts` + `src/useKittyTx.ts` and reuses the lock/receipt primitives in `src/pt-tx.ts`: preflight, one write in flight, approval receipt before chip in, uncertain receipt keeps the lock and retries the same hash.
 - Pot ids: random 32-byte salt client-side, `computePotId(creator, salt)` = keccak256(abi.encode(creator, salt)); the id is also read back from the PotCreated event.
 - Contract rules the UI reflects: open kitties enforce `effectiveMinContribution` for first-time funders; a fully funded kitty unpaid at deadline + 30 days can no longer be paid out and becomes refundable.
 - Legacy PayTogether helpers (`pt-utils`, `pt-share`, `pt-ui`, `pt-types`, `pt-abi`) stay only because Kitty reuses some of them and their tests still run.
+
+## Share, avatars and the kitty page
+
+- Avatars: `boring-avatars` (marble, one 5-colour palette) for addresses, initials on soft tints for names and "You" (`src/avatar.ts`). The connected wallet always shows the "You" avatar.
+- Share step (`ShareStep.tsx`): shown after creating a kitty and to its creator until dismissed (localStorage, per chain and kitty). Messages and chat links are pure and tested (`src/share-messages.ts`). No third-party scripts. "Save as image" draws a canvas card (`src/lib/kittyCard.ts`).
+- Social preview: static `public/og-image.png` plus og/twitter tags in `index.html`. `VITE_SITE_URL` (optional) makes the image URL absolute.
+- Kitty page has ONE clock (`useChainNow`, paused while the tab is hidden). Its live phase drives the countdown, timeline and action card; when the phase passes the last read, the page re-reads once.

@@ -1,10 +1,22 @@
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
 import { nodePolyfills } from 'vite-plugin-node-polyfills'
 
-export default defineConfig({
-  plugins: [react(), nodePolyfills()],
+/**
+ * Social previews need an absolute image URL. Set VITE_SITE_URL (for example https://kitty.example)
+ * in the hosted build; without it the tags use a root-relative path, which works in the browser
+ * but not for every chat app's link preview.
+ */
+function siteUrlInHtml(siteUrl: string): Plugin {
+  return {
+    name: 'kitty-site-url-in-html',
+    transformIndexHtml: html => html.replaceAll('__SITE_URL__', siteUrl.replace(/\/+$/, '')),
+  }
+}
+
+export default defineConfig(({ mode }) => ({
+  plugins: [react(), nodePolyfills(), siteUrlInHtml(loadEnv(mode, process.cwd(), 'VITE_').VITE_SITE_URL ?? '')],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
@@ -38,4 +50,4 @@ export default defineConfig({
     allowedHosts: true,
     cors: true,
   },
-})
+}))

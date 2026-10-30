@@ -76,7 +76,7 @@ export function OpenContributors({ data, me }: { data: KittyData; me?: string })
               animate={{ opacity: 1, y: 0 }}
               transition={{ type: 'spring', stiffness: 280, damping: 28, delay: Math.min(i, 10) * 0.03 }}
             >
-              <Avatar address={c.address} size={32} />
+              {isMe(c.address) ? <Avatar name="You" size={32} /> : <Avatar address={c.address} size={32} />}
               <p className="mono min-w-0 flex-1 truncate text-[13px] text-ink">{shortAddress(c.address)}</p>
               {isMe(c.address) && <YouChip />}
               <p className="tnum shrink-0 text-[13px] text-ink-2">{formatUsdcPlain(c.contributedRaw)}</p>

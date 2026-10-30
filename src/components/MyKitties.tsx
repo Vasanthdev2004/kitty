@@ -34,7 +34,7 @@ function KittyCard({ s, now, onOpen }: { s: MineSummary; now: bigint; onOpen: ()
       <Card interactive className="space-y-4 p-5">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
-            <h3 className="truncate text-[15px] font-semibold tracking-tight text-ink">{s.ref || 'Untitled kitty'}</h3>
+            <h3 title={s.ref} className="truncate text-[15px] font-semibold tracking-tight text-ink">{s.ref || 'Untitled kitty'}</h3>
             <p className="mt-0.5 text-xs text-ink-2">
               {s.mode === 'split' ? 'Split' : 'Open pool'}
               {s.roles.length > 0 && <>{' \u00b7 '}{s.roles.join(', ')}</>}

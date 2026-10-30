@@ -4,7 +4,7 @@ import { ConnectKitButton } from 'connectkit';
 import { formatUsdc, parseUsdcAmount } from '../pt-utils';
 import { formatUsdcPlain } from '../pt-share';
 import {
-  THIRTY_DAY_RULE, chipInBounds, kittyAction, kittyActionHasDock, validateChipIn, type KittyPhase,
+  THIRTY_DAY_RULE, busyLabel, chipInBounds, kittyAction, kittyActionHasDock, validateChipIn, type KittyPhase,
 } from '../kitty-core';
 import type { KittyData } from '../kitty-types';
 import type { TxStatus } from '../pt-types';
@@ -16,15 +16,7 @@ import { AmountInput } from './fields';
 const isBusy = (s: TxStatus) =>
   s.kind === 'wallet-pending' || s.kind === 'submitted' || s.kind === 'confirming' || s.kind === 'uncertain';
 
-function busyText(s: TxStatus): string {
-  switch (s.kind) {
-    case 'wallet-pending': return 'Waiting for wallet';
-    case 'submitted': return 'Submitted';
-    case 'confirming': return 'Confirming';
-    case 'uncertain': return 'Pending';
-    default: return 'Working';
-  }
-}
+const busyText = busyLabel;
 
 function Shell({ title, dock, children }: { title: string; dock: boolean; children: ReactNode }) {
   return (
@@ -56,9 +48,10 @@ function Stat({ label, value }: { label: string; value: string }) {
 // ── Chip in ──────────────────────────────────────────────────────────────────
 
 function ChipInForm({
-  data, my, allowanceRaw, balanceRaw, txStatus, onChipIn,
+  data, my, allowanceRaw, balanceRaw, txStatus, onChipIn, faucetUrl,
 }: {
   data: KittyData;
+  faucetUrl?: string;
   my: { shareRaw: bigint; contributedRaw: bigint } | undefined;
   allowanceRaw: bigint | undefined;
   balanceRaw: bigint | undefined;
@@ -122,6 +115,15 @@ function ChipInForm({
         )}
       </div>
 
+      {faucetUrl && balanceRaw !== undefined && balanceRaw < (amountRaw > 0n ? amountRaw : 1n) && (
+        <p className="text-xs text-ink-2">
+          Need test USDC?{' '}
+          <a href={faucetUrl} target="_blank" rel="noopener noreferrer" className="text-accent-text underline-offset-2 hover:underline">
+            Get some from the Circle faucet
+          </a>.
+        </p>
+      )}
+
       <Button
         size="lg" className="w-full" disabled={disabled} loading={busy} loadingText={busyText(txStatus)}
         onClick={() => { if (parsed.ok && !amountErr) void onChipIn(parsed.raw, hasAllowance); }}
@@ -142,6 +144,10 @@ export interface KittyActionProps {
   isCorrectChain: boolean;
   onSwitchChain: () => void;
   networkName: string;
+  /** Short network name for the switch button, e.g. Arc. */
+  shortName: string;
+  /** Testnet only: where to get test USDC. Undefined on mainnet, so no hint is ever shown. */
+  faucetUrl?: string;
   txStatus: TxStatus;
   allowanceRaw: bigint | undefined;
   balanceRaw: bigint | undefined;
@@ -173,7 +179,7 @@ export function KittyAction(p: KittyActionProps) {
       return (
         <Shell title="Wrong network" dock={false}>
           <Body>Switch to {p.networkName} to use this kitty.</Body>
-          <Button size="lg" className="w-full" onClick={p.onSwitchChain}>Switch to Arc</Button>
+          <Button size="lg" className="w-full" onClick={p.onSwitchChain}>{`Switch to ${p.shortName}`}</Button>
         </Shell>
       );
     case 'chip-in':
@@ -182,7 +188,7 @@ export function KittyAction(p: KittyActionProps) {
           <ChipInForm
             key={`${p.data.totalFundedRaw}-${p.my?.contributedRaw ?? 0n}`}
             data={p.data} my={p.my} allowanceRaw={p.allowanceRaw} balanceRaw={p.balanceRaw}
-            txStatus={p.txStatus} onChipIn={p.onChipIn}
+            txStatus={p.txStatus} onChipIn={p.onChipIn} faucetUrl={p.faucetUrl}
           />
         </Shell>
       );

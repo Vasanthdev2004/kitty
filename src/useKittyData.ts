@@ -18,7 +18,7 @@ export function useKittyData(
 ) {
   const [tick, setTick] = useState(0);
   const attempts = useRef(0);
-  const [result, setResult] = useState<{ id: string; data?: KittyData; error?: string } | undefined>();
+  const [result, setResult] = useState<{ id: string; data?: KittyData; error?: string; notFound?: boolean } | undefined>();
 
   useEffect(() => {
     if (!client || !id) return;
@@ -32,7 +32,7 @@ export function useKittyData(
           setTimeout(() => { if (!cancelled) setTick(t => t + 1); }, 1500);
           return;
         }
-        setResult({ id, error: isPotNotFound(e) ? `No kitty with that ID on ${dep.name}.` : `Could not load this kitty. ${msg(e)}` });
+        setResult({ id, notFound: isPotNotFound(e), error: isPotNotFound(e) ? `No kitty with that ID on ${dep.name}.` : `Could not load this kitty. ${msg(e)}` });
       });
     return () => { cancelled = true; };
   }, [client, dep, id, tick, expectExisting]);
@@ -41,6 +41,8 @@ export function useKittyData(
   return {
     data: current?.data,
     error: current?.error,
+    /** The contract says this ID was never created (as opposed to a network failure). */
+    notFound: !!current?.notFound,
     loading: !!id && !current,
     /** Re-reads the kitty. The previous data stays on screen until the new read lands. */
     refresh: () => { setTick(t => t + 1); return Promise.resolve(); },

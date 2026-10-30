@@ -9,7 +9,7 @@ import {
   MAX_SPLIT_CONTRIBUTORS, draftFromStart, effectiveMin, getTemplate, hasErrors, validateKittyDraft,
   type KittyDraft, type StartKind, type TemplateId,
 } from '../kitty-core';
-import type { KittyDeployment } from '../kitty-config';
+import { fundsNote, type KittyDeployment } from '../kitty-config';
 import type { KittyMode } from '../kitty-types';
 import { useNowMs } from '../hooks';
 import { Avatar, Button, Card, Notice } from './ui';
@@ -130,7 +130,7 @@ export function CreateKitty({ start, dep, connectedAddress, isCorrectChain, depl
       );
 
   const ctaLabel = txBusy ? 'Sending' : deployBlocked ? 'Contract not ready'
-    : !connectedAddress ? 'Connect wallet' : !isCorrectChain ? 'Switch to Arc' : 'Start kitty';
+    : !connectedAddress ? 'Connect wallet' : !isCorrectChain ? `Switch to ${dep.shortName}` : 'Start kitty';
   const submitBtn = (size: 'md' | 'lg', className?: string) => (
     <Button type="submit" form={FORM_ID} size={size} disabled={!canCreate} loading={txBusy} loadingText="Sending" className={className}>
       {ctaLabel}
@@ -180,7 +180,7 @@ export function CreateKitty({ start, dep, connectedAddress, isCorrectChain, depl
                 <p className="text-[13px] font-medium text-ink-2">Recipient</p>
                 {connectedAddress ? (
                   <div className="tile flex items-center gap-3 px-4 py-3">
-                    <Avatar address={connectedAddress} size={28} />
+                    <Avatar name="You" size={28} />
                     <p className="mono min-w-0 flex-1 break-all text-[13px] text-ink">{connectedAddress}</p>
                     <span className="shrink-0 text-xs font-medium text-ink-2">Requested by you</span>
                   </div>
@@ -195,7 +195,7 @@ export function CreateKitty({ start, dep, connectedAddress, isCorrectChain, depl
             ) : (
               <Field id="recipient" label="Recipient" helper="Gets the full amount once, when the goal is met. Payouts cannot be reversed." error={showField('recipient') ? errors.recipient : undefined}>
                 {p => (
-                  <AddressInput id={p.id} describedBy={p.describedBy} invalid={p.invalid} ariaLabel="Recipient address"
+                  <AddressInput me={connectedAddress} id={p.id} describedBy={p.describedBy} invalid={p.invalid} ariaLabel="Recipient address"
                     value={draft.recipient} onChange={v => patch({ recipient: v })} onBlur={() => touch('recipient')} />
                 )}
               </Field>
@@ -246,6 +246,7 @@ export function CreateKitty({ start, dep, connectedAddress, isCorrectChain, depl
               </div>
               <p className="text-xs leading-relaxed text-ink-3">Each address is unique. Everyone chips in only their own share.</p>
               <ContributorRows
+                me={connectedAddress}
                 shares={draft.shares}
                 rowIds={rowIds}
                 totalRaw={goal.ok ? goal.raw : shareSum}
@@ -265,7 +266,7 @@ export function CreateKitty({ start, dep, connectedAddress, isCorrectChain, depl
             <p className="font-medium text-ink">These terms are permanent.</p>
             <p className="mt-1">
               Once created, the recipient, goal, deadline and shares cannot change. The payout is one payment and
-              cannot be reversed. Delivery happens outside the contract. {dep.testnet ? `${dep.name} uses test USDC with no real value.` : ''}
+              cannot be reversed. Delivery happens outside the contract. {fundsNote(dep)}
             </p>
           </Notice>
         </div>

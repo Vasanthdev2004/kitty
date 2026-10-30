@@ -7,7 +7,10 @@ import {
 import { formatPercent, segmentFillPct, segmentWidths } from '../pt-ui';
 import type { ContributionInfo } from '../pt-types';
 import { cn } from '../cn';
-import { Avatar, Card, StatusPill, YouChip } from './ui';
+import { toast } from 'sonner';
+import { copyText } from '../copy';
+import { whatsappUrl } from '../share-messages';
+import { Avatar, Button, Card, StatusPill, YouChip } from './ui';
 
 const FILL: Record<ContributorStatus, string> = {
   'paid': 'var(--ok)',
@@ -93,8 +96,13 @@ export function SegmentedProgress({
 
 /** Contributor tiles inside one card, so the column can stretch to match its neighbor. */
 export function ContributorGrid({
-  contributions, connectedAddress,
-}: { contributions: ContributionInfo[]; connectedAddress: string | undefined }) {
+  contributions, connectedAddress, remindMessage,
+}: {
+  contributions: ContributionInfo[];
+  connectedAddress: string | undefined;
+  /** Given only to the creator and the recipient while the kitty is open: builds that person's reminder. */
+  remindMessage?: (c: ContributionInfo) => string;
+}) {
   const reduce = useReducedMotion();
   return (
     <Card className="space-y-4 p-5 sm:p-6" aria-label="Contributors" role="region">
@@ -115,7 +123,9 @@ export function ContributorGrid({
               transition={{ type: 'spring', stiffness: 280, damping: 28, delay: Math.min(i, 12) * 0.04 }}
             >
               <div className="flex items-center gap-3">
-                <Avatar address={c.address} size={36} />
+                {isMe
+                  ? <Avatar name="You" size={36} status={status === 'paid' ? 'paid' : undefined} badgeRing="var(--s1)" />
+                  : <Avatar address={c.address} size={36} status={status === 'paid' ? 'paid' : undefined} badgeRing="var(--s1)" />}
                 <p className="mono min-w-0 flex-1 truncate text-[13px] text-ink">{shortAddress(c.address)}</p>
                 {isMe && <YouChip />}
               </div>
@@ -136,11 +146,29 @@ export function ContributorGrid({
                   </p>
                   <StatusPill status={status} />
                 </div>
+                {remindMessage && !isMe && (status === 'not-paid' || status === 'partial') && (
+                  <RemindActions message={remindMessage(c)} who={shortAddress(c.address)} />
+                )}
               </div>
             </Card>
           );
         })}
       </div>
     </Card>
+  );
+}
+
+/** Copy the reminder, or open it in WhatsApp. Never shown for people who have paid. */
+function RemindActions({ message, who }: { message: string; who: string }) {
+  async function copy() {
+    const ok = await copyText(message);
+    if (ok) toast.success(`Reminder copied for ${who}`);
+    else toast.error('Could not copy. Select the text and copy it yourself.');
+  }
+  return (
+    <div className="flex flex-wrap gap-2 pt-1">
+      <Button size="sm" variant="secondary" onClick={() => void copy()}>Remind</Button>
+      <Button size="sm" variant="ghost" onClick={() => window.open(whatsappUrl(message), '_blank', 'noopener,noreferrer')}>WhatsApp</Button>
+    </div>
   );
 }

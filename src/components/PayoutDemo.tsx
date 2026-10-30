@@ -1,18 +1,23 @@
 // ─── Kitty – animated mini demo for the home hero ───────────────────────────
-// Built from the real Avatar / Chip components. Three people chip in one by one,
-// the bar fills, then the kitty pays out. Plays once when scrolled into view;
-// under reduced motion it renders the finished state.
+// Built from the real Avatar / Chip components. Ana, Ravi and Mei chip in one by
+// one: each person's segment sits directly above their row, fills, their Paid
+// pill appears and their check badge pops in, the total counts up, then the
+// kitty pays out. Plays once when scrolled into view; under reduced motion it
+// shows the finished state.
 import { useEffect, useRef, useState } from 'react';
+import NumberFlow from '@number-flow/react';
 import { motion, useInView, useReducedMotion } from 'motion/react';
 import { Avatar, Card, Chip } from './ui';
 
 const PEOPLE = [
-  '0x1d2f6a8b3c4e5f60718293a4b5c6d7e8f9a0b1c2',
-  '0x7a3b9c1d2e4f60718293a4b5c6d7e8f9a0b1c2d3',
-  '0xc4e8f1a2b3d4e5f60718293a4b5c6d7e8f9a0b1c4',
+  { name: 'Ana', amount: 40 },
+  { name: 'Ravi', amount: 35 },
+  { name: 'Mei', amount: 25 },
 ] as const;
-const AMOUNTS = ['40.00', '35.00', '25.00'] as const;
-const STEPS = PEOPLE.length + 1;
+const GOAL = PEOPLE.reduce((s, p) => s + p.amount, 0);
+const STEPS = PEOPLE.length + 1; // 0..3 people paid, 4 = paid out
+
+const money = (n: number) => n.toFixed(2);
 
 export function PayoutDemo() {
   const reduce = useReducedMotion();
@@ -20,15 +25,16 @@ export function PayoutDemo() {
   const inView = useInView(ref, { once: true, amount: 0.4 });
   const [step, setStep] = useState(0);
 
-  // 0..3 = people paid, 4 = paid out. Each tick is scheduled from a timeout, never set synchronously.
+  // Each tick is scheduled from a timeout, never set synchronously in the effect.
   useEffect(() => {
     if (reduce || !inView || step >= STEPS) return;
-    const id = setTimeout(() => setStep(s => s + 1), step === 0 ? 600 : 850);
+    const id = setTimeout(() => setStep(s => s + 1), step === 0 ? 600 : 900);
     return () => clearTimeout(id);
   }, [reduce, inView, step]);
 
   const shown = reduce ? STEPS : step;
-  const paid = Math.min(shown, PEOPLE.length);
+  const paidCount = Math.min(shown, PEOPLE.length);
+  const paidSum = PEOPLE.slice(0, paidCount).reduce((s, p) => s + p.amount, 0);
   const done = shown >= STEPS;
 
   return (
@@ -36,31 +42,47 @@ export function PayoutDemo() {
       <div ref={ref} className="space-y-5">
         <div className="flex items-baseline justify-between gap-3">
           <p className="text-[15px] font-semibold tracking-tight text-ink">Weekend in Lisbon</p>
-          <p className="tnum text-xs text-ink-3">{paid} of {PEOPLE.length} paid</p>
+          <p className="tnum text-xs text-ink-3">{paidCount} of {PEOPLE.length} paid</p>
         </div>
 
-        <div className="grid grid-cols-3 gap-2" aria-hidden>
-          {PEOPLE.map((p, i) => (
-            <div key={p} className="space-y-2">
-              <div className="relative h-3.5 overflow-hidden rounded-full bg-s3">
-                <motion.div
-                  className="absolute inset-0 origin-left rounded-full bg-[var(--ok)]"
-                  initial={false}
-                  animate={{ scaleX: i < paid ? 1 : 0 }}
-                  transition={reduce ? { duration: 0 } : { duration: 0.55, ease: [0.3, 0.9, 0.3, 1] }}
-                />
-              </div>
-              <div className="flex items-center gap-2">
-                <Avatar address={p} size={24} />
-                <span className="tnum text-xs text-ink-2">{AMOUNTS[i]}</span>
-              </div>
-            </div>
-          ))}
-        </div>
+        <ul className="grid grid-cols-3 gap-2.5 sm:gap-3" aria-label="Who has paid">
+          {PEOPLE.map((p, i) => {
+            const paid = i < paidCount;
+            return (
+              <li key={p.name} className="min-w-0 space-y-2.5">
+                {/* The segment sits right above its person. */}
+                <div className="relative h-3.5 overflow-hidden rounded-full bg-s3" aria-hidden>
+                  <motion.div
+                    className="absolute inset-0 origin-left rounded-full bg-[var(--ok)]"
+                    initial={false}
+                    animate={{ scaleX: paid ? 1 : 0 }}
+                    transition={reduce ? { duration: 0 } : { duration: 0.55, ease: [0.3, 0.9, 0.3, 1] }}
+                  />
+                </div>
+                <div className="flex items-center gap-2">
+                  <Avatar name={p.name} size={28} status={paid ? 'paid' : undefined} />
+                  <div className="min-w-0">
+                    <p className="truncate text-[13px] font-medium leading-tight text-ink">{p.name}</p>
+                    <p className="tnum text-[11px] leading-tight text-ink-2">
+                      {money(p.amount)} <span className="text-ink-3">USDC</span>
+                    </p>
+                  </div>
+                </div>
+                <Chip tone={paid ? 'ok' : 'neutral'}>{paid ? 'Paid' : 'Not paid'}</Chip>
+              </li>
+            );
+          })}
+        </ul>
 
         <div className="flex items-center justify-between gap-3 border-t border-line pt-4">
-          <p className="text-[13px] text-ink-2">
-            {done ? 'The recipient was paid in one go.' : 'Locked until everyone chips in.'}
+          <p className="tnum text-[13px] text-ink-2">
+            <NumberFlow
+              value={paidSum}
+              locales="en-US"
+              format={{ minimumFractionDigits: 2, maximumFractionDigits: 2 }}
+              className="font-medium text-ink"
+            />{' '}
+            of {money(GOAL)} <span className="text-ink-3">USDC</span>
           </p>
           <motion.span
             key={done ? 'done' : 'wait'}

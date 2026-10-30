@@ -11,6 +11,8 @@ import { IconButton } from './ui';
 export type RowError = { message: string; part: 'address' | 'amount' } | undefined;
 
 interface Props {
+  /** The connected wallet: its row shows the "You" avatar. */
+  me?: string;
   shares: DraftShare[];
   rowIds: number[];
   /** Total the percentages are measured against (target if set, else the sum of shares). */
@@ -22,7 +24,7 @@ interface Props {
   onRemove: (i: number) => void;
 }
 
-export function ContributorRows({ shares, rowIds, totalRaw, rowErrors, onTouch, onChange, onRemove }: Props) {
+export function ContributorRows({ shares, rowIds, totalRaw, rowErrors, onTouch, onChange, onRemove, me }: Props) {
   const reduce = useReducedMotion();
   return (
     <div className="space-y-3">
@@ -54,6 +56,7 @@ export function ContributorRows({ shares, rowIds, totalRaw, rowErrors, onTouch, 
                 </div>
 
                 <AddressInput
+                  me={me}
                   ariaLabel={`Person ${i + 1} address`}
                   value={s.address}
                   invalid={err?.part === 'address'}

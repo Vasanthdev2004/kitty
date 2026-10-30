@@ -3,6 +3,8 @@ import { ConnectKitButton } from 'connectkit';
 import { Wallet } from '@phosphor-icons/react';
 import { Avatar, Button } from './ui';
 import { SegmentedTabs } from './fields';
+import { ACTIVE } from '../kitty-config';
+import { NetworkPill } from './NetworkPill';
 import { ThemeSwitch } from './ThemeSwitch';
 
 import type { Tab } from '../kitty-core';
@@ -41,6 +43,7 @@ export function TopBar({ tab, onTab, isConnected, isCorrectChain, onSwitchChain,
             <circle cx="22" cy="9" r="3.75" fill="currentColor" />
           </svg>
           <span className="hidden text-[17px] font-semibold tracking-tight text-ink md:inline">Kitty</span>
+          {ACTIVE.testnet && <span className="hidden md:inline-flex"><NetworkPill dep={ACTIVE} /></span>}
         </button>
 
         <SegmentedTabs
@@ -53,7 +56,7 @@ export function TopBar({ tab, onTab, isConnected, isCorrectChain, onSwitchChain,
         <div className="flex items-center justify-end gap-2">
           <span className={wrongChain ? 'max-sm:hidden' : ''}><ThemeSwitch /></span>
           {wrongChain && (
-            <Button size="sm" onClick={onSwitchChain}>Switch to Arc</Button>
+            <Button size="sm" onClick={onSwitchChain}>{`Switch to ${ACTIVE.shortName}`}</Button>
           )}
           <ConnectKitButton.Custom>
             {({ show, isConnected: connected, truncatedAddress, address }) => (
@@ -64,7 +67,7 @@ export function TopBar({ tab, onTab, isConnected, isCorrectChain, onSwitchChain,
                 aria-label={connected ? `Wallet ${truncatedAddress ?? ''}` : 'Connect wallet'}
                 className={wrongChain ? 'hidden sm:inline-flex max-sm:w-9 max-sm:px-0' : 'max-sm:w-9 max-sm:px-0'}
                 leading={connected && address
-                  ? <Avatar address={address} size={18} />
+                  ? <Avatar name="You" size={18} />
                   : <Wallet size={16} weight="regular" />}
               >
                 <span className="hidden sm:inline">
