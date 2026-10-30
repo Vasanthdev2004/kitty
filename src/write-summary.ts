@@ -68,3 +68,33 @@ export function describeRefund(p: { ref: string; amountText: string }): WriteSum
     warnings: ['This returns your own contribution to your wallet. You can only do it once.'],
   };
 }
+
+/** Chip in for someone else: the friend is credited, and any refund goes to the friend. */
+export function describeFundFor(p: { ref: string; amountText: string; recipient: string; friend: string }): WriteSummary {
+  return {
+    title: 'Pay for someone else',
+    rows: [
+      { label: 'Kitty', value: p.ref },
+      { label: 'Amount', value: p.amountText },
+      { label: 'Credited to', value: p.friend, mono: true },
+      { label: 'Recipient', value: p.recipient, mono: true },
+    ],
+    warnings: [
+      'You pay now. The friend is credited as the contributor.',
+      'If this kitty is refunded, the money goes to your friend, not you.',
+      IRREVERSIBLE,
+    ],
+  };
+}
+
+/** Cancel: stops funding and opens refunds for everyone at once. */
+export function describeCancel(p: { ref: string }): WriteSummary {
+  return {
+    title: 'Cancel this kitty',
+    rows: [{ label: 'Kitty', value: p.ref }],
+    warnings: [
+      'Nobody can chip in or be paid out after this. It cannot be undone.',
+      'Everyone who chipped in can take their own money back right away.',
+    ],
+  };
+}

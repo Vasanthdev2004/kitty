@@ -44,10 +44,15 @@ const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000' as const;
 
 // ── Fill these in. They are the ONLY lines to edit when a contract is deployed. ──
 
-/** Arc Testnet: deployed from Arc Studio. */
+/**
+ * Arc Testnet: Kitty v2 (permit chip in, pay for a friend, cancel), deployed from Arc Studio.
+ * LEGACY, no longer used by the app: Kitty v1 at 0x12840026bd9457b41ae104536f0917a19dd88611
+ * (tx 0x18dd71935db31534585192d4ffa2d86c5a71f96f6f6a101377b7b22657c478fc, block 69,641,176).
+ * Kitties created on v1 are not visible in this build.
+ */
 const ARC_TESTNET_AT: DeployedAt = {
-  kitty: '0x12840026bd9457b41ae104536f0917a19dd88611',
-  deployBlock: 69_641_176n,
+  kitty: '0x621b7aadfbc5870b95d4d95245529059536da7e5',
+  deployBlock: 69_829_378n,
 };
 
 /**

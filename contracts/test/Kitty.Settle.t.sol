@@ -125,7 +125,7 @@ contract KittySettleRefundTest is KittyTestBase {
         kitty.settle(id);
         assertEq(usdc.balanceOf(creator) - before_, GOAL);
         assertEq(kitty.totalEscrowLiability(), 0);
-        (address c, address r,,,,,,,,) = kitty.getPot(id);
+        (address c, address r,,,,,,,,,) = kitty.getPot(id);
         assertEq(c, r);
     }
 

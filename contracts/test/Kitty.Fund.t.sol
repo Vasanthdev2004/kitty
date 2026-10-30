@@ -319,7 +319,7 @@ contract KittyFundTest is KittyTestBase {
 
     function test_modeIsolation_minContributionOnlyAppliesToOpen() public {
         bytes32 splitId = _split3(SALT_A);
-        (,,,,,,,, uint256 minC,) = kitty.getPot(splitId);
+        (,,,,,,,, uint256 minC,,) = kitty.getPot(splitId);
         assertEq(minC, 0);
         _fund(splitId, carol, 1); // tiny contribution ok in split
         assertEq(_contributed(splitId, carol), 1);

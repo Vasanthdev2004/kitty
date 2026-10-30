@@ -2,6 +2,7 @@
 pragma solidity ^0.8.20;
 
 import {Test} from "forge-std/Test.sol";
+import {Vm} from "forge-std/Vm.sol";
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {Kitty} from "../Kitty.sol";
 
@@ -255,7 +256,7 @@ abstract contract KittyTestBase is Test {
     // ── Read helpers ──────────────────────────────────────────────────────────
 
     function _totalFunded(Kitty k, bytes32 id) internal view returns (uint256 t) {
-        (,,,,,,, t,,) = k.getPot(id);
+        (,,,,,,, t,,,) = k.getPot(id);
     }
 
     function _totalFunded(bytes32 id) internal view returns (uint256) {
@@ -263,11 +264,11 @@ abstract contract KittyTestBase is Test {
     }
 
     function _settled(bytes32 id) internal view returns (bool s) {
-        (,,,,,, s,,,) = kitty.getPot(id);
+        (,,,,,, s,,,,) = kitty.getPot(id);
     }
 
     function _count(bytes32 id) internal view returns (uint256 c) {
-        (,,,,,,,,, c) = kitty.getPot(id);
+        (,,,,,,,,, c,) = kitty.getPot(id);
     }
 
     function _contributed(bytes32 id, address who) internal view returns (uint256 c) {
@@ -276,5 +277,25 @@ abstract contract KittyTestBase is Test {
 
     function _refunded(bytes32 id, address who) internal view returns (bool r) {
         (,, r) = kitty.getContribution(id, who);
+    }
+
+    function _cancelled(bytes32 id) internal view returns (bool c) {
+        (,,,,,,,,,, c) = kitty.getPot(id);
+    }
+
+    /// How many recorded logs carry `topic0` as their event signature.
+    function _topicCount(Vm.Log[] memory logs, bytes32 topic0) internal pure returns (uint256 n) {
+        for (uint256 i = 0; i < logs.length; i++) if (logs[i].topics[0] == topic0) n++;
+    }
+
+    /// Creator cancels `id`.
+    function _cancel(bytes32 id) internal {
+        vm.prank(creator);
+        kitty.cancel(id);
+    }
+
+    function _fundFor(bytes32 id, address payer_, address ben, uint256 amt) internal {
+        vm.prank(payer_);
+        kitty.fundFor(id, ben, amt);
     }
 }

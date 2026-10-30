@@ -2,15 +2,17 @@
 import { useState, type ReactNode } from 'react';
 import { ConnectKitButton } from 'connectkit';
 import { formatUsdc, parseUsdcAmount } from '../pt-utils';
+import { chipInHelper } from '../permit';
 import { formatUsdcPlain } from '../pt-share';
 import {
-  THIRTY_DAY_RULE, busyLabel, chipInBounds, kittyAction, kittyActionHasDock, validateChipIn, type KittyPhase,
+  THIRTY_DAY_RULE, busyLabel, chipInBounds, kittyAction, kittyActionHasDock, unpaidContributors, validateChipIn, type KittyPhase,
 } from '../kitty-core';
 import type { KittyData } from '../kitty-types';
 import type { TxStatus } from '../pt-types';
 import { cn } from '../cn';
 import { Button, Card } from './ui';
 import { AmountInput } from './fields';
+import { FriendChipIn } from './FriendChipIn';
 
 // uncertain counts as busy: the original tx may still confirm, never allow a duplicate write.
 const isBusy = (s: TxStatus) =>
@@ -56,7 +58,7 @@ function ChipInForm({
   allowanceRaw: bigint | undefined;
   balanceRaw: bigint | undefined;
   txStatus: TxStatus;
-  onChipIn: (amountRaw: bigint, hasAllowance: boolean) => void | Promise<void>;
+  onChipIn: (amountRaw: bigint) => void | Promise<void>;
 }) {
   const bounds = chipInBounds({
     mode: data.mode, goalRaw: data.goalRaw, totalFundedRaw: data.totalFundedRaw, effectiveMinRaw: data.effectiveMinRaw, my,
@@ -126,11 +128,11 @@ function ChipInForm({
 
       <Button
         size="lg" className="w-full" disabled={disabled} loading={busy} loadingText={busyText(txStatus)}
-        onClick={() => { if (parsed.ok && !amountErr) void onChipIn(parsed.raw, hasAllowance); }}
+        onClick={() => { if (parsed.ok && !amountErr) void onChipIn(parsed.raw); }}
       >
-        {!hasAllowance && amountRaw > 0n ? 'Approve and chip in' : 'Chip in'}
+        Chip in
       </Button>
-      {!hasAllowance && amountRaw > 0n && !busy && <p className="text-xs text-ink-3 max-md:hidden">Two steps: approve USDC, then chip in.</p>}
+      <p className="text-xs text-ink-3">{chipInHelper(hasAllowance ? 'plain' : 'permit')}</p>
     </>
   );
 }
@@ -153,17 +155,33 @@ export interface KittyActionProps {
   balanceRaw: bigint | undefined;
   /** The wallet's own row. For open kitties this is read separately when not in the list. */
   my: { shareRaw: bigint; contributedRaw: bigint; refunded: boolean } | undefined;
-  onChipIn: (amountRaw: bigint, hasAllowance: boolean) => void | Promise<void>;
+  /** `friend` set: pay for that person (fundFor). Refunds then go to the friend. */
+  onChipIn: (amountRaw: bigint, friend?: `0x${string}`) => void | Promise<void>;
   onPayOut: () => void | Promise<void>;
   onGetRefund: () => void | Promise<void>;
 }
 
 export function KittyAction(p: KittyActionProps) {
+  const [friendOpen, setFriendOpen] = useState(false);
   const kind = kittyAction({
     connected: !!p.connectedAddress, correctChain: p.isCorrectChain, phase: p.phase, mode: p.data.mode, my: p.my,
   });
-  const dock = kittyActionHasDock(kind);
+  // The friend form is taller than the dock, so it scrolls with the page instead.
+  const dock = kittyActionHasDock(kind) && !friendOpen;
   const busy = isBusy(p.txStatus);
+  // Anyone connected can cover a named person, or (open kitties) any address, while funding is live.
+  const canPayForFriend = p.phase === 'open' && (p.data.mode === 'open' || unpaidContributors(p.data.contributors, p.connectedAddress).length > 0);
+  const friendForm = (
+    <FriendChipIn
+      data={p.data} me={p.connectedAddress} allowanceRaw={p.allowanceRaw} balanceRaw={p.balanceRaw} txStatus={p.txStatus}
+      onChipIn={(amount, friend) => p.onChipIn(amount, friend)} onBack={() => setFriendOpen(false)}
+    />
+  );
+  const friendToggle = canPayForFriend && (
+    <Button variant="secondary" size="sm" className="w-full" disabled={busy} onClick={() => setFriendOpen(true)}>
+      Pay for someone else
+    </Button>
+  );
 
   switch (kind) {
     case 'connect':
@@ -183,25 +201,31 @@ export function KittyAction(p: KittyActionProps) {
         </Shell>
       );
     case 'chip-in':
+      if (friendOpen) return <Shell title="Pay for someone else" dock={false}>{friendForm}</Shell>;
       return (
         <Shell title="Chip in" dock={dock}>
           <ChipInForm
             key={`${p.data.totalFundedRaw}-${p.my?.contributedRaw ?? 0n}`}
             data={p.data} my={p.my} allowanceRaw={p.allowanceRaw} balanceRaw={p.balanceRaw}
-            txStatus={p.txStatus} onChipIn={p.onChipIn} faucetUrl={p.faucetUrl}
+            txStatus={p.txStatus} onChipIn={amount => p.onChipIn(amount)} faucetUrl={p.faucetUrl}
           />
+          {friendToggle}
         </Shell>
       );
     case 'share-paid':
+      if (friendOpen) return <Shell title="Pay for someone else" dock={false}>{friendForm}</Shell>;
       return (
         <Shell title="Your share is in" dock={false}>
           <Body>Nothing left for you to do. The money stays locked until everyone has chipped in.</Body>
+          {friendToggle}
         </Shell>
       );
     case 'not-invited':
+      if (friendOpen) return <Shell title="Pay for someone else" dock={false}>{friendForm}</Shell>;
       return (
         <Shell title="You are not on the list" dock={false}>
-          <Body>Only the people named on this kitty can chip in. You can still follow the progress here.</Body>
+          <Body>Only the people named on this kitty can chip in for themselves. You can still follow the progress here{canPayForFriend ? ', or cover a share for someone who is named.' : '.'}</Body>
+          {friendToggle}
         </Shell>
       );
     case 'pay-out':
@@ -226,14 +250,16 @@ export function KittyAction(p: KittyActionProps) {
           <Body>
             {p.phase === 'stuck'
               ? 'The goal was met but nobody paid out within 30 days of the deadline, so everyone can take their own money back. '
-              : 'The deadline passed before the goal was met. '}
+              : p.phase === 'cancelled'
+                ? 'This kitty was cancelled, so refunds are open right away. '
+                : 'The deadline passed before the goal was met. '}
             You can take back your own{' '}
             <span className="tnum text-ink">{formatUsdcPlain(p.my?.contributedRaw ?? 0n)} USDC</span>.
           </Body>
           <Button size="lg" className="w-full" onClick={() => void p.onGetRefund()} disabled={busy} loading={busy} loadingText={busyText(p.txStatus)}>
             Get refund
           </Button>
-          <p className="text-xs leading-relaxed text-ink-3">{THIRTY_DAY_RULE}</p>
+          {p.phase !== 'cancelled' && <p className="text-xs leading-relaxed text-ink-3">{THIRTY_DAY_RULE}</p>}
         </Shell>
       );
     case 'refunded':

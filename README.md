@@ -6,6 +6,15 @@ Kitty is a group money pool on Arc, settled in USDC. Split a bill with named sha
 
 Built with [Arc Studio](https://studio.arc.io)
 
+## Features
+
+- **One-tap chip in.** One signature and one transaction, no separate approval step, on wallets that can sign typed data. Other wallets fall back to approve, then chip in.
+- **Pay for a friend.** Cover someone's share. They are credited, so if the kitty is refunded the money goes to them, not you.
+- **Cancel.** The creator or the recipient can stop a kitty that is not fully funded. Everyone can take their money back right away.
+- **Live stats.** The home page shows how much has been paid out, how many kitties were started and how many people chipped in, plus the latest payouts.
+- **Seller requests.** A dashboard of the payment requests you made to yourself, with totals, a link and embed button for each, and a CSV export.
+- **Share tools.** An editable message, WhatsApp and Telegram links, the device share sheet, a QR code, a "Save as image" card, reminders for people who still owe, and a "What happens next" timeline.
+
 ## How it works
 
 1. **Create.** Start a kitty: set a recipient, a goal, a deadline and a name. Choose named shares (split), or an open pool where anyone can chip in. A seller can create a kitty that pays themselves to request payment.
@@ -32,8 +41,10 @@ Kitty has not had a paid third-party audit. Treat testnet as the supported envir
 
 | Network | Chain ID | Kitty contract | Token |
 | --- | --- | --- | --- |
-| Arc Testnet | 5042002 | [`0x12840026bd9457b41ae104536f0917a19dd88611`](https://explorer.testnet.arc.io/address/0x12840026bd9457b41ae104536f0917a19dd88611) | Arc USDC `0x3600000000000000000000000000000000000000` (6 decimals) |
+| Arc Testnet | 5042002 | [`0x621b7aadfbc5870b95d4d95245529059536da7e5`](https://explorer.testnet.arc.io/address/0x621b7aadfbc5870b95d4d95245529059536da7e5) | Arc USDC `0x3600000000000000000000000000000000000000` (6 decimals) |
 | Arc mainnet | | Coming soon (address and example transaction to be added) | |
+
+The Arc Testnet contract is Kitty v2. The earlier v1 contract (`0x12840026bd9457b41ae104536f0917a19dd88611`) is legacy and no longer used by the app.
 
 ## Built with Arc Studio
 
@@ -66,12 +77,12 @@ To rebuild the contract ABI used by the app: `forge build`, then `bun run kitty:
 ## Tests
 
 ```bash
-forge test        # 253 tests pass (193 Kitty, 60 legacy PayTogether)
-bun run test      # 333 tests pass
+forge test        # 377 tests pass (317 Kitty, 60 legacy PayTogether)
+bun run test      # 407 tests pass
 bun run check     # lint + typecheck, 0 errors
 ```
 
-The Kitty suite includes fuzz tests and 7 invariants, each run for 256 runs of 500 calls.
+The Kitty suite includes fuzz tests and 14 invariants, each run for 256 runs of 500 calls.
 
 ## Roadmap
 

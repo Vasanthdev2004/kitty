@@ -18,7 +18,7 @@ const DEADLINE = NOW + 3n * 86_400n;
 
 const split: KittyData = {
   id: `0x${'ab'.repeat(32)}`, creator: BOB, recipient: SELLER, goalRaw: 100n * U, deadline: DEADLINE, ref: 'Lisbon weekend',
-  mode: 'split', settled: false, totalFundedRaw: 40n * U, minContributionRaw: 0n, effectiveMinRaw: 0n, chainTimestamp: NOW,
+  mode: 'split', settled: false, cancelled: false, totalFundedRaw: 40n * U, minContributionRaw: 0n, effectiveMinRaw: 0n, chainTimestamp: NOW,
   contributors: [
     { address: ME, shareRaw: 60n * U, contributedRaw: 20n * U, refunded: false },
     { address: BOB, shareRaw: 40n * U, contributedRaw: 20n * U, refunded: false },
@@ -105,7 +105,7 @@ describe('message templates', () => {
 
 describe('remind', () => {
   it('carries the exact remaining share of that person', () => {
-    expect(remindMessageFor(split, 60n * U, 20n * U, LINK)).toBe(`Your share for Lisbon weekend is 40.00 USDC. Chip in before ${dl}: ${LINK}`);
+    expect(remindMessageFor(split, 60n * U, 20n * U, LINK)).toBe(`Your share for Lisbon weekend is 40.00 USDC. Chip in before ${dl}: ${LINK}\nOr anyone can pay it for you.`);
     expect(remindMessageFor(split, 25n * U + 500_000n, 0n, LINK)).toContain('25.50 USDC');
   });
   it('is for the creator and the recipient only', () => {

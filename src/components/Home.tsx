@@ -5,6 +5,8 @@ import { TEMPLATES, type Route, type StartKind } from '../kitty-core';
 import { Card } from './ui';
 import { PayoutDemo } from './PayoutDemo';
 import { PoolPreview, RequestPreview, SplitPreview } from './StartPreviews';
+import { LiveStats } from './LiveStats';
+import type { KittyStats } from '../kitty-requests';
 
 const STARTS: ReadonlyArray<{ kind: StartKind; title: string; line: string; Preview: () => ReactNode }> = [
   { kind: 'split', title: 'Split a bill', line: 'Name each person and their share. The recipient is paid once everyone is in.', Preview: SplitPreview },
@@ -18,7 +20,9 @@ const PROMISES = [
   'If the deadline passes, everyone gets their own money back.',
 ];
 
-export function Home({ onNavigate }: { onNavigate: (r: Route) => void }) {
+export interface HomeStats { stats: KittyStats | undefined; loading: boolean; failed: boolean; explorerBase: string }
+
+export function Home({ onNavigate, live }: { onNavigate: (r: Route) => void; live?: HomeStats }) {
   const reduce = useReducedMotion();
   return (
     <div className="space-y-12 pt-10 md:space-y-14 md:pt-16">
@@ -61,6 +65,8 @@ export function Home({ onNavigate }: { onNavigate: (r: Route) => void }) {
           </button>
         ))}
       </section>
+
+      {live && <LiveStats {...live} onStart={() => onNavigate({ view: 'new', kind: 'split' })} />}
 
       <section aria-label="Templates" className="space-y-3">
         <h2 className="text-[15px] font-semibold tracking-tight text-ink">Or start from a template</h2>

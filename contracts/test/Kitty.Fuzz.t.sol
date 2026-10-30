@@ -211,8 +211,8 @@ contract KittyFuzzTest is KittyTestBase {
         vm.prank(c2);
         bytes32 id2 = kitty.createOpenPot(salt, recipient, GOAL, deadline, "", 0);
         assertTrue(id1 != id2);
-        (address k1,,,,,,,,,) = kitty.getPot(id1);
-        (address k2,,,,,,,,,) = kitty.getPot(id2);
+        (address k1,,,,,,,,,,) = kitty.getPot(id1);
+        (address k2,,,,,,,,,,) = kitty.getPot(id2);
         assertEq(k1, c1);
         assertEq(k2, c2);
     }

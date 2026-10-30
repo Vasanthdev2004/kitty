@@ -1,5 +1,5 @@
 // ─── PayTogether – small React hooks ────────────────────────────────────────
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useSyncExternalStore } from 'react';
 import { chainOffsetSeconds, estimateChainNow } from './pt-share';
 import { getShareBase } from './lib/share';
 
@@ -49,4 +49,19 @@ export function useShareBase(): string | undefined {
     return () => { cancelled = true; };
   }, []);
   return base;
+}
+
+/** True from the `sm` breakpoint (640px) up. Server and tests render the narrow layout. */
+export function useWideScreen(): boolean {
+  const query = '(min-width: 640px)';
+  return useSyncExternalStore(
+    cb => {
+      if (typeof window === 'undefined' || !window.matchMedia) return () => undefined;
+      const m = window.matchMedia(query);
+      m.addEventListener('change', cb);
+      return () => m.removeEventListener('change', cb);
+    },
+    () => (typeof window !== 'undefined' && !!window.matchMedia && window.matchMedia(query).matches),
+    () => false,
+  );
 }

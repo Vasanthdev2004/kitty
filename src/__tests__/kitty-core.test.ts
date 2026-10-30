@@ -19,7 +19,7 @@ const ID = '0xbda9425ce58ad49f2bb13b6f1cb7e94f949a6c60e943979e47d4a2f3bce9e300' 
 const A = '0x1111111111111111111111111111111111111111';
 const B = '0x2222222222222222222222222222222222222222';
 const C = '0x3333333333333333333333333333333333333333';
-const KITTY = '0x12840026bd9457b41ae104536f0917a19dd88611';
+const KITTY = '0x621b7aadfbc5870b95d4d95245529059536da7e5';
 const USDC = '0x3600000000000000000000000000000000000000';
 
 describe('salt and pot id', () => {
@@ -360,7 +360,7 @@ describe('my kitties', () => {
   const NOW = 10_000n;
   const mk = (over: Partial<MineSummary>): MineSummary => ({
     id: ID, ref: 'k', mode: 'split', creator: A, recipient: B, goalRaw: 100n, totalFundedRaw: 0n, deadline: NOW + 1_000n,
-    settled: false, myShareRaw: 0n, myContributedRaw: 0n, myRefunded: false, roles: [], ...over,
+    settled: false, cancelled: false, myShareRaw: 0n, myContributedRaw: 0n, myRefunded: false, roles: [], ...over,
   });
 
   it('derives roles', () => {

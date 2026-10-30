@@ -18,10 +18,11 @@ const ACTION_TEXT: Record<MineAction, string> = {
 };
 
 function KittyCard({ s, now, onOpen }: { s: MineSummary; now: bigint; onOpen: () => void }) {
-  const phase = kittyPhase({ settled: s.settled, totalFundedRaw: s.totalFundedRaw, goalRaw: s.goalRaw, deadline: s.deadline, now });
+  const phase = kittyPhase({ settled: s.settled, cancelled: s.cancelled, totalFundedRaw: s.totalFundedRaw, goalRaw: s.goalRaw, deadline: s.deadline, now });
   const action = mineAction(s, now);
   const pct = fundedPercent(s.totalFundedRaw, s.goalRaw);
   const when = phase === 'paid' ? 'Paid out'
+    : phase === 'cancelled' ? 'Cancelled'
     : phase === 'open' ? `Closes ${relativeFromNow(Number(s.deadline - now))}`
     : phase === 'ready' ? 'Goal met'
     : 'Refunds open';
@@ -103,6 +104,10 @@ export function MyKitties({
           <p className="text-base leading-relaxed text-ink-2">Everything you started, chipped into, receive, or were invited to.</p>
         </div>
         <IconButton icon={ArrowsClockwise} label="Refresh my kitties" onClick={onRefresh} disabled={refreshing} className="shrink-0" />
+      </div>
+      {/* The top bar shows a Requests tab from sm up; on phones it lives here. */}
+      <div className="sm:hidden">
+        <Button variant="secondary" size="sm" onClick={() => onNavigate({ view: 'requests' })}>Seller requests</Button>
       </div>
 
       {error && (

@@ -2,7 +2,7 @@
 import { decodeEventLog, getAbiItem, pad, toEventSelector, toHex, type Abi, type PublicClient } from 'viem';
 import { KITTY_ABI } from './kitty-abi';
 import type { KittyDeployment } from './kitty-config';
-import { deriveRoles, parseKittyLog, sortActivity, chunkRanges } from './kitty-core';
+import { dedupePaidFor, deriveRoles, parseKittyLog, sortActivity, chunkRanges } from './kitty-core';
 import type { ActivityItem, KittyData, KittyMode, MineSummary } from './kitty-types';
 
 /** Runs `fn` over `items` with at most `limit` calls in flight. Keeps order. */
@@ -23,7 +23,8 @@ export function isPotNotFound(e: unknown): boolean {
   return /PotNotFound/.test(e instanceof Error ? e.message : String(e));
 }
 
-type PotTuple = readonly [string, string, bigint, bigint, string, number, boolean, bigint, bigint, bigint];
+/** getPot: creator, recipient, goal, deadline, ref, mode, settled, totalFunded, minContribution, contributorCount, cancelled. */
+type PotTuple = readonly [string, string, bigint, bigint, string, number, boolean, bigint, bigint, bigint, boolean];
 type ContributionTuple = readonly [bigint, bigint, boolean];
 
 /** Loosely typed read of any Kitty view function. Call sites cast the result to a tuple. */
@@ -33,14 +34,14 @@ function callKitty<T>(client: PublicClient, dep: KittyDeployment, functionName: 
 
 const modeOf = (n: number): KittyMode => (n === 1 ? 'open' : 'split');
 
-interface Call { functionName: string; args: unknown[] }
-type CallResult<T> = { ok: true; value: T } | { ok: false; error: unknown };
+export interface Call { functionName: string; args: unknown[] }
+export type CallResult<T> = { ok: true; value: T } | { ok: false; error: unknown };
 
 /**
  * Several Kitty view calls in ONE eth_call through Multicall3 when the chain has it,
  * otherwise plain reads. Results keep the order of `calls`.
  */
-async function kittyMulticall<T extends unknown[]>(
+export async function kittyMulticall<T extends unknown[]>(
   client: PublicClient, dep: KittyDeployment, calls: Call[], allowFailure: boolean,
 ): Promise<{ [K in keyof T]: CallResult<T[K]> }> {
   if (calls.length === 0) return [] as never;
@@ -68,7 +69,7 @@ async function kittyMulticall<T extends unknown[]>(
   return out as never;
 }
 
-const val = <T,>(r: CallResult<T>): T => (r as { ok: true; value: T }).value;
+export const val = <T,>(r: CallResult<T>): T => (r as { ok: true; value: T }).value;
 
 /**
  * Full read of one kitty: terms, people and the chain clock.
@@ -84,7 +85,7 @@ export async function readKitty(client: PublicClient, dep: KittyDeployment, id: 
     ], false),
     client.getBlock(),
   ]);
-  const [creator, recipient, goal, deadline, ref, modeNum, settled, totalFunded, minContribution] = val(head[0]);
+  const [creator, recipient, goal, deadline, ref, modeNum, settled, totalFunded, minContribution, , cancelled] = val(head[0]);
   const addrs = val(head[1]);
   const mode = modeOf(modeNum);
 
@@ -97,7 +98,7 @@ export async function readKitty(client: PublicClient, dep: KittyDeployment, id: 
   });
 
   return {
-    id, creator, recipient, goalRaw: goal, deadline, ref, mode, settled,
+    id, creator, recipient, goalRaw: goal, deadline, ref, mode, settled, cancelled: Boolean(cancelled),
     totalFundedRaw: totalFunded, minContributionRaw: minContribution, effectiveMinRaw: val(head[2]),
     contributors: people, chainTimestamp: block.timestamp,
   };
@@ -111,22 +112,22 @@ export async function readMyContribution(client: PublicClient, dep: KittyDeploym
 
 // ── Logs ─────────────────────────────────────────────────────────────────────
 
-type EventName = 'PotCreated' | 'Funded' | 'Settled' | 'Refunded';
-const ALL_EVENTS: EventName[] = ['PotCreated', 'Funded', 'Settled', 'Refunded'];
-const selector = (name: EventName) => toEventSelector(getAbiItem({ abi: KITTY_ABI, name }));
+export type EventName = 'PotCreated' | 'Funded' | 'FundedFor' | 'Settled' | 'Refunded' | 'Cancelled';
+const ALL_EVENTS: EventName[] = ['PotCreated', 'Funded', 'FundedFor', 'Settled', 'Refunded', 'Cancelled'];
+export const selector = (name: EventName) => toEventSelector(getAbiItem({ abi: KITTY_ABI, name }));
 
 interface RawLog { data: `0x${string}`; topics: `0x${string}`[]; blockNumber: `0x${string}`; logIndex: `0x${string}`; transactionHash: `0x${string}` }
-interface DecodedLog {
+export interface DecodedLog {
   eventName?: string; args?: unknown; blockNumber: bigint | null; logIndex: number | null; transactionHash: `0x${string}` | null;
 }
 
 /**
- * One eth_getLogs for any mix of events, filtered by raw topics. All four Kitty
+ * One eth_getLogs for any mix of events, filtered by raw topics. All Kitty
  * events have `potId` as their first indexed argument, so a single request can
  * return a whole pot's history. Starts at the deploy block, never block 0.
  * Only if the RPC rejects the range do we split it into chunks.
  */
-async function getKittyLogs(
+export async function getKittyLogs(
   client: PublicClient, dep: KittyDeployment, topics: Array<`0x${string}` | `0x${string}`[] | null>,
 ): Promise<DecodedLog[]> {
   const run = (from: bigint, to: bigint | 'latest') =>
@@ -156,7 +157,7 @@ async function getKittyLogs(
 /** Activity for one kitty, newest first, with block times where they could be fetched. */
 export async function readActivity(client: PublicClient, dep: KittyDeployment, id: `0x${string}`): Promise<ActivityItem[]> {
   const logs = await getKittyLogs(client, dep, [ALL_EVENTS.map(selector), id]);
-  const items = logs.map(parseKittyLog).filter((x): x is ActivityItem => x !== null);
+  const items = dedupePaidFor(logs.map(parseKittyLog).filter((x): x is ActivityItem => x !== null));
 
   // Block times: one parallel round (they share a JSON-RPC batch). Capped; extra rows just show no time.
   const blocks = [...new Set(items.map(i => i.blockNumber))].slice(-40);
@@ -218,12 +219,12 @@ export async function scanMine(client: PublicClient, dep: KittyDeployment, me: s
     const potR = res[i * 2] as CallResult<PotTuple>;
     const conR = res[i * 2 + 1] as CallResult<ContributionTuple>;
     if (!potR.ok || !conR.ok) return;
-    const [creator, recipient, goal, deadline, ref, modeNum, settled, totalFunded] = potR.value;
+    const [creator, recipient, goal, deadline, ref, modeNum, settled, totalFunded, , , cancelled] = potR.value;
     const [share, contributed, refunded] = conR.value;
     if (!mine.has(id) && share === 0n) return;
     const mode = modeOf(modeNum);
     items.push({
-      id, ref, mode, creator, recipient, goalRaw: goal, totalFundedRaw: totalFunded, deadline, settled,
+      id, ref, mode, creator, recipient, goalRaw: goal, totalFundedRaw: totalFunded, deadline, settled, cancelled: Boolean(cancelled),
       myShareRaw: share, myContributedRaw: contributed, myRefunded: refunded,
       roles: deriveRoles({ me, creator, recipient, mode, myShareRaw: share, myContributedRaw: contributed, myRefunded: refunded }),
     });

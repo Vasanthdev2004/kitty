@@ -85,10 +85,14 @@ export function shareMessageFor(data: KittyData, link: string, me?: string): str
 /** A reminder for one person: their exact remaining share. */
 export function remindMessageFor(data: KittyData, shareRaw: bigint, contributedRaw: bigint, link: string): string {
   const remaining = shareRaw > contributedRaw ? shareRaw - contributedRaw : 0n;
-  return splitMessage({
+  const base = splitMessage({
     ref: data.ref || 'this kitty', amountText: formatUsdcPlain(remaining), deadlineText: formatDeadline(data.deadline), link,
   });
+  return `${base}\n${PAY_FOR_YOU_LINE}`;
 }
+
+/** Reminders tell the person that a friend can cover their share. */
+export const PAY_FOR_YOU_LINE = 'Or anyone can pay it for you.';
 
 /** Who may send reminders: the creator and the recipient. */
 export function canRemind(data: Pick<KittyData, 'creator' | 'recipient'>, me: string | undefined): boolean {

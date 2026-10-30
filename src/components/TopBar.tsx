@@ -7,12 +7,18 @@ import { ACTIVE } from '../kitty-config';
 import { NetworkPill } from './NetworkPill';
 import { ThemeSwitch } from './ThemeSwitch';
 
+import { useWideScreen } from '../hooks';
 import type { Tab } from '../kitty-core';
 
 const TABS = [
   { id: 'new' as const, label: 'New' },
   { id: 'mine' as const, label: 'My kitties' },
   { id: 'open' as const, label: 'Open' },
+];
+// Sellers get a Requests tab once connected. Four tabs do not fit a phone's top bar, so below
+// sm it is reached from the My kitties page instead.
+const TABS_WITH_REQUESTS = [
+  TABS[0], TABS[1], { id: 'requests' as const, label: 'Requests' }, TABS[2],
 ];
 
 interface TopBarProps {
@@ -26,6 +32,8 @@ interface TopBarProps {
 
 export function TopBar({ tab, onTab, isConnected, isCorrectChain, onSwitchChain, onHome }: TopBarProps) {
   const wrongChain = isConnected && !isCorrectChain;
+  const wide = useWideScreen();
+  const showRequests = isConnected && wide;
   return (
     <header
       className="sticky top-0 z-30 border-b border-line"
@@ -48,7 +56,7 @@ export function TopBar({ tab, onTab, isConnected, isCorrectChain, onSwitchChain,
 
         <SegmentedTabs
           ariaLabel="Sections"
-          tabs={TABS}
+          tabs={showRequests ? TABS_WITH_REQUESTS : TABS}
           value={tab}
           onChange={onTab}
         />

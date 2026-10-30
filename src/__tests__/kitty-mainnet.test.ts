@@ -64,8 +64,8 @@ describe('Arc mainnet entry', () => {
     const t = KITTY_DEPLOYMENTS[arcTestnet.id];
     expect(t.chainId).toBe(5042002);
     expect(t.deployed).toBe(true);
-    expect(t.kitty).toBe('0x12840026bd9457b41ae104536f0917a19dd88611');
-    expect(t.deployBlock).toBe(69_641_176n);
+    expect(t.kitty).toBe('0x621b7aadfbc5870b95d4d95245529059536da7e5');
+    expect(t.deployBlock).toBe(69_829_378n);
     expect(t.faucetUrl).toBeTruthy();
   });
   it('is NOT deployed yet: no address, so every read and write is blocked', () => {

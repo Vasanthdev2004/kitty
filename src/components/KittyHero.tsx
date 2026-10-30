@@ -24,13 +24,14 @@ const NOTE: Record<KittyPhase, (deadline: bigint) => string> = {
   paid: () => 'Paid out to the recipient in one payment.',
   expired: d => `The deadline passed on ${formatDeadline(d)}. Each person can get back what they put in.`,
   stuck: () => 'The goal was met but nobody paid out within 30 days of the deadline, so paying out is closed. Everyone can take back their own money.',
+  cancelled: () => 'This kitty was cancelled. Nobody can chip in or be paid out, and everyone can take back their own money right away.',
 };
 
 /** `chainNow` is the page's single clock (see KittyPage), so the hero never runs its own timer. */
 export function KittyHero({
   data, chainNow, onRefresh, explorerBase, me,
 }: { data: KittyData; chainNow: bigint; onRefresh: () => void | Promise<void>; explorerBase: string; me?: string }) {
-  const phase = kittyPhase({ settled: data.settled, totalFundedRaw: data.totalFundedRaw, goalRaw: data.goalRaw, deadline: data.deadline, now: chainNow });
+  const phase = kittyPhase({ settled: data.settled, cancelled: data.cancelled, totalFundedRaw: data.totalFundedRaw, goalRaw: data.goalRaw, deadline: data.deadline, now: chainNow });
   const pill = PHASE_PILL[phase];
   const parts = splitCountdown(Number(data.deadline - chainNow));
   const pct = fundedPercent(data.totalFundedRaw, data.goalRaw);

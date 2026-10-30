@@ -15,6 +15,8 @@ export interface KittyData {
   ref: string;
   mode: KittyMode;
   settled: boolean;
+  /** Stopped by the creator or recipient before it was fully funded. Refunds are open at once. */
+  cancelled: boolean;
   totalFundedRaw: bigint;
   /** Creator-set minimum for first-time funders (open kitties). */
   minContributionRaw: bigint;
@@ -25,13 +27,15 @@ export interface KittyData {
   chainTimestamp: bigint;
 }
 
-export type ActivityKind = 'created' | 'chipped' | 'paid' | 'refunded';
+export type ActivityKind = 'created' | 'chipped' | 'paidFor' | 'paid' | 'refunded' | 'cancelled';
 
 export interface ActivityItem {
   kind: ActivityKind;
   /** Contributor for chipped / refunded, recipient for paid, creator for created. */
   address: string;
   amountRaw?: bigint;
+  /** paidFor: the friend who was credited (address is the payer). */
+  other?: string;
   blockNumber: bigint;
   logIndex: number;
   txHash: `0x${string}`;
@@ -52,6 +56,7 @@ export interface MineSummary {
   totalFundedRaw: bigint;
   deadline: bigint;
   settled: boolean;
+  cancelled: boolean;
   /** The connected wallet's own numbers on this kitty. */
   myShareRaw: bigint;
   myContributedRaw: bigint;

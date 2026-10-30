@@ -13,15 +13,17 @@ import {
 } from './kitty-core';
 import {
   acquireInflight, approveAndChipIn, checkKittyPreflight, handleReceiptOutcome, isTxBusy, kittyWrite,
-  makeInflightRef, releaseInflight, waitForReceipt,
+  makeInflightRef, permitChipIn, releaseInflight, waitForReceipt,
   type MinimalPublicClient, type MinimalWalletClient, type PendingOp,
 } from './kitty-tx';
+import { chooseChipInPath, permitDeadline } from './permit';
+import { preparePermit, type PreparedPermit } from './permit-io';
 import type { TxStatus } from './pt-types';
 import { plain } from './pt-ui';
 import { formatUsdcPlain } from './pt-share';
 import { formatDeadline } from './pt-utils';
 import {
-  describeChipIn, describeCreate, describePayOut, describeRefund, type WriteSummary,
+  describeCancel, describeChipIn, describeCreate, describeFundFor, describePayOut, describeRefund, type WriteSummary,
 } from './write-summary';
 
 const notifyError = (m: string) => toast.error(plain(m));
@@ -135,33 +137,62 @@ export function useKittyTx(p: {
     else releaseInflight(inflightRef.current);
   }, [gate, confirmed, walletClient, dep, submit]);
 
+  /**
+   * Chip in, for yourself or (with `friend`) for someone else.
+   * Path: allowance already covers it -> one plain transaction. Otherwise sign a permit
+   * and send one transaction. If the wallet cannot sign typed data, or the token's permit
+   * domain does not check out, fall back to approve, wait for the receipt, then chip in.
+   * A signature the person declines stops everything; it never silently becomes an approval.
+   */
   const chipIn = useCallback(async (
-    potId: `0x${string}`, amountRaw: bigint, hasAllowance: boolean, ctx?: { ref: string; recipient: string },
+    potId: `0x${string}`, amountRaw: bigint, allowanceRaw: bigint,
+    ctx?: { ref: string; recipient: string }, friend?: `0x${string}`,
   ) => {
     const acct = gate();
     if (!acct || !walletClient) return;
-    const ok = await confirmed(describeChipIn({
-      ref: ctx?.ref ?? potId, amountText: `${formatUsdcPlain(amountRaw)} USDC`, recipient: ctx?.recipient ?? 'the recipient',
-    }));
+    const ref = ctx?.ref ?? potId;
+    const recipient = ctx?.recipient ?? 'the recipient';
+    const amountText = `${formatUsdcPlain(amountRaw)} USDC`;
+    const ok = await confirmed(friend
+      ? describeFundFor({ ref, amountText, recipient, friend })
+      : describeChipIn({ ref, amountText, recipient }));
     if (!ok) return;
-    if (hasAllowance) {
-      const r = await kittyWrite({ dep, functionName: 'fund', args: [potId, amountRaw], label: 'Chip in', walletClient, onStatus: setTxStatus });
-      if (r.kind === 'submitted') submit({ kind: 'fund', orderId: potId, label: 'Chip in' }, r.hash);
-      else releaseInflight(inflightRef.current);
+    const done = (hash: `0x${string}`, label: string) => submit({ kind: 'fund', orderId: potId, label }, hash);
+
+    if (allowanceRaw >= amountRaw) {
+      const r = await kittyWrite({
+        dep, functionName: friend ? 'fundFor' : 'fund', args: friend ? [potId, friend, amountRaw] : [potId, amountRaw],
+        label: 'Chip in', walletClient, onStatus: setTxStatus,
+      });
+      if (r.kind === 'submitted') done(r.hash, 'Chip in'); else releaseInflight(inflightRef.current);
       return;
     }
     if (!minimal) { releaseInflight(inflightRef.current); return; }
-    const r = await approveAndChipIn({ dep, potId, amountRaw, publicClient: minimal, walletClient, onStatus: setTxStatus });
-    if (r.kind === 'chip-in-submitted') submit({ kind: 'fund', orderId: potId, label: 'Chip in' }, r.hash);
+
+    // Reading the token's domain takes a moment; show the first step right away.
+    setTxStatus({ kind: 'wallet-pending', label: 'Sign permit' });
+    const prepared: PreparedPermit = await preparePermit(minimal, dep, acct);
+    const path = chooseChipInPath({ allowanceRaw, amountRaw, permitUsable: prepared.ok });
+    if (path === 'permit' && prepared.ok) {
+      const r = await permitChipIn({
+        dep, owner: acct, potId, beneficiary: friend, amountRaw, domain: prepared.domain, nonce: prepared.nonce,
+        deadline: permitDeadline(Math.floor(Date.now() / 1000)), walletClient, onStatus: setTxStatus,
+      });
+      if (r.kind === 'chip-in-submitted') { done(r.hash, 'Chip in'); return; }
+      if (r.kind !== 'unsupported') { releaseInflight(inflightRef.current); return; }
+      // unsupported: fall through to approve + chip in
+    }
+    const r = await approveAndChipIn({ dep, potId, beneficiary: friend, amountRaw, publicClient: minimal, walletClient, onStatus: setTxStatus });
+    if (r.kind === 'chip-in-submitted') done(r.hash, 'Chip in');
     else if (r.kind === 'approve-uncertain') {
       // The approval may still land. Keep the lock and the hash; Retry re-polls it.
-      submit({ kind: 'fund', orderId: potId, label: 'Approve USDC' }, r.hash);
+      done(r.hash, 'Approve USDC');
       notifyError('Approval uncertain. Do not resubmit. Use Retry lookup.');
     } else releaseInflight(inflightRef.current);
   }, [gate, confirmed, walletClient, dep, minimal, submit]);
 
   const simple = useCallback(async (
-    fn: 'settle' | 'refund', kind: PendingOp['kind'], label: string, potId: `0x${string}`, summary: WriteSummary,
+    fn: 'settle' | 'refund' | 'cancel', kind: PendingOp['kind'], label: string, potId: `0x${string}`, summary: WriteSummary,
   ) => {
     const acct = gate();
     if (!acct || !walletClient) return;
@@ -180,6 +211,9 @@ export function useKittyTx(p: {
       ref: ctx?.ref ?? potId, amountText: ctx ? `${formatUsdcPlain(ctx.amountRaw)} USDC` : 'your contribution',
     })), [simple]);
 
+  const cancelKitty = useCallback((potId: `0x${string}`, ctx?: { ref: string }) =>
+    simple('cancel', 'cancel', 'Cancel kitty', potId, describeCancel({ ref: ctx?.ref ?? potId })), [simple]);
+
   /** Re-polls the same hash. Never submits a new transaction. */
   const retry = useCallback(() => {
     if (txStatus.kind !== 'uncertain' || !publicClient) return;
@@ -190,5 +224,5 @@ export function useKittyTx(p: {
     setTimeout(() => setPendingHash(hash), 0);
   }, [txStatus, publicClient]);
 
-  return { txStatus, busy: isTxBusy(txStatus), createKitty, chipIn, payOut, getRefund, retry };
+  return { txStatus, busy: isTxBusy(txStatus), createKitty, chipIn, payOut, getRefund, cancelKitty, retry };
 }

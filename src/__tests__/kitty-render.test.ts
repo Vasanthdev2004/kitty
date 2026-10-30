@@ -29,13 +29,13 @@ const noop = () => undefined;
 const page = (data: KittyData, over: Partial<KittyPageProps> = {}): string =>
   clean(renderToString(createElement(KittyPage, {
     data, dep: ACTIVE, connectedAddress: ME, isCorrectChain: true, onSwitchChain: noop, txStatus: { kind: 'idle' },
-    allowanceRaw: 0n, balanceRaw: 100n * U, onRefresh: noop, onChipIn: noop, onPayOut: noop, onGetRefund: noop,
+    allowanceRaw: 0n, balanceRaw: 100n * U, onRefresh: noop, onChipIn: noop, onCancel: noop, onPayOut: noop, onGetRefund: noop,
     justCreated: false, activity: { items: [], loading: false, error: undefined, retry: noop }, ...over,
   })));
 
 const base: KittyData = {
   id: ID, creator: BOB, recipient: SELLER, goalRaw: 100n * U, deadline: NOW + 86_400n, ref: 'Lisbon weekend', mode: 'split',
-  settled: false, totalFundedRaw: 40n * U, minContributionRaw: 0n, effectiveMinRaw: 0n, chainTimestamp: NOW,
+  settled: false, cancelled: false, totalFundedRaw: 40n * U, minContributionRaw: 0n, effectiveMinRaw: 0n, chainTimestamp: NOW,
   contributors: [
     { address: ME, shareRaw: 60n * U, contributedRaw: 20n * U, refunded: false },
     { address: BOB, shareRaw: 40n * U, contributedRaw: 20n * U, refunded: false },
@@ -130,7 +130,7 @@ describe('render smoke', () => {
   it('my kitties groups cards', () => {
     const mk = (id: string, over: Partial<MineSummary>): MineSummary => ({
       id: `0x${id.repeat(32)}`, ref: `Kitty ${id}`, mode: 'split', creator: ME, recipient: SELLER, goalRaw: 100n * U,
-      totalFundedRaw: 0n, deadline: NOW + 1000n, settled: false, myShareRaw: 0n, myContributedRaw: 0n, myRefunded: false,
+      totalFundedRaw: 0n, deadline: NOW + 1000n, settled: false, cancelled: false, myShareRaw: 0n, myContributedRaw: 0n, myRefunded: false,
       roles: ['Created'], ...over,
     });
     const scan = {

@@ -53,7 +53,7 @@ describe('deployment config', () => {
     expect(() => getDeployment(1)).toThrow();
   });
   it('points at the deployed Kitty and Arc USDC, scanning from the deploy block (never 0)', () => {
-    expect(dep.kitty).toBe('0x12840026bd9457b41ae104536f0917a19dd88611');
+    expect(dep.kitty).toBe('0x621b7aadfbc5870b95d4d95245529059536da7e5');
     expect(dep.usdc.toLowerCase()).toBe('0x3600000000000000000000000000000000000000');
     expect(dep.usdcDecimals).toBe(6);
     expect(dep.deployBlock).toBeGreaterThan(0n);

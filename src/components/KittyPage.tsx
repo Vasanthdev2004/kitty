@@ -5,7 +5,7 @@
 // Chip in goes away and Get refund appears, then a re-read confirms it onchain.
 import { useEffect, useRef, useState } from 'react';
 import { useChainNow, useShareBase } from '../hooks';
-import { buildKittyNudge, buildKittyUrl, kittyAction, kittyActionHasDock, kittyPhase, readPhaseOf } from '../kitty-core';
+import { buildKittyNudge, buildKittyUrl, canCancel, kittyAction, kittyActionHasDock, kittyPhase, readPhaseOf } from '../kitty-core';
 import { canRemind, dismissShareStep, isShareStepDismissed, localStore, remindMessageFor } from '../share-messages';
 import { formatDeadline } from '../pt-utils';
 import { formatUsdcPlain } from '../pt-share';
@@ -13,7 +13,8 @@ import type { KittyDeployment } from '../kitty-config';
 import type { ActivityItem, KittyData } from '../kitty-types';
 import type { TxStatus } from '../pt-types';
 import { cn } from '../cn';
-import { Skeleton } from './ui';
+import { Button, Skeleton } from './ui';
+import { ConfirmDialog } from './ConfirmDialog';
 import { KittyHero } from './KittyHero';
 import { KittyAction } from './KittyAction';
 import { OpenContributors, OpenProgress } from './OpenPeople';
@@ -34,7 +35,9 @@ export interface KittyPageProps {
   allowanceRaw: bigint | undefined;
   balanceRaw: bigint | undefined;
   onRefresh: () => void | Promise<void>;
-  onChipIn: (amountRaw: bigint, hasAllowance: boolean) => void | Promise<void>;
+  /** `friend` set: pay for that person (fundFor). */
+  onChipIn: (amountRaw: bigint, friend?: `0x${string}`) => void | Promise<void>;
+  onCancel: () => void | Promise<void>;
   onPayOut: () => void | Promise<void>;
   onGetRefund: () => void | Promise<void>;
   /** This browser just created this kitty. */
@@ -48,7 +51,7 @@ export function KittyPage(p: KittyPageProps) {
   // The page clock. Everything time-dependent below reads `chainNow`.
   const chainNow = useChainNow(data.chainTimestamp);
   const readPhase = readPhaseOf(data);
-  const phase = kittyPhase({ settled: data.settled, totalFundedRaw: data.totalFundedRaw, goalRaw: data.goalRaw, deadline: data.deadline, now: chainNow });
+  const phase = kittyPhase({ settled: data.settled, cancelled: data.cancelled, totalFundedRaw: data.totalFundedRaw, goalRaw: data.goalRaw, deadline: data.deadline, now: chainNow });
 
   // When the clock moves the phase past the last read, re-read once (a moment later, so the
   // chain clock has caught up). The action card already follows the live phase meanwhile.
@@ -74,6 +77,8 @@ export function KittyPage(p: KittyPageProps) {
   const requested = data.creator.toLowerCase() === data.recipient.toLowerCase();
   const paid = p.activity.items?.find(a => a.kind === 'paid');
   const isCreator = !!me && data.creator.toLowerCase() === me.toLowerCase();
+  const mayCancel = canCancel({ phase, me, creator: data.creator, recipient: data.recipient }) && p.isCorrectChain;
+  const [confirmCancel, setConfirmCancel] = useState(false);
 
   // Share step: prominent for a new kitty and for its creator until dismissed (remembered per kitty).
   const [dismissed, setDismissed] = useState(() => isShareStepDismissed(dep.chainId, data.id, localStore()));
@@ -111,6 +116,17 @@ export function KittyPage(p: KittyPageProps) {
         />
       )}
 
+      {confirmCancel && (
+        <ConfirmDialog
+          title="Cancel this kitty?" danger confirmLabel="Cancel kitty" cancelLabel="Keep kitty"
+          onCancel={() => setConfirmCancel(false)}
+          onConfirm={() => { setConfirmCancel(false); void p.onCancel(); }}
+        >
+          <p>Nobody will be able to chip in or be paid out. Everyone who already chipped in can take their own money back right away.</p>
+          <p>This cannot be undone.</p>
+        </ConfirmDialog>
+      )}
+
       <KittyHero data={data} chainNow={chainNow} onRefresh={p.onRefresh} explorerBase={dep.explorerBase} me={me} />
 
       <div className="grid items-start gap-4 lg:grid-cols-[1fr_360px]">
@@ -144,6 +160,14 @@ export function KittyPage(p: KittyPageProps) {
             allowanceRaw={p.allowanceRaw} balanceRaw={p.balanceRaw} my={my}
             onChipIn={p.onChipIn} onPayOut={p.onPayOut} onGetRefund={p.onGetRefund}
           />
+          {mayCancel && (
+            <div className="flex items-center justify-between gap-3 px-1">
+              <p className="text-xs leading-relaxed text-ink-3">You started or receive this kitty, so you can stop it.</p>
+              <Button variant="ghost" size="sm" className="shrink-0 text-err-text hover:text-err-text" onClick={() => setConfirmCancel(true)}>
+                Cancel kitty
+              </Button>
+            </div>
+          )}
           <WhatHappensNext phase={phase} deadline={data.deadline} now={chainNow} />
           {data.settled && <ReceiptCard data={data} dep={dep} paid={paid} />}
           {!showStep && shareCard}

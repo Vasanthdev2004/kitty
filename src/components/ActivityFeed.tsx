@@ -53,6 +53,14 @@ export function ActivityFeed({
                   <p className="text-[13px] leading-snug text-ink">
                     <span className={mine ? 'font-medium' : 'mono'}>{mine ? 'You' : shortAddress(a.address)}</span>{' '}
                     <span className="text-ink-2">{ACTIVITY_VERB[a.kind]}</span>
+                    {a.kind === 'paidFor' && a.other && (
+                      <>
+                        {' '}
+                        {me && me.toLowerCase() === a.other.toLowerCase()
+                          ? <span className="font-medium">you</span>
+                          : <span className="mono">{shortAddress(a.other)}</span>}
+                      </>
+                    )}
                     {a.amountRaw !== undefined && <span className="tnum"> {formatUsdcPlain(a.amountRaw)} USDC</span>}
                   </p>
                   <p className="mt-0.5 text-xs text-ink-3">{a.timestamp ? agoText(nowSec - a.timestamp) : 'Time unavailable'}</p>

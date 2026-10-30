@@ -48,7 +48,7 @@ contract KittyBlocklistTest is KittyTestBase {
     }
 
     function _bSettled(bytes32 id) internal view returns (bool s) {
-        (,,,,,, s,,,) = bk.getPot(id);
+        (,,,,,, s,,,,) = bk.getPot(id);
     }
 
     function _settleFails(bytes32 id) internal {
@@ -153,7 +153,7 @@ contract KittyBlocklistTest is KittyTestBase {
     function test_blocklist_paymentRequest_open_recoverable() public {
         blk.setBlocked(creator, true);
         bytes32 id = _bOpen(SALT_A, creator);
-        (address c, address r,,,,,,,,) = bk.getPot(id);
+        (address c, address r,,,,,,,,,) = bk.getPot(id);
         assertEq(c, r);
         _bFill(id);
         _runBlockedScenario(id, creator);

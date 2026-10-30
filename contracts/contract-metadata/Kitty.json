@@ -1,13 +1,20 @@
 {
-  "contractAddress": "0x12840026bd9457b41ae104536f0917a19dd88611",
+  "contractAddress": "0x621b7aadfbc5870b95d4d95245529059536da7e5",
   "network": "ARC-TESTNET",
   "deployerWalletId": "3c2464b2-8369-52e2-a782-800bbeca5396",
   "contract_code_path": "/home/user/app/contracts/Kitty.sol",
   "contract_compiled_code_path": "/home/user/app/contracts/out/Kitty.sol/Kitty.json",
   "contract_network_and_links": {
-    "Arc Testnet": "https://explorer.testnet.arc.io/address/0x12840026bd9457b41ae104536f0917a19dd88611"
+    "Arc Testnet": "https://explorer.testnet.arc.io/address/0x621b7aadfbc5870b95d4d95245529059536da7e5"
   },
   "contract_deployments": [
+    {
+      "chain": "Arc Testnet",
+      "address": "0x621b7aadfbc5870b95d4d95245529059536da7e5",
+      "explorerUrl": "https://explorer.testnet.arc.io/address/0x621b7aadfbc5870b95d4d95245529059536da7e5",
+      "txHash": "0xb88d8d84eb45570c317a048d4b863eb5636bf2e0aad25e73fc8f2ea9dbcbff2c",
+      "deployedAt": "2026-10-30T11:02:37.696Z"
+    },
     {
       "chain": "Arc Testnet",
       "address": "0x12840026bd9457b41ae104536f0917a19dd88611",
@@ -79,6 +86,19 @@
         }
       ],
       "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "cancel",
+      "inputs": [
+        {
+          "name": "potId",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
     },
     {
       "type": "function",
@@ -236,6 +256,110 @@
     },
     {
       "type": "function",
+      "name": "fundFor",
+      "inputs": [
+        {
+          "name": "potId",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        },
+        {
+          "name": "beneficiary",
+          "type": "address",
+          "internalType": "address"
+        },
+        {
+          "name": "amount",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "fundForWithPermit",
+      "inputs": [
+        {
+          "name": "potId",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        },
+        {
+          "name": "beneficiary",
+          "type": "address",
+          "internalType": "address"
+        },
+        {
+          "name": "amount",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "permitDeadline",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "v",
+          "type": "uint8",
+          "internalType": "uint8"
+        },
+        {
+          "name": "r",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        },
+        {
+          "name": "s",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "fundWithPermit",
+      "inputs": [
+        {
+          "name": "potId",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        },
+        {
+          "name": "amount",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "permitDeadline",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "v",
+          "type": "uint8",
+          "internalType": "uint8"
+        },
+        {
+          "name": "r",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        },
+        {
+          "name": "s",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
       "name": "getContribution",
       "inputs": [
         {
@@ -347,6 +471,11 @@
           "name": "contributorCount",
           "type": "uint256",
           "internalType": "uint256"
+        },
+        {
+          "name": "cancelled",
+          "type": "bool",
+          "internalType": "bool"
         }
       ],
       "stateMutability": "view"
@@ -405,6 +534,25 @@
     },
     {
       "type": "event",
+      "name": "Cancelled",
+      "inputs": [
+        {
+          "name": "potId",
+          "type": "bytes32",
+          "indexed": true,
+          "internalType": "bytes32"
+        },
+        {
+          "name": "by",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
       "name": "Funded",
       "inputs": [
         {
@@ -427,6 +575,37 @@
         },
         {
           "name": "totalFunded",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "FundedFor",
+      "inputs": [
+        {
+          "name": "potId",
+          "type": "bytes32",
+          "indexed": true,
+          "internalType": "bytes32"
+        },
+        {
+          "name": "payer",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        },
+        {
+          "name": "beneficiary",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        },
+        {
+          "name": "amount",
           "type": "uint256",
           "indexed": false,
           "internalType": "uint256"
@@ -535,6 +714,11 @@
     },
     {
       "type": "error",
+      "name": "AlreadyCancelled",
+      "inputs": []
+    },
+    {
+      "type": "error",
       "name": "AlreadyRefunded",
       "inputs": []
     },
@@ -619,6 +803,27 @@
     },
     {
       "type": "error",
+      "name": "InsufficientAllowanceAfterPermit",
+      "inputs": [
+        {
+          "name": "allowance",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "needed",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "InvalidBeneficiary",
+      "inputs": []
+    },
+    {
+      "type": "error",
       "name": "InvalidContributor",
       "inputs": []
     },
@@ -665,6 +870,11 @@
     },
     {
       "type": "error",
+      "name": "NotCreatorOrRecipient",
+      "inputs": []
+    },
+    {
+      "type": "error",
       "name": "NotFullyFunded",
       "inputs": []
     },
@@ -683,6 +893,11 @@
           "internalType": "bytes32"
         }
       ]
+    },
+    {
+      "type": "error",
+      "name": "PotCancelled",
+      "inputs": []
     },
     {
       "type": "error",
@@ -778,5 +993,16 @@
       "name": "ZeroShare",
       "inputs": []
     }
-  ]
+  ],
+  "version": "v2",
+  "deployBlock": 69829378,
+  "v1": {
+    "status": "legacy",
+    "note": "Kitty v1. Replaced by v2 (this file's contractAddress). Not used by the app.",
+    "contractAddress": "0x12840026bd9457b41ae104536f0917a19dd88611",
+    "explorerUrl": "https://explorer.testnet.arc.io/address/0x12840026bd9457b41ae104536f0917a19dd88611",
+    "txHash": "0x18dd71935db31534585192d4ffa2d86c5a71f96f6f6a101377b7b22657c478fc",
+    "deployedAt": "2026-10-29T08:27:03.344Z",
+    "deployBlock": 69641176
+  }
 }

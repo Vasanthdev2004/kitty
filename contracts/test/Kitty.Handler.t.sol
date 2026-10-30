@@ -37,6 +37,21 @@ contract KittyHandler is Test {
     uint256 public missedRefund;      // refund failed when it must succeed
     mapping(bytes32 => uint256) public refundCount;
 
+    // v2 ghosts / counters
+    mapping(bytes32 => mapping(address => uint256)) public ghostCredit; // what each beneficiary was credited
+    uint256 public fundForOk;        // successful fundFor / fundForWithPermit
+    uint256 public permitOk;         // successful fundWithPermit / fundForWithPermit
+    uint256 public cancelOk;
+    uint256 public cancelRejected;   // cancel correctly rejected
+    uint256 public fundRejected;     // funding correctly rejected
+    uint256 public unexpectedFund;   // a funding call succeeded when it must not
+    uint256 public missedFund;       // a funding call failed when it must succeed
+    uint256 public unexpectedCancel; // cancel succeeded when it must not
+    uint256 public missedCancel;     // cancel failed when it must succeed
+    uint256 public cancelMovedTokens;// cancel changed a token balance or the liability
+    uint256 public settleAfterCancel;// settle succeeded on a cancelled pot
+    uint256 public cancelledRefundOk;// refunds paid out of cancelled pots
+
     constructor(Kitty k, KittyMockUSDC u) {
         kitty = k;
         usdc = u;
@@ -82,47 +97,144 @@ contract KittyHandler is Test {
 
     // ── actions ───────────────────────────────────────────────────────────────
 
+    /// Largest-sensible amount for `ben` in pot `id` (always valid when ok == true).
+    function _validAmt(bytes32 id, address ben, uint256 amtSeed) internal view returns (uint256 amt, bool ok) {
+        (, , uint256 goal, uint64 dl,, Kitty.Mode mode,, uint256 tf,,, bool canc) = kitty.getPot(id);
+        if (canc || block.timestamp >= dl) return (0, false);
+        uint256 remaining = goal - tf;
+        if (remaining == 0) return (0, false);
+
+        uint256 maxAmt = remaining;
+        (uint256 sh, uint256 prior,) = kitty.getContribution(id, ben);
+        if (mode == Kitty.Mode.Split) {
+            if (sh == 0 || sh == prior) return (0, false);
+            if (sh - prior < maxAmt) maxAmt = sh - prior;
+        }
+        amt = amtSeed % 3 == 0 ? maxAmt : bound(amtSeed, 1, maxAmt);
+        if (mode == Kitty.Mode.Open && prior == 0) {
+            uint256 eff = kitty.effectiveMinContribution(id);
+            // first-time beneficiaries must reach the floor unless completing; repeat ones may add anything
+            if (amt < eff && amt != remaining) amt = eff <= remaining ? eff : remaining;
+        }
+        ok = true;
+    }
+
+    /// Independent model of when a funding call must succeed.
+    function _legal(bytes32 id, address payer, address ben, uint256 amt, uint8 kind) internal view returns (bool) {
+        (, , uint256 goal, uint64 dl,, Kitty.Mode mode,, uint256 tf,,, bool canc) = kitty.getPot(id);
+        if (canc || amt == 0 || block.timestamp >= dl) return false;
+        uint256 rem = goal - tf;
+        if (amt > rem) return false;
+        (uint256 sh, uint256 prior,) = kitty.getContribution(id, ben);
+        if (mode == Kitty.Mode.Split) {
+            if (sh == 0 || prior + amt > sh) return false;
+        } else if (prior == 0) {
+            uint256 eff = kitty.effectiveMinContribution(id);
+            if (amt < eff && amt != rem) return false; // the 256 cap is unreachable through the floor
+        }
+        if (kind >= 2 && usdc.allowance(payer, address(kitty)) < amt) return false;
+        return true;
+    }
+
+    /// kind: 0 fund, 1 fundFor, 2 fundWithPermit, 3 fundForWithPermit (mock token has no permit: allowance path).
+    function _attempt(bytes32 id, address payer, address ben, uint256 amt, uint8 kind) internal {
+        bool legal = _legal(id, payer, ben, amt, kind);
+        bool ok;
+        vm.prank(payer);
+        if (kind == 0) {
+            try kitty.fund(id, amt) { ok = true; } catch {}
+        } else if (kind == 1) {
+            try kitty.fundFor(id, ben, amt) { ok = true; } catch {}
+        } else if (kind == 2) {
+            try kitty.fundWithPermit(id, amt, type(uint256).max, 27, bytes32(0), bytes32(0)) { ok = true; } catch {}
+        } else {
+            try kitty.fundForWithPermit(id, ben, amt, type(uint256).max, 27, bytes32(0), bytes32(0)) { ok = true; }
+            catch {}
+        }
+        if (ok) {
+            ghostIn += amt;
+            ghostCredit[id][ben] += amt;
+            fundOk++;
+            if (kind == 1 || kind == 3) fundForOk++;
+            if (kind >= 2) permitOk++;
+            if (!legal) unexpectedFund++;
+        } else {
+            fundRejected++;
+            if (legal) missedFund++;
+        }
+    }
+
     function fund(uint256 potSeed, uint256 actorSeed, uint256 amtSeed) external {
         bytes32 id = pots[potSeed % pots.length];
         address a = actors[actorSeed % actors.length];
-        (, , uint256 goal, uint64 dl,, Kitty.Mode mode,, uint256 tf,,) = kitty.getPot(id);
-        if (block.timestamp >= dl) return;
-        uint256 remaining = goal - tf;
-        if (remaining == 0) return;
+        (uint256 amt, bool ok) = _validAmt(id, a, amtSeed);
+        if (!ok) return;
+        _attempt(id, a, a, amt, 0);
+    }
 
-        uint256 maxAmt = remaining;
-        if (mode == Kitty.Mode.Split) {
-            (uint256 sh, uint256 c,) = kitty.getContribution(id, a);
-            if (sh == 0 || sh == c) return;
-            if (sh - c < maxAmt) maxAmt = sh - c;
-        }
-        uint256 amt = amtSeed % 3 == 0 ? maxAmt : bound(amtSeed, 1, maxAmt);
-        if (mode == Kitty.Mode.Open) {
-            (, uint256 prior,) = kitty.getContribution(id, a);
-            uint256 eff = kitty.effectiveMinContribution(id);
-            // first-time funders must reach the floor unless completing; repeat funders may add anything
-            if (prior == 0 && amt < eff && amt != remaining) amt = eff <= remaining ? eff : remaining;
+    /// Any funding flavour, payer and beneficiary independent. Mostly sensible amounts, sometimes junk.
+    function fundAny(uint256 potSeed, uint256 payerSeed, uint256 benSeed, uint256 amtSeed, uint256 kindSeed) external {
+        bytes32 id = pots[potSeed % pots.length];
+        address payer = actors[payerSeed % actors.length];
+        address ben = actors[benSeed % actors.length];
+        uint8 kind = uint8(kindSeed % 4);
+        if (kind == 0) ben = payer;
+        if (kind == 2) ben = payer;
+
+        (uint256 amt, bool ok) = _validAmt(id, ben, amtSeed);
+        if (!ok || (amtSeed >> 4) % 6 == 0) {
+            (, , uint256 goal,,,,,,,,) = kitty.getPot(id);
+            amt = bound(amtSeed >> 8, 0, goal + 1); // junk: usually illegal, model decides
         }
 
-        vm.prank(a);
-        try kitty.fund(id, amt) {
-            ghostIn += amt;
-            fundOk++;
-        } catch {}
+        // permit-style calls: sometimes strip or trim the payer's allowance first
+        uint256 allowMode = (kindSeed >> 8) % 3;
+        if (kind >= 2 && allowMode != 2) {
+            vm.prank(payer);
+            usdc.approve(address(kitty), allowMode == 0 ? 0 : amt);
+        }
+        _attempt(id, payer, ben, amt, kind);
+        if (kind >= 2 && allowMode != 2) {
+            vm.prank(payer);
+            usdc.approve(address(kitty), type(uint256).max);
+        }
+    }
+
+    function cancel(uint256 potSeed, uint256 whoSeed) external {
+        bytes32 id = pots[potSeed % pots.length];
+        (address cr, address rc, uint256 goal,,,, bool settled_, uint256 tf,,, bool canc) = kitty.getPot(id);
+        uint256 w = whoSeed % 3;
+        address who = w == 0 ? address(this) : w == 1 ? rc : actors[(whoSeed / 3) % actors.length];
+        bool legal = (who == cr || who == rc) && !settled_ && !canc && tf != goal;
+        // legal cancels end a pot's life: let only about one in ten through so the others keep being explored
+        if (legal && (whoSeed >> 16) % 10 != 0) return;
+
+        uint256 bal = usdc.balanceOf(address(kitty));
+        uint256 liab = kitty.totalEscrowLiability();
+        if (who != address(this)) vm.prank(who);
+        try kitty.cancel(id) {
+            cancelOk++;
+            if (!legal) unexpectedCancel++;
+            if (usdc.balanceOf(address(kitty)) != bal || kitty.totalEscrowLiability() != liab) cancelMovedTokens++;
+        } catch {
+            cancelRejected++;
+            if (legal) missedCancel++;
+        }
     }
 
     function settle(uint256 potSeed) external {
         bytes32 id = pots[potSeed % pots.length];
-        (, , uint256 goal, uint64 dl,,, bool settled_, uint256 tf,,) = kitty.getPot(id);
+        (, , uint256 goal, uint64 dl,,, bool settled_, uint256 tf,,, bool canc) = kitty.getPot(id);
         bool full = !settled_ && tf == goal;
         bool inWindow = block.timestamp < uint256(dl) + kitty.SETTLE_GRACE();
         try kitty.settle(id) {
             ghostOutSettle += goal;
             settleOk++;
-            if (!(full && inWindow)) unexpectedSettle++;
+            if (canc) settleAfterCancel++;
+            if (!(full && inWindow) || canc) unexpectedSettle++;
         } catch (bytes memory d) {
-            if (full && inWindow) missedSettle++;
-            if (full && !inWindow) {
+            if (full && inWindow && !canc) missedSettle++;
+            if (full && !inWindow && !canc) {
                 if (bytes4(d) == Kitty.SettleWindowClosed.selector) windowRejects++;
                 else missedSettle++;
             }
@@ -132,10 +244,10 @@ contract KittyHandler is Test {
     function refund(uint256 potSeed, uint256 actorSeed) external {
         bytes32 id = pots[potSeed % pots.length];
         address a = actors[actorSeed % actors.length];
-        (, , uint256 goal, uint64 dl,,, bool settled_, uint256 tf,,) = kitty.getPot(id);
+        (, , uint256 goal, uint64 dl,,, bool settled_, uint256 tf,,, bool canc) = kitty.getPot(id);
         (, uint256 contrib, bool already) = kitty.getContribution(id, a);
         bool full = tf == goal;
-        bool shouldWork = !settled_ && block.timestamp >= dl && !already && contrib > 0
+        bool shouldWork = !settled_ && (canc || block.timestamp >= dl) && !already && contrib > 0
             && !(full && block.timestamp < uint256(dl) + kitty.SETTLE_GRACE());
 
         uint256 before_ = usdc.balanceOf(a);
@@ -147,6 +259,7 @@ contract KittyHandler is Test {
             refundOk++;
             refundCount[id]++;
             if (full) valveRefundOk++;
+            if (canc) cancelledRefundOk++;
             if (!shouldWork) unexpectedRefund++;
         } catch {
             if (shouldWork) missedRefund++;
@@ -180,7 +293,7 @@ contract KittyHandler is Test {
     function warpToValve(uint256 potSeed, uint256 mode) external {
         if (mode % 5 != 0) return; // keep valve warps rare so funding still gets explored
         bytes32 id = pots[potSeed % pots.length];
-        (, , , uint64 dl,,,,,,) = kitty.getPot(id);
+        (, , , uint64 dl,,,,,,,) = kitty.getPot(id);
         uint256 valve = uint256(dl) + kitty.SETTLE_GRACE();
         uint256 m = (mode / 5) % 4;
         uint256 target = m == 0 ? valve - 1 : m == 1 ? valve : m == 2 ? valve + 1 : valve + bound(mode, 1, 3 days);

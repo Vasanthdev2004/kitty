@@ -66,7 +66,7 @@ contract KittyTokensTest is KittyTestBase {
         vm.expectRevert(bytes("KittyRevertToken: transferFrom failed"));
         k.fund(id, GOAL);
         assertEq(k.totalEscrowLiability(), 0);
-        (,,,,,,, uint256 funded,, uint256 count) = k.getPot(id);
+        (,,,,,,, uint256 funded,, uint256 count,) = k.getPot(id);
         assertEq(funded, 0);
         assertEq(count, 0);
     }
@@ -102,7 +102,7 @@ contract KittyTokensTest is KittyTestBase {
         k.fund(id, GOAL);
 
         assertEq(k.totalEscrowLiability(), 0);
-        (,,,,,,, uint256 funded,, uint256 count) = k.getPot(id);
+        (,,,,,,, uint256 funded,, uint256 count,) = k.getPot(id);
         assertEq(funded, 0);
         assertEq(count, 0);
         assertEq(k.getContributors(id).length, 0);
@@ -141,7 +141,7 @@ contract KittyTokensTest is KittyTestBase {
         rt.setRevertTransfer(true);
         vm.expectRevert(bytes("KittyRevertToken: transfer failed"));
         k.settle(id);
-        (,,,,,, bool settled,,,) = k.getPot(id);
+        (,,,,,, bool settled,,,,) = k.getPot(id);
         assertFalse(settled);
         assertEq(k.totalEscrowLiability(), 50e6);
         assertEq(rt.balanceOf(recipient), 0);
@@ -165,7 +165,7 @@ contract KittyTokensTest is KittyTestBase {
         ft.setFalseOutbound(true);
         vm.expectRevert(abi.encodeWithSelector(SafeERC20.SafeERC20FailedOperation.selector, address(ft)));
         k.settle(id);
-        (,,,,,, bool settled,,,) = k.getPot(id);
+        (,,,,,, bool settled,,,,) = k.getPot(id);
         assertFalse(settled);
         assertEq(k.totalEscrowLiability(), 50e6);
         assertEq(ft.balanceOf(recipient), 0);
@@ -345,7 +345,7 @@ contract KittyTokensTest is KittyTestBase {
     }
 
     function _settledOn(Kitty k, bytes32 id) internal view returns (bool s) {
-        (,,,,,, s,,,) = k.getPot(id);
+        (,,,,,, s,,,,) = k.getPot(id);
     }
 
     function test_reentrancy_settle_nestedSettleBlocked() public {
@@ -371,7 +371,7 @@ contract KittyTokensTest is KittyTestBase {
         _assertBlocked();
         (, uint256 contributed,) = ck.getContribution(id, address(att));
         assertEq(contributed, 40e6); // only the outer contribution recorded
-        (,,,,,, bool settled, uint256 funded,, uint256 count) = ck.getPot(id);
+        (,,,,,, bool settled, uint256 funded,, uint256 count,) = ck.getPot(id);
         assertFalse(settled);
         assertEq(funded, 40e6);
         assertEq(count, 1);

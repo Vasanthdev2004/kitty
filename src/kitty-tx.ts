@@ -10,6 +10,7 @@
 //  - Uncertain receipt: keep the hash and the lock, never resubmit.
 import { erc20Abi } from 'viem';
 import { KITTY_ABI } from './kitty-abi';
+import { buildPermitTypedData, isSignRejection, splitSignature, type PermitDomain } from './permit';
 import type { KittyDeployment } from './kitty-config';
 import type { TxStatus } from './pt-types';
 import { isRetryableRpcError, jitteredDelay, VALIDATION_DELAYS_MS } from './rpc';
@@ -158,7 +159,10 @@ export function checkKittyPreflight(
 
 // ── Writes ───────────────────────────────────────────────────────────────────
 
-export type KittyFn = 'createSplitPot' | 'createOpenPot' | 'fund' | 'settle' | 'refund';
+export type KittyFn =
+  | 'createSplitPot' | 'createOpenPot'
+  | 'fund' | 'fundFor' | 'fundWithPermit' | 'fundForWithPermit'
+  | 'settle' | 'refund' | 'cancel';
 
 export interface KittyWriteParams {
   dep: KittyDeployment;
@@ -209,6 +213,8 @@ export type ApproveAndChipInResult =
 export async function approveAndChipIn(p: {
   dep: KittyDeployment;
   potId: `0x${string}`;
+  /** Pay for this friend instead of yourself (fundFor). */
+  beneficiary?: `0x${string}`;
   amountRaw: bigint;
   publicClient: MinimalPublicClient;
   walletClient: MinimalWalletClient;
@@ -248,8 +254,8 @@ export async function approveAndChipIn(p: {
     fundHash = await p.walletClient.writeContract({
       address: p.dep.kitty,
       abi: KITTY_ABI,
-      functionName: 'fund',
-      args: [p.potId, p.amountRaw],
+      functionName: p.beneficiary ? 'fundFor' : 'fund',
+      args: p.beneficiary ? [p.potId, p.beneficiary, p.amountRaw] : [p.potId, p.amountRaw],
       chain: { id: p.dep.chainId },
       account: p.walletClient.account,
     });
@@ -260,4 +266,77 @@ export async function approveAndChipIn(p: {
   }
   p.onStatus({ kind: 'submitted', hash: fundHash, label: 'Chip in' });
   return { kind: 'chip-in-submitted', hash: fundHash };
+}
+
+// ── One-tap chip in (EIP-2612 permit) ────────────────────────────────────────
+
+export type PermitChipInResult =
+  /** The wallet cannot sign typed data. Nothing was sent; the caller falls back to approve + chip in. */
+  | { kind: 'unsupported'; message: string }
+  /** The person declined the signature. Stop here. */
+  | { kind: 'sign-rejected'; message: string }
+  | { kind: 'chip-in-rejected'; message: string }
+  | { kind: 'chip-in-submitted'; hash: `0x${string}` };
+
+/**
+ * Sign a permit for exactly `amountRaw`, then send ONE transaction that spends it
+ * (fundWithPermit, or fundForWithPermit when paying for a friend).
+ */
+export async function permitChipIn(p: {
+  dep: KittyDeployment;
+  owner: `0x${string}`;
+  potId: `0x${string}`;
+  beneficiary?: `0x${string}`;
+  amountRaw: bigint;
+  domain: PermitDomain;
+  nonce: bigint;
+  deadline: bigint;
+  walletClient: MinimalWalletClient;
+  onStatus: (s: TxStatus) => void;
+}): Promise<PermitChipInResult> {
+  if (typeof p.walletClient.signTypedData !== 'function') {
+    return { kind: 'unsupported', message: 'This wallet cannot sign typed data' };
+  }
+  p.onStatus({ kind: 'wallet-pending', label: 'Sign permit' });
+  const typed = buildPermitTypedData({
+    domain: p.domain, owner: p.owner, spender: p.dep.kitty, value: p.amountRaw, nonce: p.nonce, deadline: p.deadline,
+  });
+  let sig: `0x${string}`;
+  try {
+    sig = await p.walletClient.signTypedData({
+      account: p.walletClient.account, domain: typed.domain, types: typed.types, primaryType: typed.primaryType, message: typed.message,
+    });
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e);
+    if (isSignRejection(e)) {
+      p.onStatus({ kind: 'rejected', message: 'Wallet rejected the signature' });
+      return { kind: 'sign-rejected', message: msg };
+    }
+    return { kind: 'unsupported', message: msg };
+  }
+
+  let parts: { v: number; r: `0x${string}`; s: `0x${string}` };
+  try { parts = splitSignature(sig); } catch (e) {
+    return { kind: 'unsupported', message: e instanceof Error ? e.message : 'Unreadable signature' };
+  }
+
+  p.onStatus({ kind: 'wallet-pending', label: 'Chip in' });
+  try {
+    const hash = await p.walletClient.writeContract({
+      address: p.dep.kitty,
+      abi: KITTY_ABI,
+      functionName: p.beneficiary ? 'fundForWithPermit' : 'fundWithPermit',
+      args: p.beneficiary
+        ? [p.potId, p.beneficiary, p.amountRaw, p.deadline, parts.v, parts.r, parts.s]
+        : [p.potId, p.amountRaw, p.deadline, parts.v, parts.r, parts.s],
+      chain: { id: p.dep.chainId },
+      account: p.walletClient.account,
+    });
+    p.onStatus({ kind: 'submitted', hash, label: 'Chip in' });
+    return { kind: 'chip-in-submitted', hash };
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e);
+    p.onStatus({ kind: 'rejected', message: isUserRejection(msg) ? 'Wallet rejected the transaction' : msg.slice(0, 120) });
+    return { kind: 'chip-in-rejected', message: msg };
+  }
 }

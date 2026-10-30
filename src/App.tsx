@@ -13,7 +13,7 @@ import { ACTIVE, ACTIVE_CHAIN_ID, footerNote, notDeployedTitle } from './kitty-c
 import { routeTab, type KittyDraft, type Route, type Tab } from './kitty-core';
 import { ensureDeploymentValid, hasCachedValidation, resetDeploymentValidation, type MinimalPublicClient, type MinimalWalletClient } from './kitty-tx';
 import { useKittyTx } from './useKittyTx';
-import { useActivity, useKittyData, useMine } from './useKittyData';
+import { useActivity, useKittyData, useMine, useRequests, useStats } from './useKittyData';
 import { useRoute } from './useRoute';
 import { plain } from './pt-ui';
 
@@ -22,6 +22,7 @@ import { TxIsland } from './components/TxIsland';
 import { Home } from './components/Home';
 import { CreateKitty } from './components/CreateKitty';
 import { KittyPage, KittySkeleton } from './components/KittyPage';
+import { SellerRequests } from './components/SellerRequests';
 import { KittyNotFound } from './components/KittyNotFound';
 import { MyKitties } from './components/MyKitties';
 import { OrderLookup, LookupEmpty } from './components/OrderLookup';
@@ -106,6 +107,8 @@ export default function App() {
   const kitty = useKittyData(readClient, ACTIVE, kittyId, !!kittyId && createdId === kittyId);
   const activity = useActivity(readClient, ACTIVE, kittyId, refreshKey, !!kitty.data);
   const mine = useMine(route.view === 'mine' ? readClient : undefined, ACTIVE, route.view === 'mine' ? me : undefined);
+  const requests = useRequests(route.view === 'requests' ? readClient : undefined, ACTIVE, route.view === 'requests' ? me : undefined);
+  const stats = useStats(readClient, ACTIVE, route.view === 'home');
 
   const mainnetConfirm = useMainnetConfirm(ACTIVE);
 
@@ -130,7 +133,7 @@ export default function App() {
   });
 
   const deployBlocked = deploy.state !== 'valid';
-  const onTab = (t: Tab) => navigate(t === 'new' ? { view: 'home' } : t === 'mine' ? { view: 'mine' } : { view: 'open' });
+  const onTab = (t: Tab) => navigate(t === 'new' ? { view: 'home' } : t === 'mine' ? { view: 'mine' } : t === 'requests' ? { view: 'requests' } : { view: 'open' });
   const go = (r: Route) => navigate(r);
   const onCreate = (draft: KittyDraft, recipient: string) => void tx.createKitty(draft, recipient);
 
@@ -177,7 +180,12 @@ export default function App() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.24, ease: 'easeOut' }}
         >
-          {route.view === 'home' && <Home onNavigate={go} />}
+          {route.view === 'home' && (
+            <Home
+              onNavigate={go}
+              live={{ stats: stats.stats, loading: stats.loading, failed: stats.failed, explorerBase: ACTIVE.explorerBase }}
+            />
+          )}
 
           {route.view === 'new' && (
             <CreateKitty
@@ -200,6 +208,20 @@ export default function App() {
                 refreshing={mine.refreshing}
                 error={mine.error}
                 onRefresh={mine.refresh}
+                onNavigate={go}
+              />
+            </div>
+          )}
+
+          {route.view === 'requests' && (
+            <div className="pt-10 md:pt-14">
+              <SellerRequests
+                me={me}
+                scan={requests.scan}
+                loading={requests.loading}
+                refreshing={requests.refreshing}
+                error={requests.error}
+                onRefresh={requests.refresh}
                 onNavigate={go}
               />
             </div>
@@ -238,7 +260,8 @@ export default function App() {
                   allowanceRaw={allowanceRaw}
                   balanceRaw={balanceRaw}
                   onRefresh={() => { void kitty.refresh(); setRefreshKey(k => k + 1); refreshBalances(); }}
-                  onChipIn={(amount, hasAllowance) => tx.chipIn(route.id, amount, hasAllowance, kitty.data && { ref: kitty.data.ref, recipient: kitty.data.recipient })}
+                  onChipIn={(amount, friend) => tx.chipIn(route.id, amount, allowanceRaw ?? 0n, kitty.data && { ref: kitty.data.ref, recipient: kitty.data.recipient }, friend)}
+                  onCancel={() => tx.cancelKitty(route.id, kitty.data && { ref: kitty.data.ref })}
                   onPayOut={() => tx.payOut(route.id, kitty.data && { ref: kitty.data.ref, recipient: kitty.data.recipient, goalRaw: kitty.data.goalRaw })}
                   onGetRefund={() => tx.getRefund(route.id, kitty.data && { ref: kitty.data.ref, amountRaw: kitty.data.contributors.find(c => c.address.toLowerCase() === me?.toLowerCase())?.contributedRaw ?? 0n })}
                   justCreated={createdId === route.id}

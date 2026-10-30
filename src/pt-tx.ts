@@ -50,6 +50,14 @@ export interface MinimalWalletClient {
     chain?: unknown;
     account?: unknown;
   }): Promise<`0x${string}`>;
+  /** EIP-712 signing, used for one-tap chip in. Wallets that cannot sign typed data omit it or throw. */
+  signTypedData?(args: {
+    account?: unknown;
+    domain: unknown;
+    types: unknown;
+    primaryType: string;
+    message: unknown;
+  }): Promise<`0x${string}`>;
 }
 
 // ── Deployment validation result ──────────────────────────────────────────────
@@ -329,7 +337,7 @@ export async function singleWrite(p: SingleWriteParams): Promise<SingleWriteResu
 //  • The caller (App) must only execute release/clear when told to by releaseLock/clearPending.
 
 export interface PendingOp {
-  kind: 'create' | 'fund' | 'settle' | 'refund';
+  kind: 'create' | 'fund' | 'settle' | 'refund' | 'cancel';
   orderId?: string;
   label: string;
 }

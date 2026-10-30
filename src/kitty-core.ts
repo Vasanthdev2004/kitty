@@ -7,6 +7,7 @@ import { isValidOrderId } from './pt-share';
 import { relativeFromNow, toLocalInputValue } from './pt-ui';
 import type {
   ActivityItem, KittyData, KittyMode, MineRole, MineSummary,
+  KittyContributor,
 } from './kitty-types';
 
 // ── Contract constants (mirrors Kitty.sol) ───────────────────────────────────
@@ -65,7 +66,7 @@ export function effectiveMin(goalRaw: bigint, minContributionRaw: bigint): bigin
 
 // ── Phase (lifecycle) ────────────────────────────────────────────────────────
 
-export type KittyPhase = 'open' | 'ready' | 'paid' | 'expired' | 'stuck';
+export type KittyPhase = 'open' | 'ready' | 'paid' | 'expired' | 'stuck' | 'cancelled';
 
 /**
  * open     funding is live
@@ -73,18 +74,20 @@ export type KittyPhase = 'open' | 'ready' | 'paid' | 'expired' | 'stuck';
  * paid     paid out to the recipient
  * expired  deadline passed, not fully funded: refunds open
  * stuck    fully funded but unpaid 30 days past the deadline: refunds open, pay out closed
+ * cancelled stopped by the creator or recipient before it was fully funded: refunds open at once
  */
 export function kittyPhase(i: {
-  settled: boolean; totalFundedRaw: bigint; goalRaw: bigint; deadline: bigint; now: bigint;
+  settled: boolean; cancelled?: boolean; totalFundedRaw: bigint; goalRaw: bigint; deadline: bigint; now: bigint;
 }): KittyPhase {
   if (i.settled) return 'paid';
+  if (i.cancelled) return 'cancelled';
   if (i.totalFundedRaw >= i.goalRaw) return i.now < i.deadline + SETTLE_GRACE_SECONDS ? 'ready' : 'stuck';
   return i.now < i.deadline ? 'open' : 'expired';
 }
 
 /** Phase from the last read, not the live clock, so a button never appears before the chain agrees. */
-export function readPhaseOf(d: Pick<KittyData, 'settled' | 'totalFundedRaw' | 'goalRaw' | 'deadline' | 'chainTimestamp'>): KittyPhase {
-  return kittyPhase({ settled: d.settled, totalFundedRaw: d.totalFundedRaw, goalRaw: d.goalRaw, deadline: d.deadline, now: d.chainTimestamp });
+export function readPhaseOf(d: Pick<KittyData, 'settled' | 'totalFundedRaw' | 'goalRaw' | 'deadline' | 'chainTimestamp'> & { cancelled?: boolean }): KittyPhase {
+  return kittyPhase({ settled: d.settled, cancelled: d.cancelled, totalFundedRaw: d.totalFundedRaw, goalRaw: d.goalRaw, deadline: d.deadline, now: d.chainTimestamp });
 }
 
 export const PHASE_PILL: Record<KittyPhase, { label: string; tone: 'neutral' | 'ok' | 'warn' }> = {
@@ -93,6 +96,7 @@ export const PHASE_PILL: Record<KittyPhase, { label: string; tone: 'neutral' | '
   paid: { label: 'Paid out', tone: 'ok' },
   expired: { label: 'Expired, refunds open', tone: 'warn' },
   stuck: { label: 'Refunds open', tone: 'warn' },
+  cancelled: { label: 'Cancelled', tone: 'neutral' },
 };
 
 export const THIRTY_DAY_RULE =
@@ -126,6 +130,7 @@ export function kittyAction(i: {
       return 'paid';
     case 'expired':
     case 'stuck':
+    case 'cancelled':
       if (i.my?.refunded) return 'refunded';
       return i.my && i.my.contributedRaw > 0n ? 'refund' : 'nothing';
   }
@@ -135,6 +140,28 @@ export function kittyAction(i: {
 export function kittyActionHasDock(kind: KittyActionKind): boolean {
   return kind === 'chip-in' || kind === 'pay-out' || kind === 'refund';
 }
+
+/**
+ * Cancel is offered to the creator or the recipient while funding is still live.
+ * (After the deadline refunds are already open, so cancelling would add nothing.)
+ */
+export function canCancel(i: { phase: KittyPhase; me?: string; creator: string; recipient: string }): boolean {
+  if (i.phase !== 'open' || !i.me) return false;
+  const m = i.me.toLowerCase();
+  return m === i.creator.toLowerCase() || m === i.recipient.toLowerCase();
+}
+
+/** Named people who still owe part of their share: the "pay for someone else" list on a split kitty. */
+export function unpaidContributors(
+  contributors: readonly KittyContributor[], me?: string,
+): Array<KittyContributor & { remainingRaw: bigint }> {
+  const m = me?.toLowerCase();
+  return contributors
+    .filter(c => !c.refunded && c.shareRaw > c.contributedRaw && c.address.toLowerCase() !== m)
+    .map(c => ({ ...c, remainingRaw: c.shareRaw - c.contributedRaw }));
+}
+
+export const FRIEND_WARNING = (friend: string) => `If this kitty is refunded, the money goes to ${friend}, not you.`;
 
 export interface ChipInBounds { min: bigint; max: bigint }
 
@@ -332,13 +359,14 @@ export type Route =
   | { view: 'home' }
   | { view: 'new'; kind: StartKind; template?: TemplateId }
   | { view: 'mine' }
+  | { view: 'requests' }
   | { view: 'open'; invalid?: boolean }
   | { view: 'kitty'; id: `0x${string}` };
 
-export type Tab = 'new' | 'mine' | 'open';
+export type Tab = 'new' | 'mine' | 'requests' | 'open';
 
 export function routeTab(r: Route): Tab {
-  return r.view === 'mine' ? 'mine' : r.view === 'open' || r.view === 'kitty' ? 'open' : 'new';
+  return r.view === 'mine' ? 'mine' : r.view === 'requests' ? 'requests' : r.view === 'open' || r.view === 'kitty' ? 'open' : 'new';
 }
 
 /** ?kitty=<id> (or the legacy ?order=<id>), ?view=mine, ?view=open, ?new=<kind|template>. */
@@ -351,6 +379,7 @@ export function parseRoute(search: string): Route {
   }
   const view = q.get('view');
   if (view === 'mine') return { view: 'mine' };
+  if (view === 'requests') return { view: 'requests' };
   if (view === 'open') return { view: 'open' };
   const n = q.get('new');
   if (n === 'split' || n === 'open' || n === 'request') return { view: 'new', kind: n };
@@ -363,6 +392,7 @@ export function routeToSearch(r: Route): string {
   switch (r.view) {
     case 'kitty': return `?kitty=${r.id}`;
     case 'mine': return '?view=mine';
+    case 'requests': return '?view=requests';
     case 'open': return '?view=open';
     case 'new': return `?new=${r.template ?? r.kind}`;
     default: return '';
@@ -438,6 +468,8 @@ export function parseKittyLog(log: {
   switch (log.eventName) {
     case 'PotCreated': return { kind: 'created', address: str(a.creator), ...base };
     case 'Funded': return { kind: 'chipped', address: str(a.contributor), amountRaw: big(a.amount), ...base };
+    case 'FundedFor': return { kind: 'paidFor', address: str(a.payer), other: str(a.beneficiary), amountRaw: big(a.amount), ...base };
+    case 'Cancelled': return { kind: 'cancelled', address: str(a.by), ...base };
     case 'Settled': return { kind: 'paid', address: str(a.recipient), amountRaw: big(a.amount), ...base };
     case 'Refunded': return { kind: 'refunded', address: str(a.contributor), amountRaw: big(a.amount), ...base };
     default: return null;
@@ -453,9 +485,24 @@ export function sortActivity(items: readonly ActivityItem[]): ActivityItem[] {
 export const ACTIVITY_VERB: Record<ActivityItem['kind'], string> = {
   created: 'started the kitty',
   chipped: 'chipped in',
+  paidFor: 'paid for',
   paid: 'was paid out',
   refunded: 'got a refund',
+  cancelled: 'cancelled the kitty',
 };
+
+/**
+ * One fundFor emits Funded (the friend) then FundedFor (payer + friend) in the same
+ * transaction. Show it once, as "payer paid for friend".
+ */
+export function dedupePaidFor(items: readonly ActivityItem[]): ActivityItem[] {
+  const paidFor = items.filter(i => i.kind === 'paidFor');
+  return items.filter(i => {
+    if (i.kind !== 'chipped') return true;
+    return !paidFor.some(p =>
+      p.txHash === i.txHash && p.amountRaw === i.amountRaw && (p.other ?? '').toLowerCase() === i.address.toLowerCase());
+  });
+}
 
 /** "just now", "5 minutes ago", "3 days ago". */
 export function agoText(deltaSeconds: number): string {
@@ -495,11 +542,11 @@ export function deriveRoles(i: {
 
 export type MineAction = 'chip-in' | 'pay-out' | 'refund';
 
-export function mineAction(s: Pick<MineSummary, 'mode' | 'goalRaw' | 'totalFundedRaw' | 'deadline' | 'settled' | 'myShareRaw' | 'myContributedRaw' | 'myRefunded'>, now: bigint): MineAction | null {
-  const phase = kittyPhase({ settled: s.settled, totalFundedRaw: s.totalFundedRaw, goalRaw: s.goalRaw, deadline: s.deadline, now });
+export function mineAction(s: Pick<MineSummary, 'mode' | 'goalRaw' | 'totalFundedRaw' | 'deadline' | 'settled' | 'myShareRaw' | 'myContributedRaw' | 'myRefunded'> & { cancelled?: boolean }, now: bigint): MineAction | null {
+  const phase = kittyPhase({ settled: s.settled, cancelled: s.cancelled, totalFundedRaw: s.totalFundedRaw, goalRaw: s.goalRaw, deadline: s.deadline, now });
   if (phase === 'ready') return 'pay-out';
   if (phase === 'open') return s.mode === 'split' && s.myShareRaw > s.myContributedRaw && !s.myRefunded ? 'chip-in' : null;
-  if ((phase === 'expired' || phase === 'stuck') && s.myContributedRaw > 0n && !s.myRefunded) return 'refund';
+  if ((phase === 'expired' || phase === 'stuck' || phase === 'cancelled') && s.myContributedRaw > 0n && !s.myRefunded) return 'refund';
   return null;
 }
 
@@ -512,9 +559,9 @@ export interface MineGroups {
 export function groupMine(list: readonly MineSummary[], now: bigint): MineGroups {
   const g: MineGroups = { needsAction: [], active: [], completed: [] };
   for (const s of list) {
-    const phase = kittyPhase({ settled: s.settled, totalFundedRaw: s.totalFundedRaw, goalRaw: s.goalRaw, deadline: s.deadline, now });
+    const phase = kittyPhase({ settled: s.settled, cancelled: s.cancelled, totalFundedRaw: s.totalFundedRaw, goalRaw: s.goalRaw, deadline: s.deadline, now });
     if (mineAction(s, now)) g.needsAction.push(s);
-    else if (phase === 'paid' || phase === 'expired' || phase === 'stuck') g.completed.push(s);
+    else if (phase === 'paid' || phase === 'expired' || phase === 'stuck' || phase === 'cancelled') g.completed.push(s);
     else g.active.push(s);
   }
   const asc = (a: MineSummary, b: MineSummary) => (a.deadline < b.deadline ? -1 : a.deadline > b.deadline ? 1 : 0);
@@ -528,7 +575,7 @@ export function groupMine(list: readonly MineSummary[], now: bigint): MineGroups
 // ── What happens next (timeline) ─────────────────────────────────────────────
 
 export type StepState = 'past' | 'current' | 'upcoming' | 'skipped';
-export interface TimelineStep { id: 'funding' | 'paid' | 'refunds'; title: string; text: string; state: StepState }
+export interface TimelineStep { id: 'funding' | 'paid' | 'refunds' | 'cancelled'; title: string; text: string; state: StepState }
 
 /** "in 3 days" for the future, "2 days ago" for the past. */
 export function relativeTo(nowSec: bigint, ts: bigint): string {
@@ -543,6 +590,13 @@ const whenText = (nowSec: bigint, ts: bigint) => `${formatDeadline(ts)} (${relat
  */
 export function timelineSteps(p: { phase: KittyPhase; deadline: bigint; now: bigint }): TimelineStep[] {
   const { phase, deadline, now } = p;
+  if (phase === 'cancelled') {
+    return [
+      { id: 'funding', title: 'Funding', state: 'past', text: 'Funding stopped when the kitty was cancelled.' },
+      { id: 'cancelled', title: 'Cancelled', state: 'past', text: 'The creator or recipient cancelled it. Nobody can chip in or be paid out.' },
+      { id: 'refunds', title: 'Refunds open', state: 'current', text: 'Each person can take back what they put in right away.' },
+    ];
+  }
   const windowEnd = deadline + SETTLE_GRACE_SECONDS;
   const goalMet = phase === 'ready' || phase === 'paid' || phase === 'stuck';
   const funding: TimelineStep = phase === 'open'
@@ -574,7 +628,8 @@ export function busyLabel(s: TxStatus): string {
   switch (s.kind) {
     case 'wallet-pending':
       return ({
-        'Approve USDC': 'Approving USDC', 'Chip in': 'Chipping in', 'Pay out': 'Paying out',
+        'Sign permit': 'Sign permit', 'Approve USDC': 'Approving USDC', 'Chip in': 'Chipping in', 'Pay out': 'Paying out',
+        'Cancel kitty': 'Cancelling',
         'Get refund': 'Getting refund', 'Start kitty': 'Starting kitty',
       } as Record<string, string>)[s.label] ?? 'Waiting for wallet';
     case 'submitted':

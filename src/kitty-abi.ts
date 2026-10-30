@@ -65,6 +65,19 @@ export const KITTY_ABI = [
   },
   {
     "type": "function",
+    "name": "cancel",
+    "inputs": [
+      {
+        "name": "potId",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "computePotId",
     "inputs": [
       {
@@ -219,6 +232,110 @@ export const KITTY_ABI = [
   },
   {
     "type": "function",
+    "name": "fundFor",
+    "inputs": [
+      {
+        "name": "potId",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "beneficiary",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "amount",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "fundForWithPermit",
+    "inputs": [
+      {
+        "name": "potId",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "beneficiary",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "amount",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "permitDeadline",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "v",
+        "type": "uint8",
+        "internalType": "uint8"
+      },
+      {
+        "name": "r",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "s",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "fundWithPermit",
+    "inputs": [
+      {
+        "name": "potId",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "amount",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "permitDeadline",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "v",
+        "type": "uint8",
+        "internalType": "uint8"
+      },
+      {
+        "name": "r",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "s",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "getContribution",
     "inputs": [
       {
@@ -330,6 +447,11 @@ export const KITTY_ABI = [
         "name": "contributorCount",
         "type": "uint256",
         "internalType": "uint256"
+      },
+      {
+        "name": "cancelled",
+        "type": "bool",
+        "internalType": "bool"
       }
     ],
     "stateMutability": "view"
@@ -388,6 +510,25 @@ export const KITTY_ABI = [
   },
   {
     "type": "event",
+    "name": "Cancelled",
+    "inputs": [
+      {
+        "name": "potId",
+        "type": "bytes32",
+        "indexed": true,
+        "internalType": "bytes32"
+      },
+      {
+        "name": "by",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
     "name": "Funded",
     "inputs": [
       {
@@ -410,6 +551,37 @@ export const KITTY_ABI = [
       },
       {
         "name": "totalFunded",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "FundedFor",
+    "inputs": [
+      {
+        "name": "potId",
+        "type": "bytes32",
+        "indexed": true,
+        "internalType": "bytes32"
+      },
+      {
+        "name": "payer",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "beneficiary",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "amount",
         "type": "uint256",
         "indexed": false,
         "internalType": "uint256"
@@ -518,6 +690,11 @@ export const KITTY_ABI = [
   },
   {
     "type": "error",
+    "name": "AlreadyCancelled",
+    "inputs": []
+  },
+  {
+    "type": "error",
     "name": "AlreadyRefunded",
     "inputs": []
   },
@@ -602,6 +779,27 @@ export const KITTY_ABI = [
   },
   {
     "type": "error",
+    "name": "InsufficientAllowanceAfterPermit",
+    "inputs": [
+      {
+        "name": "allowance",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "needed",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "InvalidBeneficiary",
+    "inputs": []
+  },
+  {
+    "type": "error",
     "name": "InvalidContributor",
     "inputs": []
   },
@@ -648,6 +846,11 @@ export const KITTY_ABI = [
   },
   {
     "type": "error",
+    "name": "NotCreatorOrRecipient",
+    "inputs": []
+  },
+  {
+    "type": "error",
     "name": "NotFullyFunded",
     "inputs": []
   },
@@ -666,6 +869,11 @@ export const KITTY_ABI = [
         "internalType": "bytes32"
       }
     ]
+  },
+  {
+    "type": "error",
+    "name": "PotCancelled",
+    "inputs": []
   },
   {
     "type": "error",

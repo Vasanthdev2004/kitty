@@ -34,7 +34,8 @@ contract KittyTest is KittyTestBase {
         (
             address c, address r, uint256 goal, uint64 dl, string memory ref,
             Kitty.Mode mode, bool settled, uint256 funded, uint256 minC, uint256 count
-        ) = kitty.getPot(id);
+        , bool cancelled) = kitty.getPot(id);
+        assertFalse(cancelled);
         assertEq(c, creator);
         assertEq(r, recipient);
         assertEq(goal, GOAL);
@@ -187,7 +188,7 @@ contract KittyTest is KittyTestBase {
         string memory ref64 = _str(64);
         string memory ref65 = _str(65);
         bytes32 id = kitty.createSplitPot(SALT_A, recipient, GOAL, deadline, ref64, cs, ss);
-        (,,,, string memory stored,,,,,) = kitty.getPot(id);
+        (,,,, string memory stored,,,,,,) = kitty.getPot(id);
         assertEq(stored, ref64);
         vm.expectRevert(Kitty.RefTooLong.selector);
         kitty.createSplitPot(SALT_B, recipient, GOAL, deadline, ref65, cs, ss);
@@ -206,7 +207,8 @@ contract KittyTest is KittyTestBase {
         (
             address c, address r, uint256 goal, uint64 dl, string memory ref,
             Kitty.Mode mode, bool settled, uint256 funded, uint256 minC, uint256 count
-        ) = kitty.getPot(id);
+        , bool cancelled) = kitty.getPot(id);
+        assertFalse(cancelled);
         assertEq(c, creator);
         assertEq(r, recipient);
         assertEq(goal, GOAL);
@@ -304,8 +306,8 @@ contract KittyTest is KittyTestBase {
         assertTrue(idA != idS);
         assertEq(idS, kitty.computePotId(stranger, SALT_A));
 
-        (address c1, address r1, uint256 g1,,,,,,,) = kitty.getPot(idA);
-        (address c2, address r2, uint256 g2,,,,,,,) = kitty.getPot(idS);
+        (address c1, address r1, uint256 g1,,,,,,,,) = kitty.getPot(idA);
+        (address c2, address r2, uint256 g2,,,,,,,,) = kitty.getPot(idS);
         assertEq(c1, creator); assertEq(r1, recipient); assertEq(g1, GOAL);
         assertEq(c2, stranger); assertEq(r2, dave); assertEq(g2, 40e6);
 
@@ -328,7 +330,7 @@ contract KittyTest is KittyTestBase {
         bytes32 victimId = _split3(SALT_A);
         assertTrue(victimId != hostile);
         assertEq(victimId, kitty.computePotId(creator, SALT_A));
-        (address c, address r,,,,,,,,) = kitty.getPot(victimId);
+        (address c, address r,,,,,,,,,) = kitty.getPot(victimId);
         assertEq(c, creator);
         assertEq(r, recipient);
 
@@ -357,7 +359,7 @@ contract KittyTest is KittyTestBase {
         vm.prank(attacker);
         bytes32 hostile = kitty.createOpenPot(SALT_A, attacker, GOAL, deadline, "", 0);
         assertTrue(hostile != victimId);
-        (address c,,,,,,,,,) = kitty.getPot(victimId);
+        (address c,,,,,,,,,,) = kitty.getPot(victimId);
         assertEq(c, creator);
         assertEq(_totalFunded(victimId), 10e6);
         assertEq(_totalFunded(hostile), 0);

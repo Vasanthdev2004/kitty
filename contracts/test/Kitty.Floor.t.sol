@@ -66,7 +66,7 @@ contract KittyFloorTest is KittyTestBase {
         _belowMin(id, alice, 30e6 - 1, 30e6);
         _fund(id, alice, 30e6);
         // raw creator value is still what getPot reports
-        (,,,,,,,, uint256 minC,) = kitty.getPot(id);
+        (,,,,,,,, uint256 minC,,) = kitty.getPot(id);
         assertEq(minC, 30e6);
     }
 
@@ -75,7 +75,7 @@ contract KittyFloorTest is KittyTestBase {
         assertEq(kitty.effectiveMinContribution(id), 390_625);
         _belowMin(id, alice, 390_624, 390_625);
         _fund(id, alice, 390_625);
-        (,,,,,,,, uint256 minC,) = kitty.getPot(id);
+        (,,,,,,,, uint256 minC,,) = kitty.getPot(id);
         assertEq(minC, 1); // stored creator value unchanged
     }
 
