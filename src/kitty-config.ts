@@ -56,11 +56,14 @@ const ARC_TESTNET_AT: DeployedAt = {
 };
 
 /**
- * TODO(mainnet): after deploying contracts/Kitty.sol to Arc mainnet (see DEPLOY.md), replace
- * this ONE line with: { kitty: '0x<deployed address>', deployBlock: <block number>n }
- * The app shows "Kitty is not deployed on Arc yet" and blocks every write until both are set.
+ * Arc mainnet: Kitty v2, deployed by the project owner from their own wallet (not from Arc Studio).
+ *   address  0x965281605d34f7045cbef306fe690118e6626192
+ *   tx       0xd95a3e960d9ea9ac953ae4a45be14c48eff6d8eed83f0123b0f3982a7dafb86f
+ *   block    28,763,168 (2026-10-31 04:53:23 UTC), chain 5042, constructor arg = Arc USDC
+ * To point at a new mainnet contract later, replace this ONE line (see DEPLOY.md).
+ * Without both fields the app shows "Kitty is not deployed on Arc yet" and blocks every write.
  */
-export const ARC_MAINNET_AT: DeployedAt = { kitty: undefined, deployBlock: undefined };
+export const ARC_MAINNET_AT: DeployedAt = { kitty: '0x965281605d34f7045cbef306fe690118e6626192', deployBlock: 28_763_168n };
 
 // ── Builders ─────────────────────────────────────────────────────────────────
 

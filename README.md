@@ -42,9 +42,9 @@ Kitty has not had a paid third-party audit. Treat testnet as the supported envir
 | Network | Chain ID | Kitty contract | Token |
 | --- | --- | --- | --- |
 | Arc Testnet | 5042002 | [`0x621b7aadfbc5870b95d4d95245529059536da7e5`](https://explorer.testnet.arc.io/address/0x621b7aadfbc5870b95d4d95245529059536da7e5) | Arc USDC `0x3600000000000000000000000000000000000000` (6 decimals) |
-| Arc mainnet | | Coming soon (address and example transaction to be added) | |
+| Arc mainnet | 5042 | [`0x965281605d34f7045cbef306fe690118e6626192`](https://explorer.arc.io/address/0x965281605d34f7045cbef306fe690118e6626192) ([deploy tx](https://explorer.arc.io/tx/0xd95a3e960d9ea9ac953ae4a45be14c48eff6d8eed83f0123b0f3982a7dafb86f), block 28,763,168) | Arc USDC `0x3600000000000000000000000000000000000000` (6 decimals) |
 
-The Arc Testnet contract is Kitty v2. The earlier v1 contract (`0x12840026bd9457b41ae104536f0917a19dd88611`) is legacy and no longer used by the app.
+Both contracts are Kitty v2 (the same bytecode, token address aside). The earlier v1 contract (`0x12840026bd9457b41ae104536f0917a19dd88611`) is legacy and no longer used by the app.
 
 ## Built with Arc Studio
 
@@ -78,7 +78,7 @@ To rebuild the contract ABI used by the app: `forge build`, then `bun run kitty:
 
 ```bash
 forge test        # 377 tests pass (317 Kitty, 60 legacy PayTogether)
-bun run test      # 407 tests pass
+bun run test      # 409 tests pass
 bun run check     # lint + typecheck, 0 errors
 ```
 

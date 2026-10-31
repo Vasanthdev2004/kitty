@@ -5,9 +5,23 @@
   "contract_code_path": "/home/user/app/contracts/Kitty.sol",
   "contract_compiled_code_path": "/home/user/app/contracts/out/Kitty.sol/Kitty.json",
   "contract_network_and_links": {
-    "Arc Testnet": "https://explorer.testnet.arc.io/address/0x621b7aadfbc5870b95d4d95245529059536da7e5"
+    "Arc Testnet": "https://explorer.testnet.arc.io/address/0x621b7aadfbc5870b95d4d95245529059536da7e5",
+    "Arc": "https://explorer.arc.io/address/0x965281605d34f7045cbef306fe690118e6626192"
   },
   "contract_deployments": [
+    {
+      "chain": "Arc",
+      "chainId": 5042,
+      "address": "0x965281605d34f7045cbef306fe690118e6626192",
+      "explorerUrl": "https://explorer.arc.io/address/0x965281605d34f7045cbef306fe690118e6626192",
+      "txHash": "0xd95a3e960d9ea9ac953ae4a45be14c48eff6d8eed83f0123b0f3982a7dafb86f",
+      "txUrl": "https://explorer.arc.io/tx/0xd95a3e960d9ea9ac953ae4a45be14c48eff6d8eed83f0123b0f3982a7dafb86f",
+      "deployedAt": "2026-10-31T04:53:23.000Z",
+      "deployBlock": 28763168,
+      "deployer": "0x49a501ae562ca2278968ffc3c36e4ce12e688576",
+      "version": "v2",
+      "deployedBy": "project owner, from their own wallet (not Arc Studio)"
+    },
     {
       "chain": "Arc Testnet",
       "address": "0x621b7aadfbc5870b95d4d95245529059536da7e5",

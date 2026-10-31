@@ -85,6 +85,8 @@ If any check fails, do not use the address. There is no admin to fix a contract:
 
 ## 4. Switch the app over (one line)
 
+The current mainnet deployment (Kitty v2 at `0x965281605d34f7045cbef306fe690118e6626192`, block 28,763,168) is already filled in. The steps here are what to repeat for any new contract.
+
 In `src/kitty-config.ts`, replace the `ARC_MAINNET_AT` line with the address and block from step 2:
 
 ```ts

@@ -68,12 +68,28 @@ describe('Arc mainnet entry', () => {
     expect(t.deployBlock).toBe(69_829_378n);
     expect(t.faucetUrl).toBeTruthy();
   });
-  it('is NOT deployed yet: no address, so every read and write is blocked', () => {
-    expect(ARC_MAINNET_AT).toEqual({ kitty: undefined, deployBlock: undefined });
+  it('resolves to the deployed Kitty v2 address and deploy block', () => {
+    expect(ARC_MAINNET_AT).toEqual({ kitty: '0x965281605d34f7045cbef306fe690118e6626192', deployBlock: 28_763_168n });
     const d = mainnet();
-    expect(d.deployed).toBe(false);
-    expect(d.kitty).toBe('0x0000000000000000000000000000000000000000');
-    expect(checkKittyPreflight('0x2222222222222222222222222222222222222222', 5042, d))
+    expect(d.deployed).toBe(true);
+    expect(d.chainId).toBe(5042);
+    expect(d.kitty).toBe('0x965281605d34f7045cbef306fe690118e6626192');
+    expect(d.deployBlock).toBe(28_763_168n);
+    expect(d.usdc.toLowerCase()).toBe(ARC_USDC);
+    expect(KITTY_DEPLOYMENTS[arc.id]).toBe(d);
+    expect(checkKittyPreflight('0x2222222222222222222222222222222222222222', 5042, d)).toMatchObject({ ok: true });
+  });
+  it('the default build still targets testnet (mainnet only when VITE_KITTY_CHAIN is exactly "arc")', () => {
+    expect(ACTIVE_CHAIN_ID).toBe(arcTestnet.id);
+    expect(ACTIVE.chainId).toBe(5042002);
+    expect(selectChainKey(undefined)).toBe('arcTestnet');
+    expect(selectChainKey('arc')).toBe('arc');
+  });
+  it('a mainnet config with no address stays blocked (every read and write)', () => {
+    const none = makeDeployment('arc', arc, { name: 'Arc', shortName: 'Arc', testnet: false }, { kitty: undefined, deployBlock: undefined });
+    expect(none.deployed).toBe(false);
+    expect(none.kitty).toBe('0x0000000000000000000000000000000000000000');
+    expect(checkKittyPreflight('0x2222222222222222222222222222222222222222', 5042, none))
       .toEqual({ ok: false, reason: 'Kitty is not deployed on Arc yet.' });
   });
   it('filling the address AND the deploy block is all it takes to go live', () => {
