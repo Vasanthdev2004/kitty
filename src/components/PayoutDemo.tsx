@@ -41,8 +41,10 @@ export function PayoutDemo() {
     <Card className="p-5 sm:p-6">
       <div ref={ref} className="space-y-5">
         <div className="flex items-baseline justify-between gap-3">
-          <p className="text-[15px] font-semibold tracking-tight text-ink">Weekend in Lisbon</p>
-          <p className="tnum text-xs text-ink-3">{paidCount} of {PEOPLE.length} paid</p>
+          <p className="min-w-0 text-[15px] font-semibold tracking-tight text-ink">
+            Weekend in Lisbon <span className="ml-1.5 align-middle rounded-full bg-s3 px-2 py-0.5 text-[11px] font-medium text-ink-2" data-testid="example-label">Example</span>
+          </p>
+          <p className="tnum shrink-0 text-xs text-ink-3">{paidCount} of {PEOPLE.length} paid</p>
         </div>
 
         <ul className="grid grid-cols-3 gap-2.5 sm:gap-3" aria-label="Who has paid">

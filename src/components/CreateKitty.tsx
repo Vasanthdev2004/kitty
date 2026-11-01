@@ -2,15 +2,17 @@
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { ConnectKitButton } from 'connectkit';
+import { OpenInWalletApp } from './OpenInWalletApp';
 import { formatUsdc, isoToUnixSeconds, parseUsdcAmount, shortAddress } from '../pt-utils';
 import { formatUsdcPlain } from '../pt-share';
 import { describeDeadline, splitEvenly } from '../pt-ui';
 import {
-  MAX_SPLIT_CONTRIBUTORS, draftFromStart, effectiveMin, getTemplate, hasErrors, validateKittyDraft,
+  MAX_SPLIT_CONTRIBUTORS, applyCheckout, draftFromStart, effectiveMin, getTemplate, hasErrors, validateKittyDraft,
   type KittyDraft, type StartKind, type TemplateId,
 } from '../kitty-core';
-import { fundsNote, type KittyDeployment } from '../kitty-config';
+import { fundsNote, switchLabel, type KittyDeployment } from '../kitty-config';
 import type { KittyMode } from '../kitty-types';
+import { ignoredNote, type CheckoutParse } from '../checkout';
 import { useNowMs } from '../hooks';
 import { Avatar, Button, Card, Notice } from './ui';
 import { AddressInput, AmountInput, Field, FieldError, ReferenceInput, SegmentedTabs } from './fields';
@@ -36,6 +38,8 @@ const MODE_TABS = [
 
 interface Props {
   start: { kind: StartKind; template?: TemplateId };
+  /** A shop's checkout link: prefills (and with lock=1 locks) the recipient and amount. */
+  checkout?: CheckoutParse;
   dep: KittyDeployment;
   connectedAddress: string | undefined;
   isCorrectChain: boolean;
@@ -44,10 +48,18 @@ interface Props {
   onSubmit: (draft: KittyDraft, recipient: string) => void | Promise<void>;
 }
 
-export function CreateKitty({ start, dep, connectedAddress, isCorrectChain, deployBlocked, txBusy, onSubmit }: Props) {
+export function CreateKitty({ start, checkout, dep, connectedAddress, isCorrectChain, deployBlocked, txBusy, onSubmit }: Props) {
   const reduce = useReducedMotion();
   const template = getTemplate(start.template);
-  const [draft, setDraft] = useState<KittyDraft>(() => draftFromStart(start, nowMillis()));
+  const [initial] = useState(() => {
+    const base = draftFromStart(start, nowMillis());
+    return checkout
+      ? applyCheckout(base, checkout, nowMillis())
+      : { draft: base, lockRecipient: false, lockGoal: false, modeFixed: false, shop: undefined, toAddress: undefined };
+  });
+  const [draft, setDraft] = useState<KittyDraft>(initial.draft);
+  const note = checkout ? ignoredNote(checkout.ignored) : undefined;
+  const fromShop = initial.toAddress ? (initial.shop ?? shortAddress(initial.toAddress)) : undefined;
   const [rowIds, setRowIds] = useState<number[]>(() => draft.shares.map(newRowId));
   const [blurred, setBlurred] = useState<Record<string, boolean>>({});
   const [submitted, setSubmitted] = useState(false);
@@ -130,7 +142,7 @@ export function CreateKitty({ start, dep, connectedAddress, isCorrectChain, depl
       );
 
   const ctaLabel = txBusy ? 'Sending' : deployBlocked ? 'Contract not ready'
-    : !connectedAddress ? 'Connect wallet' : !isCorrectChain ? `Switch to ${dep.shortName}` : 'Start kitty';
+    : !connectedAddress ? 'Connect wallet' : !isCorrectChain ? switchLabel(dep) : 'Start kitty';
   const submitBtn = (size: 'md' | 'lg', className?: string) => (
     <Button type="submit" form={FORM_ID} size={size} disabled={!canCreate} loading={txBusy} loadingText="Sending" className={className}>
       {ctaLabel}
@@ -142,11 +154,19 @@ export function CreateKitty({ start, dep, connectedAddress, isCorrectChain, depl
   return (
     <div className="space-y-6 pt-8 md:pt-12">
       <div className="max-w-2xl space-y-2">
+        {fromShop && initial.toAddress && (
+          <div className="flex items-center gap-3" data-testid="checkout-header">
+            {initial.shop ? <Avatar name={initial.shop} size={40} /> : <Avatar address={initial.toAddress} size={40} />}
+            <p className="text-sm font-medium text-ink-2">Checkout from <span className="text-ink">{fromShop}</span></p>
+          </div>
+        )}
         <h1 className="text-3xl font-semibold leading-tight tracking-[-0.03em] text-ink text-balance md:text-4xl">
-          {template ? template.label : TITLES[start.kind]}
+          {fromShop ? 'Pay together' : template ? template.label : TITLES[start.kind]}
         </h1>
         <p className="text-base leading-relaxed text-ink-2 text-pretty">
-          {template ? template.helper : isRequest
+          {fromShop
+            ? 'Share this with the people paying with you. The shop is paid once, in full, when everyone has chipped in. If it falls short, everyone is refunded.'
+            : template ? template.helper : isRequest
             ? 'You are the recipient. Share the link and get paid once the goal is met.'
             : 'Set a goal and a deadline, then share the link.'}
         </p>
@@ -154,15 +174,18 @@ export function CreateKitty({ start, dep, connectedAddress, isCorrectChain, depl
 
       <form ref={formRef} id={FORM_ID} onSubmit={handleSubmit} noValidate className="grid items-start gap-4 pb-44 lg:grid-cols-[2fr_1fr] lg:pb-0">
         <div className="space-y-4">
-          {!connectedAddress && <Notice>Connect your wallet on {dep.name} to start a kitty.</Notice>}
-          {connectedAddress && !isCorrectChain && <Notice tone="warn">Switch to {dep.name} to continue.</Notice>}
+          {note && <Notice>{note}</Notice>}
+          {!connectedAddress && <Notice>Connect your wallet on {dep.networkLabel} to start a kitty.<OpenInWalletApp className="mt-2 text-xs leading-relaxed text-ink-2" /></Notice>}
+          {connectedAddress && !isCorrectChain && <Notice tone="warn">Switch to {dep.networkLabel} to continue.</Notice>}
 
           <Card className="space-y-5 p-5 sm:p-6">
             <h2 className="text-[15px] font-semibold tracking-tight text-ink">Kitty</h2>
 
             <div className="space-y-2">
               <p className="text-[13px] font-medium text-ink-2">Who chips in</p>
-              <SegmentedTabs<KittyMode> ariaLabel="Who chips in" tabs={MODE_TABS} value={draft.mode} onChange={m => patch({ mode: m })} />
+              {initial.modeFixed
+                ? <p className="text-sm text-ink" data-testid="mode-fixed">{isOpen ? 'Open pool' : 'Named people'}</p>
+                : <SegmentedTabs<KittyMode> ariaLabel="Who chips in" tabs={MODE_TABS} value={draft.mode} onChange={m => patch({ mode: m })} />}
               <p className="text-xs leading-relaxed text-ink-3">
                 {isOpen ? 'Anyone with the link can chip in, any amount, until the goal is reached.' : 'You name each person and their share. Only they can chip in.'}
               </p>
@@ -192,6 +215,19 @@ export function CreateKitty({ start, dep, connectedAddress, isCorrectChain, depl
                 <p className="text-xs leading-relaxed text-ink-3">You receive the full amount once, when the goal is met.</p>
                 {showField('recipient') && errors.recipient && <FieldError>{errors.recipient}</FieldError>}
               </div>
+            ) : initial.lockRecipient ? (
+              <div className="space-y-2">
+                <p className="text-[13px] font-medium text-ink-2">Recipient</p>
+                <div className="tile flex items-center gap-3 px-4 py-3" data-testid="locked-recipient">
+                  {initial.shop ? <Avatar name={initial.shop} size={28} /> : <Avatar address={draft.recipient} size={28} />}
+                  <div className="min-w-0 flex-1">
+                    {initial.shop && <p className="truncate text-[13px] font-medium text-ink" title={initial.shop}>{initial.shop}</p>}
+                    <p className="mono break-all text-[13px] text-ink">{draft.recipient}</p>
+                  </div>
+                  <span className="shrink-0 text-xs font-medium text-ink-2">Set by the shop</span>
+                </div>
+                <p className="text-xs leading-relaxed text-ink-3">The shop gets the full amount once, straight from escrow. Payouts cannot be reversed.</p>
+              </div>
             ) : (
               <Field id="recipient" label="Recipient" helper="Gets the full amount once, when the goal is met. Payouts cannot be reversed." error={showField('recipient') ? errors.recipient : undefined}>
                 {p => (
@@ -201,12 +237,22 @@ export function CreateKitty({ start, dep, connectedAddress, isCorrectChain, depl
               </Field>
             )}
 
-            <Field id="goal" label="Goal" helper={`In USDC on ${dep.name}. The recipient gets exactly this.`} error={showField('goal') ? errors.goal : undefined}>
-              {p => (
-                <AmountInput id={p.id} describedBy={p.describedBy} invalid={p.invalid} className="sm:max-w-xs"
-                  value={draft.goal} onChange={v => patch({ goal: v })} onBlur={() => touch('goal')} ariaLabel="Goal in USDC" />
-              )}
-            </Field>
+            {initial.lockGoal ? (
+              <div className="space-y-2">
+                <p className="text-[13px] font-medium text-ink-2">Total</p>
+                <div className="tile flex items-center justify-between gap-3 px-4 py-3" data-testid="locked-goal">
+                  <p className="tnum text-[15px] text-ink"><span className="mono">{draft.goal}</span> <span className="text-ink-3">USDC</span></p>
+                  <span className="shrink-0 text-xs font-medium text-ink-2">Set by the shop</span>
+                </div>
+              </div>
+            ) : (
+              <Field id="goal" label="Goal" helper={`In USDC on ${dep.name}. The recipient gets exactly this.`} error={showField('goal') ? errors.goal : undefined}>
+                {p => (
+                  <AmountInput id={p.id} describedBy={p.describedBy} invalid={p.invalid} className="sm:max-w-xs"
+                    value={draft.goal} onChange={v => patch({ goal: v })} onBlur={() => touch('goal')} ariaLabel="Goal in USDC" />
+                )}
+              </Field>
+            )}
 
             <DeadlinePicker
               value={draft.deadlineIso}

@@ -436,7 +436,7 @@ describe('seller requests', () => {
   const NOW = 5_000n;
   const mk = (id: string, over: Partial<RequestSummary>): RequestSummary => ({
     id: `0x${id.repeat(32)}`, ref: `Invoice ${id}`, goalRaw: 100n * U, totalFundedRaw: 0n, deadline: NOW + 1_000n,
-    settled: false, cancelled: false, contributorCount: 0, createdBlock: BigInt(parseInt(id, 16)), ...over,
+    settled: false, cancelled: false, type: 'request', contributorCount: 0, createdBlock: BigInt(parseInt(id, 16)), ...over,
   });
   const list = [
     mk('01', { totalFundedRaw: 40n * U, contributorCount: 2 }),                                    // active, open
@@ -469,7 +469,7 @@ describe('seller requests', () => {
     ];
     const csv = requestCsv(rows, NOW);
     const lines = csv.split('\r\n');
-    expect(lines[0]).toBe('Name,Kitty ID,Goal (USDC),Funded (USDC),Status,Created block,Created time (UTC),Payout transaction');
+    expect(lines[0]).toBe('Name,Kitty ID,Goal (USDC),Funded (USDC),Status,Created block,Created time (UTC),Payout transaction,Type');
     expect(lines[1].startsWith("'=cmd|' /C calc'!A0,")).toBe(true);
     expect(lines[1]).toContain(',100,100,Paid out,3,2027-01-15T08:00:00.000Z,0x' + 'ee'.repeat(32));
     expect(csv).toContain('"Dinner, ""the big one""\nround 2"');

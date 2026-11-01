@@ -5,6 +5,7 @@ import type { DraftShare, TxStatus } from './pt-types';
 import { formatDeadline, isoToUnixSeconds, parseUsdcAmount } from './pt-utils';
 import { isValidOrderId } from './pt-share';
 import { relativeFromNow, toLocalInputValue } from './pt-ui';
+import { buildCheckoutSearch, parseCheckout, type CheckoutContext, type CheckoutParams, type CheckoutParse } from './checkout';
 import type {
   ActivityItem, KittyData, KittyMode, MineRole, MineSummary,
   KittyContributor,
@@ -357,20 +358,22 @@ export function buildCreateCall(d: KittyDraft, salt: `0x${string}`, recipient: s
 
 export type Route =
   | { view: 'home' }
-  | { view: 'new'; kind: StartKind; template?: TemplateId }
+  | { view: 'new'; kind: StartKind; template?: TemplateId; checkout?: CheckoutParse }
   | { view: 'mine' }
   | { view: 'requests' }
+  | { view: 'sell' }
+  | { view: 'shop' }
   | { view: 'open'; invalid?: boolean }
   | { view: 'kitty'; id: `0x${string}` };
 
 export type Tab = 'new' | 'mine' | 'requests' | 'open';
 
 export function routeTab(r: Route): Tab {
-  return r.view === 'mine' ? 'mine' : r.view === 'requests' ? 'requests' : r.view === 'open' || r.view === 'kitty' ? 'open' : 'new';
+  return r.view === 'mine' ? 'mine' : r.view === 'requests' || r.view === 'sell' || r.view === 'shop' ? 'requests' : r.view === 'open' || r.view === 'kitty' ? 'open' : 'new';
 }
 
 /** ?kitty=<id> (or the legacy ?order=<id>), ?view=mine, ?view=open, ?new=<kind|template>. */
-export function parseRoute(search: string): Route {
+export function parseRoute(search: string, ctx?: CheckoutContext): Route {
   const q = new URLSearchParams(search);
   const rawId = q.get('kitty') ?? q.get('order');
   if (rawId !== null) {
@@ -380,9 +383,15 @@ export function parseRoute(search: string): Route {
   const view = q.get('view');
   if (view === 'mine') return { view: 'mine' };
   if (view === 'requests') return { view: 'requests' };
+  if (view === 'sell') return { view: 'sell' };
+  if (view === 'shop') return { view: 'shop' };
   if (view === 'open') return { view: 'open' };
   const n = q.get('new');
-  if (n === 'split' || n === 'open' || n === 'request') return { view: 'new', kind: n };
+  if (n === 'split' || n === 'open' || n === 'request') {
+    // A shop's checkout link: new=<mode> plus to / amount / ref / days / lock / shop.
+    const checkout = parseCheckout(search, ctx);
+    return checkout ? { view: 'new', kind: n, checkout } : { view: 'new', kind: n };
+  }
   const t = getTemplate(n);
   if (t) return { view: 'new', kind: t.mode, template: t.id };
   return { view: 'home' };
@@ -393,8 +402,10 @@ export function routeToSearch(r: Route): string {
     case 'kitty': return `?kitty=${r.id}`;
     case 'mine': return '?view=mine';
     case 'requests': return '?view=requests';
+    case 'sell': return '?view=sell';
+    case 'shop': return '?view=shop';
     case 'open': return '?view=open';
-    case 'new': return `?new=${r.template ?? r.kind}`;
+    case 'new': return r.checkout ? buildCheckoutSearch(r.checkout.params) : `?new=${r.template ?? r.kind}`;
     default: return '';
   }
 }
@@ -443,6 +454,10 @@ const EMBED_CSS: ReadonlyArray<readonly [string, string]> = [
 ];
 
 export const EMBED_LABEL = 'Split with friends';
+
+/** The button a shop puts next to its normal checkout. */
+export const PAY_TOGETHER_LABEL = 'Pay together';
+export const buildPayTogetherSnippet = (link: string): string => buildEmbedSnippet(link, PAY_TOGETHER_LABEL);
 
 /** Inline-styled anchor. No script, no external CSS, every dynamic value escaped. */
 export function buildEmbedSnippet(url: string, label: string = EMBED_LABEL): string {
@@ -638,4 +653,43 @@ export function busyLabel(s: TxStatus): string {
     case 'uncertain': return 'Pending';
     default: return 'Working';
   }
+}
+
+/** An in-app route for a checkout link (what the demo store buttons open). */
+export function buildCheckoutRoute(params: CheckoutParams): Route {
+  return { view: 'new', kind: params.mode, checkout: { params, ignored: [] } };
+}
+
+// ── Checkout prefill ─────────────────────────────────────────────────────────
+
+export interface CheckoutPrefill {
+  draft: KittyDraft;
+  /** The buyer cannot edit the recipient (lock=1 with a valid to). */
+  lockRecipient: boolean;
+  /** The buyer cannot edit the goal (lock=1 with a valid amount). */
+  lockGoal: boolean;
+  /** The link chose split or open, so the buyer does not pick the mode. */
+  modeFixed: boolean;
+  shop?: string;
+  toAddress?: string;
+}
+
+/**
+ * The create form's starting draft for a checkout link. Only validated values are applied
+ * (parseCheckout already dropped the rest). `days` counts from when the buyer opens the link.
+ * new=request without a valid `to` stays a "request to my wallet" start.
+ */
+export function applyCheckout(base: KittyDraft, c: CheckoutParse, nowMs: number): CheckoutPrefill {
+  const p = c.params;
+  const hasTo = !!p.to;
+  const kind: StartKind = hasTo && p.mode === 'request' ? 'open' : p.mode;
+  const mode: KittyMode = p.mode === 'split' ? 'split' : 'open';
+  const draft: KittyDraft = {
+    ...base, kind, mode,
+    recipient: p.to ?? base.recipient,
+    ref: p.ref ?? base.ref,
+    goal: p.amount ?? base.goal,
+    deadlineIso: p.days ? toLocalInputValue(nowMs + p.days * 86_400_000) : base.deadlineIso,
+  };
+  return { draft, lockRecipient: !!p.lock && hasTo, lockGoal: !!p.lock && !!p.amount, modeFixed: p.mode !== 'request', shop: p.shop, toAddress: p.to };
 }

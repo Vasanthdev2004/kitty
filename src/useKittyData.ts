@@ -4,8 +4,9 @@
 import { useEffect, useRef, useState } from 'react';
 import type { PublicClient } from 'viem';
 import type { KittyDeployment } from './kitty-config';
-import { isPotNotFound, readActivity, readKitty, scanMine, type MineScan } from './kitty-data';
-import { parseStats, serializeStats, type KittyStats } from './kitty-requests';
+import { isPotNotFound, kittyExistsOn, readActivity, readKitty, scanMine, type MineScan } from './kitty-data';
+import { STATS_TIMEOUT_MS, parseStats, serializeStats, statsPhase, type KittyStats } from './kitty-requests';
+import { withTimeout } from './lib/timeout';
 import { scanRequests, scanStats, type RequestsScan } from './kitty-scan';
 import { sessionStore } from './kitty-tx';
 import type { ActivityItem, KittyData } from './kitty-types';
@@ -148,6 +149,7 @@ const statsKey = (dep: KittyDeployment) => `kitty:stats:${dep.chainId}:${dep.kit
 export function useStats(client: PublicClient | undefined, dep: KittyDeployment, enabled: boolean) {
   const key = statsKey(dep);
   const [result, setResult] = useState<{ key: string; stats?: KittyStats; failed?: boolean } | undefined>();
+  const [timedOut, setTimedOut] = useState(false);
 
   const cached = (() => {
     try { return parseStats(sessionStore()?.getItem(key), Date.now()); } catch { return undefined; }
@@ -156,7 +158,8 @@ export function useStats(client: PublicClient | undefined, dep: KittyDeployment,
   useEffect(() => {
     if (!client || !enabled || cached) return;
     let cancelled = false;
-    scanStats(client, dep)
+    // The scan itself is bounded, so a blocked or hung RPC cannot keep the skeleton up for minutes.
+    withTimeout(scanStats(client, dep), STATS_TIMEOUT_MS)
       .then(stats => {
         try { sessionStore()?.setItem(key, serializeStats(stats, Date.now())); } catch { /* cache is optional */ }
         if (!cancelled) setResult({ key, stats });
@@ -166,7 +169,37 @@ export function useStats(client: PublicClient | undefined, dep: KittyDeployment,
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [client, dep, enabled, key, cached === undefined]);
 
+  // Belt and braces: whatever the scan is doing, the skeleton never outlives the timeout.
+  useEffect(() => {
+    if (!client || !enabled || cached) return;
+    const id = setTimeout(() => setTimedOut(true), STATS_TIMEOUT_MS);
+    return () => { clearTimeout(id); setTimedOut(false); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [client, enabled, key, cached === undefined]);
+
   const current = result && result.key === key ? result : undefined;
   const stats = cached ?? current?.stats;
-  return { stats, failed: !!current?.failed, loading: enabled && !!client && !stats && !current };
+  const phase = statsPhase({
+    hasStats: !!stats, failed: !!current?.failed, timedOut, loading: enabled && !!client && !current,
+  });
+  return { stats, failed: phase === 'hidden', loading: phase === 'loading' };
+}
+
+// ── Is this kitty on the other network? ──────────────────────────────────────
+
+/** One read of the other network's contract, only when `enabled`. undefined = not known (yet). */
+export function useExistsOnOther(
+  client: PublicClient | undefined, otherDep: KittyDeployment, id: `0x${string}` | undefined, enabled: boolean,
+): boolean | undefined {
+  const [result, setResult] = useState<{ key: string; exists: boolean } | undefined>();
+  const key = id ? `${otherDep.chainId}:${id}` : '';
+  useEffect(() => {
+    if (!client || !id || !enabled || !otherDep.deployed) return;
+    let cancelled = false;
+    kittyExistsOn(client, otherDep, id)
+      .then(exists => { if (!cancelled) setResult({ key, exists }); })
+      .catch(() => { if (!cancelled) setResult({ key, exists: false }); });
+    return () => { cancelled = true; };
+  }, [client, otherDep, id, enabled, key]);
+  return result && result.key === key ? result.exists : undefined;
 }

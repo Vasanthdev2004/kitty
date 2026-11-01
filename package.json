@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "build:site": "VITE_KITTY_CHAIN=arc vite build && VITE_KITTY_CHAIN=arcTestnet vite build --base /testnet/ --outDir dist/testnet",
     "deploy:self": "bun run ./scripts/self-deploy.ts",
     "compass:deploy": "bun run ./scripts/compass-deploy.ts",
     "fetch:abi": "bun run ./scripts/fetch-abi.ts",

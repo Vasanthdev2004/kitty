@@ -1,6 +1,7 @@
 // ─── Kitty – seller dashboard (?view=requests) ──────────────────────────────
 // Payment requests where the connected wallet is both creator and recipient.
 import { ConnectKitButton } from 'connectkit';
+import { OpenInWalletApp } from './OpenInWalletApp';
 import { ArrowsClockwise } from '@phosphor-icons/react';
 import { toast } from 'sonner';
 import { useNowMs, useShareBase } from '../hooks';
@@ -43,7 +44,10 @@ function RequestCard({ r, now, base, onOpen }: { r: RequestSummary; now: bigint;
             {' \u00b7 '}Closes {formatDeadline(r.deadline)}
           </p>
         </div>
-        <Chip tone={pill.tone}>{pill.label}</Chip>
+        <div className="flex shrink-0 flex-wrap justify-end gap-1.5">
+          {r.type === 'checkout' && <Chip>Checkout</Chip>}
+          <Chip tone={pill.tone}>{pill.label}</Chip>
+        </div>
       </div>
       <div className="space-y-2">
         <div className="h-2 overflow-hidden rounded-full bg-s3" aria-hidden>
@@ -97,7 +101,7 @@ export function SellerRequests({
     return (
       <EmptyState
         title="Connect your wallet"
-        action={<ConnectKitButton.Custom>{({ show }) => <Button onClick={show}>Connect wallet</Button>}</ConnectKitButton.Custom>}
+        action={<div className="space-y-3"><ConnectKitButton.Custom>{({ show }) => <Button onClick={show}>Connect wallet</Button>}</ConnectKitButton.Custom><OpenInWalletApp /></div>}
       >
         Payment requests you started for yourself show up here, with totals and a CSV export.
       </EmptyState>
@@ -119,9 +123,10 @@ export function SellerRequests({
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="max-w-2xl space-y-2">
           <h1 className="text-3xl font-semibold leading-tight tracking-[-0.03em] text-ink md:text-4xl">Requests</h1>
-          <p className="text-base leading-relaxed text-ink-2">Payment requests you started for yourself, and where each one stands.</p>
+          <p className="text-base leading-relaxed text-ink-2">Payment requests you started for yourself and checkout kitties your buyers started for you, and where each one stands.</p>
         </div>
         <div className="flex items-center gap-2">
+          <Button variant="ghost" size="sm" onClick={() => onNavigate({ view: 'sell' })}>For sellers</Button>
           <Button variant="secondary" size="sm" onClick={exportCsv} disabled={!scan || scan.items.length === 0}>Export CSV</Button>
           <IconButton icon={ArrowsClockwise} label="Refresh requests" onClick={onRefresh} disabled={refreshing} />
         </div>

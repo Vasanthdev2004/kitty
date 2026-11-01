@@ -2,6 +2,7 @@
 import { useEffect, useState, useSyncExternalStore } from 'react';
 import { chainOffsetSeconds, estimateChainNow } from './pt-share';
 import { getShareBase } from './lib/share';
+import { isRpcBlockedNow, rpcHealth } from './rpc-health';
 
 /**
  * Wall-clock ms, refreshed on an interval. The interval is cleared while the tab is
@@ -64,4 +65,14 @@ export function useWideScreen(): boolean {
     () => (typeof window !== 'undefined' && !!window.matchMedia && window.matchMedia(query).matches),
     () => false,
   );
+}
+
+/**
+ * True when every RPC host this browser tried failed outright (fetch threw) and none answered:
+ * the signature of a content blocker or being offline. A 429 or 5xx counts as an answer.
+ */
+export function useRpcBlocked(): boolean {
+  // The snapshot is a version number (stable between changes); the time-based check happens after it.
+  useSyncExternalStore(rpcHealth.subscribe, rpcHealth.getVersion, () => 0);
+  return isRpcBlockedNow();
 }

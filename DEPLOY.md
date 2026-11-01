@@ -95,7 +95,7 @@ export const ARC_MAINNET_AT: DeployedAt = { kitty: '0x<Kitty address>', deployBl
 
 Both fields are required. Until both are set, the app says "Kitty is not deployed on Arc yet" and blocks every read and write. The app also re-checks the deployment in the browser (code present, `token()` is Arc USDC, USDC has 6 decimals) and blocks writes if that fails.
 
-Then tell the hosted build to use mainnet. Set this in the hosting provider's build environment settings and rebuild:
+Then tell the hosted build to use mainnet. (The live site is one Vercel project that builds both networks: see the Hosting notes in the README. Besides `VITE_KITTY_CHAIN`, set `VITE_MAINNET_URL`, `VITE_TESTNET_URL` and `VITE_SITE_URL` so the header switch and link previews work.) Set this in the hosting provider's build environment settings and rebuild:
 
 ```
 VITE_KITTY_CHAIN=arc

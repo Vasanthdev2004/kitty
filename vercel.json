@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    { "source": "/rpc/arc", "destination": "https://rpc.mainnet.arc.io/" },
+    { "source": "/rpc/arc-testnet", "destination": "https://rpc.testnet.arc.io/" },
+    { "source": "/rpc/arc-logs", "destination": "https://rpc.blockdaemon.mainnet.arc.io/" },
+    { "source": "/rpc/arc-testnet-logs", "destination": "https://rpc.blockdaemon.testnet.arc.io/" }
+  ]
+}

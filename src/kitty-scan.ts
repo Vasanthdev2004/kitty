@@ -4,7 +4,7 @@
 import { pad, type PublicClient } from 'viem';
 import type { KittyDeployment } from './kitty-config';
 import { getKittyLogs, kittyMulticall, selector, val, type DecodedLog } from './kitty-data';
-import { computeStats, type KittyStats, type RequestSummary } from './kitty-requests';
+import { computeStats, requestType, type KittyStats, type RequestSummary } from './kitty-requests';
 
 /** Block times for a handful of blocks in one parallel round (they share a JSON-RPC batch). */
 async function blockTimes(client: PublicClient, blocks: readonly bigint[], cap = 40): Promise<Map<bigint, number>> {
@@ -36,16 +36,22 @@ export interface RequestsScan { items: RequestSummary[]; chainTimestamp: bigint;
  * Rounds: [PotCreated filtered by recipient, block] -> [one multicall of getPot + block times]
  * -> [Settled logs for the paid ones, to find the payout transaction].
  */
+/** The newest this many kitties paying one wallet are listed. */
+export const MAX_REQUESTS = 300;
+
 export async function scanRequests(client: PublicClient, dep: KittyDeployment, me: string): Promise<RequestsScan> {
   const meLower = me.toLowerCase();
   const [created, block] = await Promise.all([
     getKittyLogs(client, dep, [selector('PotCreated'), null, null, pad(me as `0x${string}`)]),
     client.getBlock(),
   ]);
+  // Every kitty that pays this wallet: its own payment requests (creator == recipient == me) and
+  // checkout kitties a buyer started with this wallet as the shop. The recipient filter is on an
+  // indexed topic, and only the newest MAX_REQUESTS are read, so the work stays bounded.
   const own = created.filter((l: DecodedLog) => {
-    const a = (l.args ?? {}) as { creator?: string; recipient?: string };
-    return a.creator?.toLowerCase() === meLower && a.recipient?.toLowerCase() === meLower && l.blockNumber !== null;
-  });
+    const a = (l.args ?? {}) as { recipient?: string };
+    return a.recipient?.toLowerCase() === meLower && l.blockNumber !== null;
+  }).slice(-MAX_REQUESTS);
   const ids = own.map(l => (l.args as { potId: `0x${string}` }).potId);
   if (ids.length === 0) return { items: [], chainTimestamp: block.timestamp, scannedAt: Date.now() };
 
@@ -59,8 +65,9 @@ export async function scanRequests(client: PublicClient, dep: KittyDeployment, m
     const r = pots[i];
     if (!r.ok) return;
     const [, , goal, deadline, ref, , settled, totalFunded, , count, cancelled] = val(r);
+    const creator = ((own[i].args ?? {}) as { creator?: string }).creator ?? '';
     items.push({
-      id, ref, goalRaw: goal, totalFundedRaw: totalFunded, deadline, settled, cancelled: Boolean(cancelled),
+      id, type: requestType(creator, me), ref, goalRaw: goal, totalFundedRaw: totalFunded, deadline, settled, cancelled: Boolean(cancelled),
       contributorCount: Number(count), createdBlock: own[i].blockNumber as bigint, createdAt: times.get(own[i].blockNumber as bigint),
     });
   });

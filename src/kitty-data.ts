@@ -2,7 +2,10 @@
 import { decodeEventLog, getAbiItem, pad, toEventSelector, toHex, type Abi, type PublicClient } from 'viem';
 import { KITTY_ABI } from './kitty-abi';
 import type { KittyDeployment } from './kitty-config';
-import { dedupePaidFor, deriveRoles, parseKittyLog, sortActivity, chunkRanges } from './kitty-core';
+import { dedupePaidFor, deriveRoles, parseKittyLog, sortActivity } from './kitty-core';
+import { cacheKey, loadKittyLogs, matchTopics, type BlockRange, type RawLog, type TopicFilter } from './log-scan';
+import { logsClientFor } from './logs-client';
+import { localStore } from './share-messages';
 import type { ActivityItem, KittyData, KittyMode, MineSummary } from './kitty-types';
 
 /** Runs `fn` over `items` with at most `limit` calls in flight. Keeps order. */
@@ -104,6 +107,21 @@ export async function readKitty(client: PublicClient, dep: KittyDeployment, id: 
   };
 }
 
+/**
+ * One read: does this kitty id exist on the given deployment? Used for the
+ * "this kitty is on the other network" hint. A real error is thrown, not hidden as "no".
+ */
+export async function kittyExistsOn(client: PublicClient, dep: KittyDeployment, id: `0x${string}`): Promise<boolean> {
+  if (!dep.deployed) return false;
+  try {
+    await callKitty<PotTuple>(client, dep, 'getPot', [id]);
+    return true;
+  } catch (e) {
+    if (isPotNotFound(e)) return false;
+    throw e;
+  }
+}
+
 /** The connected wallet's own numbers on a kitty that is not in the loaded list (open kitties). */
 export async function readMyContribution(client: PublicClient, dep: KittyDeployment, id: `0x${string}`, who: string) {
   const [share, contributed, refunded] = await callKitty<ContributionTuple>(client, dep, 'getContribution', [id, who]);
@@ -116,36 +134,36 @@ export type EventName = 'PotCreated' | 'Funded' | 'FundedFor' | 'Settled' | 'Ref
 const ALL_EVENTS: EventName[] = ['PotCreated', 'Funded', 'FundedFor', 'Settled', 'Refunded', 'Cancelled'];
 export const selector = (name: EventName) => toEventSelector(getAbiItem({ abi: KITTY_ABI, name }));
 
-interface RawLog { data: `0x${string}`; topics: `0x${string}`[]; blockNumber: `0x${string}`; logIndex: `0x${string}`; transactionHash: `0x${string}` }
 export interface DecodedLog {
   eventName?: string; args?: unknown; blockNumber: bigint | null; logIndex: number | null; transactionHash: `0x${string}` | null;
 }
 
+/** eth_getLogs for the contract's address over one block range, no topic filter. */
+async function rawLogs(client: PublicClient, dep: KittyDeployment, r: BlockRange): Promise<RawLog[]> {
+  return (client as unknown as { request: (a: unknown) => Promise<RawLog[]> }).request({
+    method: 'eth_getLogs',
+    params: [{ address: dep.kitty, fromBlock: toHex(r.from), toBlock: toHex(r.to) }],
+  });
+}
+
 /**
- * One eth_getLogs for any mix of events, filtered by raw topics. All Kitty
- * events have `potId` as their first indexed argument, so a single request can
- * return a whole pot's history. Starts at the deploy block, never block 0.
- * Only if the RPC rejects the range do we split it into chunks.
+ * Logs of the Kitty contract filtered by raw topics. All Kitty events have `potId` as their first
+ * indexed argument, so one call can return a whole pot's history. The whole contract history is read
+ * once (from the deploy block, never block 0; src/log-scan.ts), cached in localStorage, and refreshed
+ * incrementally; the filter is applied here, so every screen shares one scan.
  */
 export async function getKittyLogs(
-  client: PublicClient, dep: KittyDeployment, topics: Array<`0x${string}` | `0x${string}`[] | null>,
+  client: PublicClient, dep: KittyDeployment, topics: TopicFilter,
 ): Promise<DecodedLog[]> {
-  const run = (from: bigint, to: bigint | 'latest') =>
-    (client as unknown as { request: (a: unknown) => Promise<RawLog[]> }).request({
-      method: 'eth_getLogs',
-      params: [{ address: dep.kitty, fromBlock: toHex(from), toBlock: to === 'latest' ? 'latest' : toHex(to), topics }],
-    });
-  let raw: RawLog[];
-  try {
-    raw = await run(dep.deployBlock, 'latest');
-  } catch {
-    const head = await client.getBlockNumber();
-    const ranges = chunkRanges(dep.deployBlock, head, 20_000n);
-    if (ranges.length > 400) throw new Error('The activity range is too large for this RPC.');
-    raw = (await mapLimit(ranges, 4, ([from, to]) => run(from, to))).flat();
-  }
+  const all = await loadKittyLogs(cacheKey(dep.chainId, dep.kitty), dep.deployBlock, {
+    head: () => client.getBlockNumber(),
+    primary: r => rawLogs(logsClientFor(dep), dep, r),
+    fallback: r => rawLogs(client, dep, r),
+    storage: localStore(),
+  });
   const out: DecodedLog[] = [];
-  for (const l of raw) {
+  for (const l of all) {
+    if (!matchTopics(l.topics, topics)) continue;
     try {
       const d = decodeEventLog({ abi: KITTY_ABI, data: l.data, topics: l.topics as [`0x${string}`, ...`0x${string}`[]] });
       out.push({ eventName: d.eventName, args: d.args, blockNumber: BigInt(l.blockNumber), logIndex: Number(l.logIndex), transactionHash: l.transactionHash });

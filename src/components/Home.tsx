@@ -2,11 +2,15 @@
 import type { ReactNode } from 'react';
 import { useReducedMotion } from 'motion/react';
 import { TEMPLATES, type Route, type StartKind } from '../kitty-core';
-import { Card } from './ui';
+import { Card, Notice } from './ui';
+import { ProofStrip } from './ProofStrip';
+import type { KittyDeployment } from '../kitty-config';
+import type { SiteUrls } from '../network-switch';
 import { PayoutDemo } from './PayoutDemo';
 import { PoolPreview, RequestPreview, SplitPreview } from './StartPreviews';
 import { LiveStats } from './LiveStats';
 import type { KittyStats } from '../kitty-requests';
+import { FEATURED_LABEL } from '../featured';
 
 const STARTS: ReadonlyArray<{ kind: StartKind; title: string; line: string; Preview: () => ReactNode }> = [
   { kind: 'split', title: 'Split a bill', line: 'Name each person and their share. The recipient is paid once everyone is in.', Preview: SplitPreview },
@@ -22,10 +26,36 @@ const PROMISES = [
 
 export interface HomeStats { stats: KittyStats | undefined; loading: boolean; failed: boolean; explorerBase: string }
 
-export function Home({ onNavigate, live }: { onNavigate: (r: Route) => void; live?: HomeStats }) {
+const LINK = 'font-medium text-accent-text underline-offset-2 hover:underline';
+
+export function Home({
+  onNavigate, live, dep, site, onGetUsdc, featuredId,
+}: {
+  onNavigate: (r: Route) => void;
+  live?: HomeStats;
+  /** The active deployment: drives the testnet banner and the proof strip. */
+  dep?: KittyDeployment;
+  /** The two site URLs (mainnet, testnet). A link is shown only when its URL is set. */
+  site?: SiteUrls;
+  onGetUsdc?: () => void;
+  /** One real, paid-out kitty the host chose (VITE_FEATURED_KITTIES). Nothing is shown without it. */
+  featuredId?: `0x${string}`;
+}) {
   const reduce = useReducedMotion();
   return (
     <div className="space-y-12 pt-10 md:space-y-14 md:pt-16">
+      {dep?.testnet && (
+        <Notice>
+          <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
+            <span>You're on {dep.networkLabel}. Test USDC is free and has no value.</span>
+            <span className="flex flex-wrap gap-x-5 gap-y-1">
+              {dep.faucetUrl && <a className={LINK} href={dep.faucetUrl} target="_blank" rel="noopener noreferrer">Get test USDC</a>}
+              {site?.mainnet && <a className={LINK} href={site.mainnet}>Back to mainnet</a>}
+            </span>
+          </div>
+        </Notice>
+      )}
+
       <section className="grid items-center gap-10 lg:grid-cols-[1.15fr_1fr] lg:gap-14">
         <div className="max-w-2xl space-y-5">
           <h1 className="text-4xl font-semibold leading-[1.05] tracking-[-0.035em] text-ink text-balance md:text-5xl">
@@ -34,18 +64,27 @@ export function Home({ onNavigate, live }: { onNavigate: (r: Route) => void; liv
           <p className="max-w-[46ch] text-base leading-relaxed text-ink-2 text-pretty md:text-lg">
             Start a kitty for a bill or a gift. Money stays locked until everyone chips in, then pays out once.
           </p>
+          {((dep && !dep.testnet && site?.testnet) || featuredId) && (
+            <p className="flex flex-wrap gap-x-5 gap-y-1 text-[13px] text-ink-2">
+              {dep && !dep.testnet && site?.testnet && <a className={LINK} href={site.testnet}>Try it free on testnet</a>}
+              {featuredId && (
+                <a
+                  className={LINK}
+                  href={`?kitty=${featuredId}`}
+                  onClick={e => { e.preventDefault(); onNavigate({ view: 'kitty', id: featuredId }); }}
+                >{FEATURED_LABEL}</a>
+              )}
+            </p>
+          )}
         </div>
         <PayoutDemo />
       </section>
 
+      {dep && <ProofStrip dep={dep} onGetUsdc={onGetUsdc} featuredId={featuredId} onOpenKitty={id => onNavigate({ view: 'kitty', id })} />}
+
       <section aria-label="Start a kitty" className="grid gap-4 md:grid-cols-3">
         {STARTS.map((s, i) => (
-          <button
-            key={s.kind}
-            type="button"
-            onClick={() => onNavigate({ view: 'new', kind: s.kind })}
-            className="rounded-card text-left"
-          >
+          <div key={s.kind} className="relative rounded-card">
             <Card
               interactive
               className="flex h-full flex-col justify-between gap-6 p-5 sm:p-6"
@@ -62,7 +101,29 @@ export function Home({ onNavigate, live }: { onNavigate: (r: Route) => void; liv
                 <span className="text-[13px] font-medium text-accent-text">Start</span>
               </div>
             </Card>
-          </button>
+            {/* The whole card starts the kitty; the links below sit above it so they stay clickable. */}
+            <button
+              type="button"
+              aria-label={s.title}
+              onClick={() => onNavigate({ view: 'new', kind: s.kind })}
+              className="absolute inset-0 rounded-card"
+            />
+            {s.kind === 'request' && (
+              <p className="pointer-events-none absolute bottom-5 right-5 text-[13px] sm:bottom-6 sm:right-6">
+                <a
+                  href="?view=sell"
+                  onClick={e => { e.preventDefault(); onNavigate({ view: 'sell' }); }}
+                  className="pointer-events-auto relative font-medium text-ink underline decoration-[var(--line-strong)] underline-offset-4 hover:decoration-ink"
+                >For sellers</a>
+                <span className="text-ink-3">{' \u00b7 '}</span>
+                <a
+                  href="?view=shop"
+                  onClick={e => { e.preventDefault(); onNavigate({ view: 'shop' }); }}
+                  className="pointer-events-auto relative font-medium text-ink underline decoration-[var(--line-strong)] underline-offset-4 hover:decoration-ink"
+                >Demo store</a>
+              </p>
+            )}
+          </div>
         ))}
       </section>
 

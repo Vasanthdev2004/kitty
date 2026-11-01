@@ -76,6 +76,8 @@ export interface RetryOptions {
   sleep?: (ms: number) => Promise<void>;
   /** Called before each wait with the 1-based retry number. */
   onRetry?: (retry: number, error: unknown) => void;
+  /** Checked before each wait: true means retrying is pointless (for example every RPC is blocked), so stop now. */
+  giveUp?: () => boolean;
 }
 
 /** Validate, retrying transient network failures with backoff and jitter. Mismatches are final. */
@@ -88,6 +90,7 @@ export async function validateWithRetry(
   let result = await validateKittyDeployment(client, dep);
   for (let i = 0; i < delays.length; i++) {
     if (result.ok || !result.transient) return result;
+    if (opts.giveUp?.()) return result;
     opts.onRetry?.(i + 1, result.cause);
     await sleep(jitteredDelay(delays[i], random));
     result = await validateKittyDeployment(client, dep);

@@ -6,14 +6,15 @@
 //  - Every write goes through useKittyTx (lock, approve-then-chip-in, uncertain retry).
 import { useCallback, useEffect, useState } from 'react';
 import { useAccount, useChainId, usePublicClient, useSwitchChain, useWalletClient } from 'wagmi';
+import { toast } from 'sonner';
 import { erc20Abi, isAddress } from 'viem';
 import { motion, useReducedMotion } from 'motion/react';
 
-import { ACTIVE, ACTIVE_CHAIN_ID, footerNote, notDeployedTitle } from './kitty-config';
-import { routeTab, type KittyDraft, type Route, type Tab } from './kitty-core';
+import { ACTIVE, ACTIVE_CHAIN_ID, footerNote, notDeployedTitle, otherDeployment } from './kitty-config';
+import { routeTab, routeToSearch, type KittyDraft, type Route, type Tab } from './kitty-core';
 import { ensureDeploymentValid, hasCachedValidation, resetDeploymentValidation, type MinimalPublicClient, type MinimalWalletClient } from './kitty-tx';
 import { useKittyTx } from './useKittyTx';
-import { useActivity, useKittyData, useMine, useRequests, useStats } from './useKittyData';
+import { useActivity, useExistsOnOther, useKittyData, useMine, useRequests, useStats } from './useKittyData';
 import { useRoute } from './useRoute';
 import { plain } from './pt-ui';
 
@@ -23,6 +24,15 @@ import { Home } from './components/Home';
 import { CreateKitty } from './components/CreateKitty';
 import { KittyPage, KittySkeleton } from './components/KittyPage';
 import { SellerRequests } from './components/SellerRequests';
+import { RpcBlockedNotice } from './components/RpcBlockedNotice';
+import { GetUsdcSheet } from './components/GetUsdcSheet';
+import { SellerSetup } from './components/SellerSetup';
+import { DemoStore } from './components/DemoStore';
+import { OtherNetworkHint } from './components/OtherNetworkHint';
+import { FEATURED_KITTY, SITE_URLS } from './site-config';
+import { otherNetworkKittyHref, switchModel } from './network-switch';
+import { useRpcBlocked } from './hooks';
+import { isRpcBlockedNow } from './rpc-health';
 import { KittyNotFound } from './components/KittyNotFound';
 import { MyKitties } from './components/MyKitties';
 import { OrderLookup, LookupEmpty } from './components/OrderLookup';
@@ -56,6 +66,7 @@ export default function App() {
   const [deploy, setDeploy] = useState<DeployValidation>(() =>
     !ACTIVE.deployed ? { state: 'notDeployed' } : hasCachedValidation(ACTIVE) ? { state: 'valid' } : { state: 'checking' });
   const [deployAttempt, setDeployAttempt] = useState(0);
+  const rpcBlocked = useRpcBlocked();
   const [balanceRaw, setBalanceRaw] = useState<bigint | undefined>();
   const [allowanceRaw, setAllowanceRaw] = useState<bigint | undefined>();
 
@@ -65,6 +76,8 @@ export default function App() {
     if (!ACTIVE.deployed || !publicClient || hasCachedValidation(ACTIVE)) return;
     let cancelled = false;
     ensureDeploymentValid(publicClient as unknown as MinimalPublicClient, ACTIVE, {
+      // Every RPC failed outright (a content blocker, or offline): more waiting changes nothing.
+      giveUp: isRpcBlockedNow,
       onRetry: (n, err) => {
         console.warn(`Kitty deployment check: network error, retry ${n}`, err);
         if (!cancelled) setDeploy({ state: 'retrying' });
@@ -106,6 +119,13 @@ export default function App() {
   const kittyId = route.view === 'kitty' ? route.id : undefined;
   const kitty = useKittyData(readClient, ACTIVE, kittyId, !!kittyId && createdId === kittyId);
   const activity = useActivity(readClient, ACTIVE, kittyId, refreshKey, !!kitty.data);
+  // The other network (mainnet <-> testnet): one read, only to say "this kitty is over there".
+  const other = otherDeployment(ACTIVE);
+  const otherUrl = ACTIVE.testnet ? SITE_URLS.mainnet : SITE_URLS.testnet;
+  const otherClient = usePublicClient({ chainId: other.chainId });
+  const existsOnOther = useExistsOnOther(otherClient, other, kittyId, kitty.notFound && !!otherUrl);
+  const [usdcOpen, setUsdcOpen] = useState(false);
+  const networkOptions = switchModel({ activeTestnet: ACTIVE.testnet, urls: SITE_URLS, route });
   const mine = useMine(route.view === 'mine' ? readClient : undefined, ACTIVE, route.view === 'mine' ? me : undefined);
   const requests = useRequests(route.view === 'requests' ? readClient : undefined, ACTIVE, route.view === 'requests' ? me : undefined);
   const stats = useStats(readClient, ACTIVE, route.view === 'home');
@@ -146,6 +166,8 @@ export default function App() {
         isConnected={isConnected}
         isCorrectChain={isCorrectChain}
         onSwitchChain={switchToActive}
+        networkOptions={networkOptions}
+        onGetUsdc={() => setUsdcOpen(true)}
       />
 
       {/* Transaction status: floating island, visible on every route */}
@@ -153,9 +175,12 @@ export default function App() {
 
       <main className="mx-auto max-w-5xl px-4 pb-[calc(2.5rem+env(safe-area-inset-bottom))]">
         <div className="space-y-2 pt-4 empty:hidden">
-          {deploy.state === 'checking' && <Notice>Verifying the Kitty contract on {ACTIVE.name}...</Notice>}
-          {deploy.state === 'retrying' && <Notice tone="warn">{ACTIVE.shortName} network is busy. Retrying...</Notice>}
-          {deploy.state === 'unreachable' && (
+          {ACTIVE.deployed && rpcBlocked && (
+            <RpcBlockedNotice shortName={ACTIVE.shortName} onReload={() => window.location.reload()} />
+          )}
+          {!rpcBlocked && deploy.state === 'checking' && <Notice>Verifying the Kitty contract on {ACTIVE.name}...</Notice>}
+          {!rpcBlocked && deploy.state === 'retrying' && <Notice tone="warn">{ACTIVE.shortName} network is busy. Retrying...</Notice>}
+          {!rpcBlocked && deploy.state === 'unreachable' && (
             <Notice tone="warn">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <span>Can't reach the {ACTIVE.shortName} network right now. Writes are paused until it answers.</span>
@@ -175,7 +200,7 @@ export default function App() {
           <NotDeployedState />
         ) : (
         <motion.div
-          key={route.view === 'kitty' ? `kitty-${route.id}` : route.view === 'new' ? `new-${route.template ?? route.kind}` : route.view}
+          key={route.view === 'kitty' ? `kitty-${route.id}` : route.view === 'new' ? `new-${routeToSearch(route)}` : route.view}
           initial={reduceMotion ? false : { opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.24, ease: 'easeOut' }}
@@ -183,6 +208,10 @@ export default function App() {
           {route.view === 'home' && (
             <Home
               onNavigate={go}
+              dep={ACTIVE}
+              site={SITE_URLS}
+              onGetUsdc={() => setUsdcOpen(true)}
+              featuredId={FEATURED_KITTY}
               live={{ stats: stats.stats, loading: stats.loading, failed: stats.failed, explorerBase: ACTIVE.explorerBase }}
             />
           )}
@@ -190,6 +219,7 @@ export default function App() {
           {route.view === 'new' && (
             <CreateKitty
               start={{ kind: route.kind, template: route.template }}
+              checkout={route.checkout}
               dep={ACTIVE}
               connectedAddress={me}
               isCorrectChain={isCorrectChain}
@@ -227,6 +257,18 @@ export default function App() {
             </div>
           )}
 
+          {route.view === 'sell' && (
+            <div className="pt-10 md:pt-14">
+              <SellerSetup me={me} dep={ACTIVE} onNavigate={go} />
+            </div>
+          )}
+
+          {route.view === 'shop' && (
+            <div className="pt-10 md:pt-14">
+              <DemoStore me={me} dep={ACTIVE} onNavigate={go} />
+            </div>
+          )}
+
           {route.view === 'open' && (
             <div className="space-y-6 pt-10 md:pt-14">
               <LookupHeader />
@@ -242,7 +284,15 @@ export default function App() {
           {route.view === 'kitty' && (
             <div className="space-y-6 pt-10 md:pt-14">
               {kitty.loading && <KittySkeleton />}
-              {kitty.notFound && <KittyNotFound networkName={ACTIVE.name} onNavigate={go} />}
+              {kitty.notFound && (
+                <KittyNotFound
+                  networkName={ACTIVE.networkLabel}
+                  onNavigate={go}
+                  hint={existsOnOther && otherUrl
+                    ? <OtherNetworkHint networkLabel={other.networkLabel} href={otherNetworkKittyHref(otherUrl, route.id)} />
+                    : undefined}
+                />
+              )}
               {kitty.error && !kitty.notFound && (
                 <>
                   <LookupHeader />
@@ -256,6 +306,7 @@ export default function App() {
                   connectedAddress={me}
                   isCorrectChain={isCorrectChain}
                   onSwitchChain={switchToActive}
+                  onGetUsdc={() => setUsdcOpen(true)}
                   txStatus={tx.txStatus}
                   allowanceRaw={allowanceRaw}
                   balanceRaw={balanceRaw}
@@ -288,6 +339,15 @@ export default function App() {
 
       {/* Mainnet only: the one-time "what is about to happen" confirmation. */}
       {mainnetConfirm.dialog}
+
+      {usdcOpen && (
+        <GetUsdcSheet
+          dep={ACTIVE}
+          address={me}
+          onClose={() => setUsdcOpen(false)}
+          onAddNetwork={() => { if (isConnected) switchToActive(); else toast.error('Connect your wallet first.'); }}
+        />
+      )}
     </div>
   );
 }

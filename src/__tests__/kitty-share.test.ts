@@ -91,9 +91,9 @@ describe('message templates', () => {
       .toBe(`Chip in for Trip before Nov 5. Your share is on the page: ${LINK}`);
   });
   it('shareMessageFor picks the right template', () => {
-    expect(shareMessageFor(split, LINK, ME)).toBe(`Your share for Lisbon weekend is 60.00 USDC. Chip in before ${dl}: ${LINK}`);
+    expect(shareMessageFor(split, LINK, ME)).toBe(`Your share for Lisbon weekend is 60.00 USDC. Chip in before ${dl}: ${LINK}\nIf not everyone pays by ${dl}, everyone pulls their money back.`);
     expect(shareMessageFor(split, LINK, '0x4444444444444444444444444444444444444444')).toContain('Your share is on the page');
-    expect(shareMessageFor(open, LINK, ME)).toBe(`Chipping in for Gift for Sam. 60.00 USDC to go, minimum 0.390625 USDC, by ${dl}: ${LINK}`);
+    expect(shareMessageFor(open, LINK, ME)).toBe(`Chipping in for Gift for Sam. 60.00 USDC to go, minimum 0.390625 USDC, by ${dl}: ${LINK}\nIf the goal isn't reached by ${dl}, you pull your money back.`);
     expect(shareMessageFor({ ...open, creator: SELLER, recipient: SELLER }, LINK, ME)).toBe(`Gift for Sam: 100.00 USDC requested, split it with friends: ${LINK}`);
   });
   it('has no dashes', () => {

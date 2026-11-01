@@ -7,8 +7,16 @@ import { toCsv } from './csv';
 
 // ── Seller requests ──────────────────────────────────────────────────────────
 
+/** request: the seller started it for themselves. checkout: a buyer started it with the seller as recipient. */
+export type RequestType = 'request' | 'checkout';
+
+/** Who started a kitty that pays `me`: me (a request) or somebody else (a buyer's checkout). */
+export const requestType = (creator: string, me: string): RequestType =>
+  creator.toLowerCase() === me.toLowerCase() ? 'request' : 'checkout';
+
 export interface RequestSummary {
   id: `0x${string}`;
+  type: RequestType;
   ref: string;
   goalRaw: bigint;
   totalFundedRaw: bigint;
@@ -67,13 +75,13 @@ export function requestTotals(list: readonly RequestSummary[], now: bigint): Req
 }
 
 export const REQUEST_CSV_HEADER = [
-  'Name', 'Kitty ID', 'Goal (USDC)', 'Funded (USDC)', 'Status', 'Created block', 'Created time (UTC)', 'Payout transaction',
+  'Name', 'Kitty ID', 'Goal (USDC)', 'Funded (USDC)', 'Status', 'Created block', 'Created time (UTC)', 'Payout transaction', 'Type',
 ] as const;
 
 export function requestCsv(list: readonly RequestSummary[], now: bigint): string {
   const rows = list.map(r => [
     r.ref, r.id, formatUnits(r.goalRaw, 6), formatUnits(r.totalFundedRaw, 6), PHASE_PILL[requestPhase(r, now)].label,
-    r.createdBlock.toString(), r.createdAt !== undefined ? new Date(r.createdAt * 1000).toISOString() : '', r.payoutTx ?? '',
+    r.createdBlock.toString(), r.createdAt !== undefined ? new Date(r.createdAt * 1000).toISOString() : '', r.payoutTx ?? '', r.type,
   ]);
   return toCsv(REQUEST_CSV_HEADER, rows);
 }
@@ -147,4 +155,16 @@ export function parseStats(raw: string | null | undefined, now: number, ttlMs: n
       recent: j.recent.map(r => ({ ...r, amountRaw: BigInt(r.amountRaw), blockNumber: BigInt(r.blockNumber) })),
     };
   } catch { return undefined; }
+}
+
+// ── Home stats: how long we wait before giving up quietly ────────────────────
+
+/** The stats section shows its skeleton for at most this long, then disappears. */
+export const STATS_TIMEOUT_MS = 15_000;
+
+/** What the stats section should render. Numbers always win; a failure or a timeout hides it. */
+export function statsPhase(i: { hasStats: boolean; failed: boolean; timedOut: boolean; loading: boolean }): 'ready' | 'loading' | 'hidden' {
+  if (i.hasStats) return 'ready';
+  if (i.failed || i.timedOut) return 'hidden';
+  return i.loading ? 'loading' : 'hidden';
 }

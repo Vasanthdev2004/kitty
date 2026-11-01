@@ -1,9 +1,12 @@
 // ─── Kitty – calm "not found" for a bad or foreign kitty ID ─────────────────
 import type { Route } from '../kitty-core';
+import type { ReactNode } from 'react';
 import { Button, EmptyState } from './ui';
 
-export function KittyNotFound({ networkName, onNavigate }: { networkName: string; onNavigate: (r: Route) => void }) {
+export function KittyNotFound({ networkName, onNavigate, hint }: { networkName: string; onNavigate: (r: Route) => void; hint?: ReactNode }) {
   return (
+    <div className="space-y-4">
+    {hint}
     <EmptyState
       title="We could not find that kitty"
       action={
@@ -15,5 +18,6 @@ export function KittyNotFound({ networkName, onNavigate }: { networkName: string
     >
       The link may be mistyped, or the kitty may live on a different network. This app is showing kitties on {networkName}.
     </EmptyState>
+    </div>
   );
 }

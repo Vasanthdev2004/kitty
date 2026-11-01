@@ -43,3 +43,26 @@ export const VALIDATION_DELAYS_MS = [1000, 3000, 7000] as const;
 export function jitteredDelay(baseMs: number, random: () => number = Math.random): number {
   return Math.round(baseMs * (0.75 + random() * 0.5));
 }
+
+// ── Network failures (blocked or offline) ────────────────────────────────────
+// A content blocker or an offline browser makes fetch() itself throw ("Failed to
+// fetch"): no HTTP status ever arrives. src/rpc-health.ts turns such a failure
+// into a response with this marker status so viem does not sit in its retry
+// backoff; the next URL in the list is tried at once.
+export const NETWORK_FAILURE_STATUS = 599;
+
+const NETWORK_TEXT = /failed to fetch|networkerror|network request failed|load failed|fetch failed|err_blocked_by_client|err_internet_disconnected/i;
+
+/**
+ * True when the request never got an HTTP answer at all (blocked, offline, DNS).
+ * False for anything the network did answer: 429, 5xx, a revert, a bad request.
+ */
+export function isNetworkError(e: unknown): boolean {
+  const links = chain(e);
+  for (const l of links) {
+    if (typeof l.status === 'number') return l.status === NETWORK_FAILURE_STATUS;
+  }
+  const str = (v: unknown) => (typeof v === 'string' ? v : '');
+  const text = links.map(l => `${str(l.shortMessage)} ${str(l.message)}`).join(' ');
+  return NETWORK_TEXT.test(text) || links.some(l => l.name === 'TypeError' && /fetch|network/i.test(str(l.message)));
+}

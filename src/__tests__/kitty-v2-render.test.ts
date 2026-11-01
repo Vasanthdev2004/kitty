@@ -25,7 +25,7 @@ const noop = () => undefined;
 const page = (data: KittyData, over: Partial<KittyPageProps> = {}): string =>
   clean(renderToString(createElement(KittyPage, {
     data, dep: ACTIVE, connectedAddress: ME, isCorrectChain: true, onSwitchChain: noop, txStatus: { kind: 'idle' },
-    allowanceRaw: 0n, balanceRaw: 100n * U, onRefresh: noop, onChipIn: noop, onCancel: noop, onPayOut: noop, onGetRefund: noop,
+    allowanceRaw: 0n, balanceRaw: 100n * U, onRefresh: noop, onChipIn: noop, onCancel: noop, onGetUsdc: noop, onPayOut: noop, onGetRefund: noop,
     justCreated: false, activity: { items: [], loading: false, error: undefined, retry: noop }, ...over,
   })));
 
@@ -196,7 +196,7 @@ describe('seller requests', () => {
   const scan = (items: RequestSummary[]) => ({ items, chainTimestamp: NOW, scannedAt: Date.now() });
   const mk = (id: string, over: Partial<RequestSummary>): RequestSummary => ({
     id: `0x${id.repeat(32)}`, ref: `Invoice ${id}`, goalRaw: 100n * U, totalFundedRaw: 0n, deadline: NOW + 1_000n,
-    settled: false, cancelled: false, contributorCount: 0, createdBlock: 1n, ...over,
+    settled: false, cancelled: false, type: 'request', contributorCount: 0, createdBlock: 1n, ...over,
   });
   const el = (s: ReturnType<typeof scan> | undefined, over: Partial<Parameters<typeof SellerRequests>[0]> = {}) =>
     clean(renderToString(createElement(SellerRequests, {

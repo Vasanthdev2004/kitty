@@ -29,7 +29,7 @@ const noop = () => undefined;
 const page = (data: KittyData, over: Partial<KittyPageProps> = {}): string =>
   clean(renderToString(createElement(KittyPage, {
     data, dep: ACTIVE, connectedAddress: ME, isCorrectChain: true, onSwitchChain: noop, txStatus: { kind: 'idle' },
-    allowanceRaw: 0n, balanceRaw: 100n * U, onRefresh: noop, onChipIn: noop, onCancel: noop, onPayOut: noop, onGetRefund: noop,
+    allowanceRaw: 0n, balanceRaw: 100n * U, onRefresh: noop, onChipIn: noop, onCancel: noop, onGetUsdc: noop, onPayOut: noop, onGetRefund: noop,
     justCreated: false, activity: { items: [], loading: false, error: undefined, retry: noop }, ...over,
   })));
 

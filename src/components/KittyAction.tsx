@@ -1,8 +1,9 @@
 // ─── Kitty – the one action card for the current wallet and state ────────────
 import { useState, type ReactNode } from 'react';
 import { ConnectKitButton } from 'connectkit';
-import { formatUsdc, parseUsdcAmount } from '../pt-utils';
+import { formatDeadline, formatUsdc, parseUsdcAmount } from '../pt-utils';
 import { chipInHelper } from '../permit';
+import { refundPromise } from '../share-messages';
 import { formatUsdcPlain } from '../pt-share';
 import {
   THIRTY_DAY_RULE, busyLabel, chipInBounds, kittyAction, kittyActionHasDock, unpaidContributors, validateChipIn, type KittyPhase,
@@ -13,6 +14,7 @@ import { cn } from '../cn';
 import { Button, Card } from './ui';
 import { AmountInput } from './fields';
 import { FriendChipIn } from './FriendChipIn';
+import { OpenInWalletApp } from './OpenInWalletApp';
 
 // uncertain counts as busy: the original tx may still confirm, never allow a duplicate write.
 const isBusy = (s: TxStatus) =>
@@ -50,10 +52,11 @@ function Stat({ label, value }: { label: string; value: string }) {
 // ── Chip in ──────────────────────────────────────────────────────────────────
 
 function ChipInForm({
-  data, my, allowanceRaw, balanceRaw, txStatus, onChipIn, faucetUrl,
+  data, my, allowanceRaw, balanceRaw, txStatus, onChipIn, onGetUsdc,
 }: {
   data: KittyData;
-  faucetUrl?: string;
+  /** Opens the "Get USDC" sheet. Offered whenever the wallet cannot cover the amount. */
+  onGetUsdc: () => void;
   my: { shareRaw: bigint; contributedRaw: bigint } | undefined;
   allowanceRaw: bigint | undefined;
   balanceRaw: bigint | undefined;
@@ -117,13 +120,8 @@ function ChipInForm({
         )}
       </div>
 
-      {faucetUrl && balanceRaw !== undefined && balanceRaw < (amountRaw > 0n ? amountRaw : 1n) && (
-        <p className="text-xs text-ink-2">
-          Need test USDC?{' '}
-          <a href={faucetUrl} target="_blank" rel="noopener noreferrer" className="text-accent-text underline-offset-2 hover:underline">
-            Get some from the Circle faucet
-          </a>.
-        </p>
+      {balanceRaw !== undefined && balanceRaw < (amountRaw > 0n ? amountRaw : 1n) && (
+        <Button size="sm" variant="secondary" className="w-full" onClick={onGetUsdc}>Get USDC</Button>
       )}
 
       <Button
@@ -133,6 +131,7 @@ function ChipInForm({
         Chip in
       </Button>
       <p className="text-xs text-ink-3">{chipInHelper(hasAllowance ? 'plain' : 'permit')}</p>
+      <p className="text-xs leading-relaxed text-ink-3" data-testid="refund-promise">{refundPromise(data.mode, formatDeadline(data.deadline))}</p>
     </>
   );
 }
@@ -146,10 +145,10 @@ export interface KittyActionProps {
   isCorrectChain: boolean;
   onSwitchChain: () => void;
   networkName: string;
-  /** Short network name for the switch button, e.g. Arc. */
-  shortName: string;
-  /** Testnet only: where to get test USDC. Undefined on mainnet, so no hint is ever shown. */
-  faucetUrl?: string;
+  /** Text of the switch button, e.g. "Switch to Arc Testnet". */
+  switchText: string;
+  /** Opens the "Get USDC" sheet (faucet on testnet, bridge or exchange on mainnet). */
+  onGetUsdc: () => void;
   txStatus: TxStatus;
   allowanceRaw: bigint | undefined;
   balanceRaw: bigint | undefined;
@@ -174,7 +173,7 @@ export function KittyAction(p: KittyActionProps) {
   const friendForm = (
     <FriendChipIn
       data={p.data} me={p.connectedAddress} allowanceRaw={p.allowanceRaw} balanceRaw={p.balanceRaw} txStatus={p.txStatus}
-      onChipIn={(amount, friend) => p.onChipIn(amount, friend)} onBack={() => setFriendOpen(false)}
+      onChipIn={(amount, friend) => p.onChipIn(amount, friend)} onBack={() => setFriendOpen(false)} onGetUsdc={p.onGetUsdc}
     />
   );
   const friendToggle = canPayForFriend && (
@@ -191,13 +190,14 @@ export function KittyAction(p: KittyActionProps) {
           <ConnectKitButton.Custom>
             {({ show }) => <Button size="lg" className="w-full" onClick={show}>Connect wallet</Button>}
           </ConnectKitButton.Custom>
+          <OpenInWalletApp />
         </Shell>
       );
     case 'switch':
       return (
         <Shell title="Wrong network" dock={false}>
           <Body>Switch to {p.networkName} to use this kitty.</Body>
-          <Button size="lg" className="w-full" onClick={p.onSwitchChain}>{`Switch to ${p.shortName}`}</Button>
+          <Button size="lg" className="w-full" onClick={p.onSwitchChain}>{p.switchText}</Button>
         </Shell>
       );
     case 'chip-in':
@@ -207,7 +207,7 @@ export function KittyAction(p: KittyActionProps) {
           <ChipInForm
             key={`${p.data.totalFundedRaw}-${p.my?.contributedRaw ?? 0n}`}
             data={p.data} my={p.my} allowanceRaw={p.allowanceRaw} balanceRaw={p.balanceRaw}
-            txStatus={p.txStatus} onChipIn={amount => p.onChipIn(amount)} faucetUrl={p.faucetUrl}
+            txStatus={p.txStatus} onChipIn={amount => p.onChipIn(amount)} onGetUsdc={p.onGetUsdc}
           />
           {friendToggle}
         </Shell>

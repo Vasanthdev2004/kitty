@@ -19,12 +19,13 @@ const isBusy = (s: TxStatus) =>
   s.kind === 'wallet-pending' || s.kind === 'submitted' || s.kind === 'confirming' || s.kind === 'uncertain';
 
 export function FriendChipIn({
-  data, me, allowanceRaw, balanceRaw, txStatus, onChipIn, onBack,
+  data, me, allowanceRaw, balanceRaw, txStatus, onChipIn, onBack, onGetUsdc,
 }: {
   data: KittyData;
   me: string | undefined;
   allowanceRaw: bigint | undefined;
   balanceRaw: bigint | undefined;
+  onGetUsdc?: () => void;
   txStatus: TxStatus;
   onChipIn: (amountRaw: bigint, friend: `0x${string}`) => void | Promise<void>;
   /** Back to chipping in for yourself. */
@@ -113,6 +114,9 @@ export function FriendChipIn({
               </div>
             )}
             {err && <p id="friend-err" role="alert" className="text-[12.5px] text-err-text">{err}</p>}
+            {onGetUsdc && balanceRaw !== undefined && balanceRaw < (amountRaw > 0n ? amountRaw : 1n) && (
+              <Button size="sm" variant="secondary" className="w-full" onClick={onGetUsdc}>Get USDC</Button>
+            )}
           </div>
 
           {friend && !isSelf && (

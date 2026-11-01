@@ -64,6 +64,12 @@ export function splitGroupMessage(p: { ref: string; deadlineText: string; link: 
   return `Chip in for ${p.ref} before ${p.deadlineText}. Your share is on the page: ${p.link}`;
 }
 
+/** What happens if the kitty falls short. Said plainly in the share message and on the chip-in card. */
+export const openRefundPromise = (deadlineText: string) => `If the goal isn't reached by ${deadlineText}, you pull your money back.`;
+export const splitRefundPromise = (deadlineText: string) => `If not everyone pays by ${deadlineText}, everyone pulls their money back.`;
+export const refundPromise = (mode: 'open' | 'split', deadlineText: string) =>
+  mode === 'open' ? openRefundPromise(deadlineText) : splitRefundPromise(deadlineText);
+
 /** The message for the share step: picks the right template for this kitty and reader. */
 export function shareMessageFor(data: KittyData, link: string, me?: string): string {
   const ref = data.ref || 'this kitty';
@@ -72,14 +78,15 @@ export function shareMessageFor(data: KittyData, link: string, me?: string): str
   if (requested) return requestMessage({ ref, goalText: formatUsdcPlain(data.goalRaw), link });
   if (data.mode === 'open') {
     const remaining = data.goalRaw > data.totalFundedRaw ? data.goalRaw - data.totalFundedRaw : 0n;
-    return openMessage({
+    return `${openMessage({
       ref, remainingText: formatUsdcPlain(remaining), floorText: formatUsdcPlain(data.effectiveMinRaw), deadlineText, link,
-    });
+    })}\n${openRefundPromise(deadlineText)}`;
   }
   const mine = me ? data.contributors.find(c => c.address.toLowerCase() === me.toLowerCase()) : undefined;
-  return mine && mine.shareRaw > 0n
+  const body = mine && mine.shareRaw > 0n
     ? splitMessage({ ref, amountText: formatUsdcPlain(mine.shareRaw), deadlineText, link })
     : splitGroupMessage({ ref, deadlineText, link });
+  return `${body}\n${splitRefundPromise(deadlineText)}`;
 }
 
 /** A reminder for one person: their exact remaining share. */

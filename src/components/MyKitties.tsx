@@ -1,5 +1,6 @@
 // ─── Kitty – My kitties (?view=mine) ────────────────────────────────────────
 import { ConnectKitButton } from 'connectkit';
+import { OpenInWalletApp } from './OpenInWalletApp';
 import { ArrowsClockwise } from '@phosphor-icons/react';
 import { useNowMs } from '../hooks';
 import { formatUsdcPlain, fundedPercent } from '../pt-share';
@@ -86,7 +87,7 @@ export function MyKitties({
     return (
       <EmptyState
         title="Connect your wallet"
-        action={<ConnectKitButton.Custom>{({ show }) => <Button onClick={show}>Connect wallet</Button>}</ConnectKitButton.Custom>}
+        action={<div className="space-y-3"><ConnectKitButton.Custom>{({ show }) => <Button onClick={show}>Connect wallet</Button>}</ConnectKitButton.Custom><OpenInWalletApp /></div>}
       >
         Your kitties are the ones you started, chipped into, or were invited to. Connect to see them.
       </EmptyState>

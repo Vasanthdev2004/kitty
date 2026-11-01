@@ -9,7 +9,7 @@ import { buildKittyNudge, buildKittyUrl, canCancel, kittyAction, kittyActionHasD
 import { canRemind, dismissShareStep, isShareStepDismissed, localStore, remindMessageFor } from '../share-messages';
 import { formatDeadline } from '../pt-utils';
 import { formatUsdcPlain } from '../pt-share';
-import type { KittyDeployment } from '../kitty-config';
+import { switchLabel, type KittyDeployment } from '../kitty-config';
 import type { ActivityItem, KittyData } from '../kitty-types';
 import type { TxStatus } from '../pt-types';
 import { cn } from '../cn';
@@ -38,6 +38,8 @@ export interface KittyPageProps {
   /** `friend` set: pay for that person (fundFor). */
   onChipIn: (amountRaw: bigint, friend?: `0x${string}`) => void | Promise<void>;
   onCancel: () => void | Promise<void>;
+  /** Opens the "Get USDC" sheet. */
+  onGetUsdc: () => void;
   onPayOut: () => void | Promise<void>;
   onGetRefund: () => void | Promise<void>;
   /** This browser just created this kitty. */
@@ -156,7 +158,7 @@ export function KittyPage(p: KittyPageProps) {
         <div className="flex min-w-0 flex-col gap-4">
           <KittyAction
             data={data} phase={phase} connectedAddress={me} isCorrectChain={p.isCorrectChain}
-            onSwitchChain={p.onSwitchChain} networkName={dep.name} shortName={dep.shortName} faucetUrl={dep.faucetUrl} txStatus={p.txStatus}
+            onSwitchChain={p.onSwitchChain} networkName={dep.networkLabel} switchText={switchLabel(dep)} onGetUsdc={p.onGetUsdc} txStatus={p.txStatus}
             allowanceRaw={p.allowanceRaw} balanceRaw={p.balanceRaw} my={my}
             onChipIn={p.onChipIn} onPayOut={p.onPayOut} onGetRefund={p.onGetRefund}
           />

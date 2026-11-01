@@ -17,8 +17,10 @@ export interface KittyDeployment {
   chain: Chain;
   /** Network name shown in copy, e.g. "Arc Testnet". */
   name: string;
-  /** Short name for buttons, e.g. "Switch to Arc". */
+  /** Short name for sentences, e.g. "Arc". */
   shortName: string;
+  /** Unambiguous name for buttons and links: "Arc mainnet" or "Arc Testnet". */
+  networkLabel: string;
   /** Kitty contract. Meaningless (zero address) while `deployed` is false: never read from it. */
   kitty: `0x${string}`;
   /** False until BOTH the address and the deploy block are filled in below. Blocks all reads and writes. */
@@ -29,6 +31,8 @@ export interface KittyDeployment {
   /** Block the contract was deployed in. Event scans start here, never at block 0. */
   deployBlock: bigint;
   explorerBase: string;
+  /** The transaction that deployed the contract (shown in the proof strip). */
+  deployTx?: `0x${string}`;
   testnet: boolean;
   /** Faucet for test USDC. Testnet only: mainnet has none, so no hint is ever shown there. */
   faucetUrl?: string;
@@ -38,6 +42,7 @@ export interface KittyDeployment {
 export interface DeployedAt {
   kitty?: `0x${string}`;
   deployBlock?: bigint;
+  deployTx?: `0x${string}`;
 }
 
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000' as const;
@@ -53,6 +58,7 @@ const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000' as const;
 const ARC_TESTNET_AT: DeployedAt = {
   kitty: '0x621b7aadfbc5870b95d4d95245529059536da7e5',
   deployBlock: 69_829_378n,
+  deployTx: '0xb88d8d84eb45570c317a048d4b863eb5636bf2e0aad25e73fc8f2ea9dbcbff2c',
 };
 
 /**
@@ -63,7 +69,7 @@ const ARC_TESTNET_AT: DeployedAt = {
  * To point at a new mainnet contract later, replace this ONE line (see DEPLOY.md).
  * Without both fields the app shows "Kitty is not deployed on Arc yet" and blocks every write.
  */
-export const ARC_MAINNET_AT: DeployedAt = { kitty: '0x965281605d34f7045cbef306fe690118e6626192', deployBlock: 28_763_168n };
+export const ARC_MAINNET_AT: DeployedAt = { kitty: '0x965281605d34f7045cbef306fe690118e6626192', deployBlock: 28_763_168n, deployTx: '0xd95a3e960d9ea9ac953ae4a45be14c48eff6d8eed83f0123b0f3982a7dafb86f' };
 
 // ── Builders ─────────────────────────────────────────────────────────────────
 
@@ -77,7 +83,7 @@ function usdcFor(chainId: number): `0x${string}` {
 export function makeDeployment(
   key: KittyChainKey,
   chain: Chain,
-  meta: { name: string; shortName: string; testnet: boolean; faucetUrl?: string },
+  meta: { name: string; shortName: string; networkLabel?: string; testnet: boolean; faucetUrl?: string },
   at: DeployedAt,
 ): KittyDeployment {
   const deployed = !!at.kitty && at.deployBlock !== undefined && at.deployBlock > 0n;
@@ -87,12 +93,14 @@ export function makeDeployment(
     chain,
     name: meta.name,
     shortName: meta.shortName,
+    networkLabel: meta.networkLabel ?? (meta.testnet ? 'Arc Testnet' : 'Arc mainnet'),
     kitty: deployed ? (at.kitty as `0x${string}`) : ZERO_ADDRESS,
     deployed,
     usdc: usdcFor(chain.id),
     usdcDecimals: 6,
     deployBlock: deployed ? (at.deployBlock as bigint) : 0n,
     explorerBase: requireChain(chain.id).explorerBase,
+    deployTx: deployed ? at.deployTx : undefined,
     testnet: meta.testnet,
     faucetUrl: meta.faucetUrl,
   };
@@ -139,6 +147,16 @@ export function footerNote(dep: KittyDeployment): string {
 /** One sentence for the "terms are permanent" notice. */
 export function fundsNote(dep: KittyDeployment): string {
   return dep.testnet ? `${dep.name} uses test USDC with no real value.` : 'This moves real USDC.';
+}
+
+/** "Switch to Arc Testnet" / "Switch to Arc mainnet": the two chains must never read the same. */
+export function switchLabel(dep: Pick<KittyDeployment, 'networkLabel'>): string {
+  return `Switch to ${dep.networkLabel}`;
+}
+
+/** The other network's deployment (mainnet <-> testnet). */
+export function otherDeployment(dep: KittyDeployment): KittyDeployment {
+  return getDeployment(dep.testnet ? arc.id : arcTestnet.id);
 }
 
 export function notDeployedTitle(dep: KittyDeployment): string {

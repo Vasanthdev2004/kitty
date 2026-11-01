@@ -9,7 +9,8 @@ const trimSlash = (url: string) => url.replace(/\/+$/, '');
 const ownBase = () =>
   trimSlash(
     new URL(
-      (import.meta as { env?: { BASE_URL?: string } }).env?.BASE_URL ?? '/',
+      // Direct access so the build (and tests) can substitute it: a /testnet/ build shares /testnet/ links.
+      import.meta.env.BASE_URL || '/',
       `${window.location.origin}/`,
     ).href,
   );

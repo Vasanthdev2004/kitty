@@ -69,7 +69,10 @@ describe('Arc mainnet entry', () => {
     expect(t.faucetUrl).toBeTruthy();
   });
   it('resolves to the deployed Kitty v2 address and deploy block', () => {
-    expect(ARC_MAINNET_AT).toEqual({ kitty: '0x965281605d34f7045cbef306fe690118e6626192', deployBlock: 28_763_168n });
+    expect(ARC_MAINNET_AT).toEqual({
+      kitty: '0x965281605d34f7045cbef306fe690118e6626192', deployBlock: 28_763_168n,
+      deployTx: '0xd95a3e960d9ea9ac953ae4a45be14c48eff6d8eed83f0123b0f3982a7dafb86f',
+    });
     const d = mainnet();
     expect(d.deployed).toBe(true);
     expect(d.chainId).toBe(5042);
